@@ -134,3 +134,4 @@ D:\PIZZASHOP\pizzashop\obj\Debug\net8.0\refint\pizzashop.dll
 D:\PIZZASHOP\pizzashop\obj\Debug\net8.0\pizzashop.pdb
 D:\PIZZASHOP\pizzashop\obj\Debug\net8.0\pizzashop.genruntimeconfig.cache
 D:\PIZZASHOP\pizzashop\obj\Debug\net8.0\ref\pizzashop.dll
+D:\PIZZASHOP\pizzashop\obj\Debug\net8.0\pizzashop.sourcelink.json
