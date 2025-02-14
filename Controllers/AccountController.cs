@@ -1,4 +1,5 @@
-    using System.Diagnostics;
+ using Microsoft.AspNetCore.Authentication;
+using Microsoft.AspNetCore.Identity;    
 using Microsoft.AspNetCore.Mvc;
 using pizzashop.Models;
 using pizzashop.ViewModels;
@@ -11,6 +12,7 @@ public class AccountController : Controller
 {
 
     private readonly PizzashopContext _context;
+   
 
     public AccountController(PizzashopContext context)
     {
@@ -20,6 +22,7 @@ public class AccountController : Controller
      [HttpGet]
     public IActionResult Index()
     {
+
         return View();
     }
 
@@ -33,7 +36,7 @@ public class AccountController : Controller
         }
 
         User? user = _context.Users.FirstOrDefault(u => u.Email == loginViewModel.Email);
-        
+
         if (user == null)
         {
             TempData["error"] = "User Not Found";
@@ -47,8 +50,23 @@ public class AccountController : Controller
         }
 
 
-        
+
+
+
+
+
+
+
+
+
 
         return RedirectToAction ("Index", "Home");
     }
+
+    [HttpGet]
+    public IActionResult forgotpassword()
+    {
+        return View();
+    }
 }
+

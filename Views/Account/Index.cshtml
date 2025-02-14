@@ -64,8 +64,8 @@
                                 
                         </div>
                         <div style="display: flex;justify-content: space-between;padding-top: 20px;">
-                            <div><input type="checkbox" asp-for="RememberMe"> &nbsp;remember me</div>
-                            <div style="padding-right: 20%;"><a href="#" class="text-decoration-none">forgot password?</a></div>
+                            <div><input type="checkbox" asp-for="RememberMe" class="form-check-input"> &nbsp;remember me</div>
+                            <div style="padding-right: 20%;"><a href="@Url.Action("ForgotPassword", "Account")" class="text-decoration-none">forgot password?</a></div>
                         </div>
                         <div style="padding-top: 17px;">
                             <button class="loginpage-btn" type="submit">Login</button>
