@@ -60,12 +60,19 @@ public class AccountController : Controller
 
 
 
-        return RedirectToAction ("Index", "Home");
+        return RedirectToAction ("userlist", "Account");
     }
 
     [HttpGet]
     public IActionResult forgotpassword()
     {
+        return View();
+    }
+
+    public IActionResult userlist(){
+        return View();
+    }
+     public IActionResult menu(){
         return View();
     }
 }
