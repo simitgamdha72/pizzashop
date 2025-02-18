@@ -73,7 +73,7 @@ public class AccountController : Controller
         Extrathings object1 = new();
         string object2 = object1.getEmail();
         // string object1 ="";
-        Console.WriteLine(m.Email);
+        // Console.WriteLine(m.Email);
         await es.SendEmailAsync(m.Email, subject, object2);
 
         return Ok("ok");
