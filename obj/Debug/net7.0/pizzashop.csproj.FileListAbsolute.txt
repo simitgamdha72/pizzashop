@@ -44,3 +44,14 @@ D:\PIZZASHOP\pizzashop\obj\Debug\net7.0\refint\pizzashop.dll
 D:\PIZZASHOP\pizzashop\obj\Debug\net7.0\pizzashop.pdb
 D:\PIZZASHOP\pizzashop\obj\Debug\net7.0\pizzashop.genruntimeconfig.cache
 D:\PIZZASHOP\pizzashop\obj\Debug\net7.0\ref\pizzashop.dll
+D:\PIZZASHOP\pizzashop\bin\Debug\net7.0\BouncyCastle.Cryptography.dll
+D:\PIZZASHOP\pizzashop\bin\Debug\net7.0\MailKit.dll
+D:\PIZZASHOP\pizzashop\bin\Debug\net7.0\MimeKit.dll
+D:\PIZZASHOP\pizzashop\bin\Debug\net7.0\Newtonsoft.Json.dll
+D:\PIZZASHOP\pizzashop\bin\Debug\net7.0\SendGrid.dll
+D:\PIZZASHOP\pizzashop\bin\Debug\net7.0\StarkbankEcdsa.dll
+D:\PIZZASHOP\pizzashop\bin\Debug\net7.0\System.Formats.Asn1.dll
+D:\PIZZASHOP\pizzashop\bin\Debug\net7.0\System.Security.Cryptography.Pkcs.dll
+D:\PIZZASHOP\pizzashop\bin\Debug\net7.0\System.Text.Encoding.CodePages.dll
+D:\PIZZASHOP\pizzashop\bin\Debug\net7.0\runtimes\win\lib\net7.0\System.Security.Cryptography.Pkcs.dll
+D:\PIZZASHOP\pizzashop\bin\Debug\net7.0\runtimes\win\lib\net7.0\System.Text.Encoding.CodePages.dll

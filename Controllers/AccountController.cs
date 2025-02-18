@@ -1,8 +1,12 @@
- using Microsoft.AspNetCore.Authentication;
+using System.Net.Mail;
+using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Identity;    
 using Microsoft.AspNetCore.Mvc;
+using MimeKit;
 using pizzashop.Models;
 using pizzashop.ViewModels;
+using Utility;
 
 
 
@@ -12,11 +16,15 @@ public class AccountController : Controller
 {
 
     private readonly PizzashopContext _context;
+       public readonly EmailSender1 es;
+
+
    
 
-    public AccountController(PizzashopContext context)
+    public AccountController(PizzashopContext context, EmailSender1 ess1)
     {
         _context = context;
+        es = ess1;
     }
 
      [HttpGet]
@@ -62,6 +70,19 @@ public class AccountController : Controller
 
         return RedirectToAction ("userlist", "Account");
     }
+
+ 
+
+    [HttpPost]
+    public async Task<IActionResult> SendResetLink(ForgotPasswordViewModel m){
+        string subject = "reset password";
+        string object1 = "hello";
+        Console.WriteLine(m.Email);
+        await es.SendEmailAsync(m.Email,subject,object1);
+        
+        return Ok("ok");
+    }
+    
 
     [HttpGet]
     public IActionResult forgotpassword()

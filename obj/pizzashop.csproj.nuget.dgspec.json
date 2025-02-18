@@ -43,6 +43,10 @@
         "net7.0": {
           "targetAlias": "net7.0",
           "dependencies": {
+            "MailKit": {
+              "target": "Package",
+              "version": "[4.10.0, )"
+            },
             "Microsoft.EntityFrameworkCore.Design": {
               "include": "Runtime, Build, Native, ContentFiles, Analyzers, BuildTransitive",
               "suppressParent": "All",
@@ -62,6 +66,10 @@
             "Npgsql.EntityFrameworkCore.PostgreSQL.Design": {
               "target": "Package",
               "version": "[1.0.2, )"
+            },
+            "SendGrid": {
+              "target": "Package",
+              "version": "[9.29.3, )"
             }
           },
           "imports": [
