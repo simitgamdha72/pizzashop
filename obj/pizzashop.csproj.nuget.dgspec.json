@@ -59,6 +59,10 @@
               "target": "Package",
               "version": "[7.0.20, )"
             },
+            "MimeKit": {
+              "target": "Package",
+              "version": "[4.10.0, )"
+            },
             "Npgsql.EntityFrameworkCore.PostgreSQL": {
               "target": "Package",
               "version": "[7.0.18, )"

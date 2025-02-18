@@ -1,6 +1,6 @@
 {
   "Version": 1,
-  "Hash": "ulMn7Yyna3mngccU18SQGds04koJh6VcMJo8ZEXfjYw=",
+  "Hash": "r1hTca7aeoA/wsYGUDMvHSKkiIlNpey6ArKXFXsm4ho=",
   "Source": "pizzashop",
   "BasePath": "_content/pizzashop",
   "Mode": "Default",
@@ -1687,6 +1687,25 @@
       "CopyToOutputDirectory": "Never",
       "CopyToPublishDirectory": "PreserveNewest",
       "OriginalItemSpec": "wwwroot\\lib\\jquery\\LICENSE.txt"
+    },
+    {
+      "Identity": "D:\\PIZZASHOP\\pizzashop\\wwwroot\\Template\\email.html",
+      "SourceId": "pizzashop",
+      "SourceType": "Discovered",
+      "ContentRoot": "D:\\PIZZASHOP\\pizzashop\\wwwroot\\",
+      "BasePath": "_content/pizzashop",
+      "RelativePath": "Template/email.html",
+      "AssetKind": "All",
+      "AssetMode": "All",
+      "AssetRole": "Primary",
+      "AssetMergeBehavior": "PreferTarget",
+      "AssetMergeSource": "",
+      "RelatedAsset": "",
+      "AssetTraitName": "",
+      "AssetTraitValue": "",
+      "CopyToOutputDirectory": "Never",
+      "CopyToPublishDirectory": "PreserveNewest",
+      "OriginalItemSpec": "wwwroot\\Template\\email.html"
     }
   ]
 }

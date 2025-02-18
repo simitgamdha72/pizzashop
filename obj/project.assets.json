@@ -5094,6 +5094,7 @@
       "MailKit >= 4.10.0",
       "Microsoft.EntityFrameworkCore.Design >= 7.0.20",
       "Microsoft.EntityFrameworkCore.Tools >= 7.0.20",
+      "MimeKit >= 4.10.0",
       "Npgsql.EntityFrameworkCore.PostgreSQL >= 7.0.18",
       "Npgsql.EntityFrameworkCore.PostgreSQL.Design >= 1.0.2",
       "SendGrid >= 9.29.3"
@@ -5105,11 +5106,11 @@
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "D:\\PIZZASHOP\\pizzashop\\pizzashop.csproj",
+      "projectUniqueName": "d:\\PIZZASHOP\\pizzashop\\pizzashop.csproj",
       "projectName": "pizzashop",
-      "projectPath": "D:\\PIZZASHOP\\pizzashop\\pizzashop.csproj",
+      "projectPath": "d:\\PIZZASHOP\\pizzashop\\pizzashop.csproj",
       "packagesPath": "C:\\Users\\pctr59\\.nuget\\packages\\",
-      "outputPath": "D:\\PIZZASHOP\\pizzashop\\obj\\",
+      "outputPath": "d:\\PIZZASHOP\\pizzashop\\obj\\",
       "projectStyle": "PackageReference",
       "configFilePaths": [
         "C:\\Users\\pctr59\\AppData\\Roaming\\NuGet\\NuGet.Config"
@@ -5156,6 +5157,10 @@
             "suppressParent": "All",
             "target": "Package",
             "version": "[7.0.20, )"
+          },
+          "MimeKit": {
+            "target": "Package",
+            "version": "[4.10.0, )"
           },
           "Npgsql.EntityFrameworkCore.PostgreSQL": {
             "target": "Package",

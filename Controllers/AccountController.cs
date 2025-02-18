@@ -1,7 +1,7 @@
 using System.Net.Mail;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authentication;
-using Microsoft.AspNetCore.Identity;    
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using MimeKit;
 using pizzashop.Models;
@@ -16,10 +16,10 @@ public class AccountController : Controller
 {
 
     private readonly PizzashopContext _context;
-       public readonly EmailSender1 es;
+    public readonly EmailSender1 es;
 
 
-   
+
 
     public AccountController(PizzashopContext context, EmailSender1 ess1)
     {
@@ -27,14 +27,14 @@ public class AccountController : Controller
         es = ess1;
     }
 
-     [HttpGet]
+    [HttpGet]
     public IActionResult Index()
     {
 
         return View();
     }
 
-   [HttpPost]
+    [HttpPost]
 
     public IActionResult Index(LoginViewModel loginViewModel)
     {
@@ -68,32 +68,42 @@ public class AccountController : Controller
 
 
 
-        return RedirectToAction ("userlist", "Account");
+        return RedirectToAction("userlist", "Account");
     }
 
- 
+
+
+   
 
     [HttpPost]
-    public async Task<IActionResult> SendResetLink(ForgotPasswordViewModel m){
+    public async Task<IActionResult> SendResetLink(ForgotPasswordViewModel m)
+    {
         string subject = "reset password";
-        string object1 = "hello";
+        Extrathings object1 = new();
+        string object2 = object1.getEmail();
+        // string object1 ="";
         Console.WriteLine(m.Email);
-        await es.SendEmailAsync(m.Email,subject,object1);
-        
+        await es.SendEmailAsync(m.Email, subject, object2);
+
         return Ok("ok");
     }
-    
+
 
     [HttpGet]
     public IActionResult forgotpassword()
     {
         return View();
     }
-
-    public IActionResult userlist(){
+      public IActionResult resetpassword()
+    {
         return View();
     }
-     public IActionResult menu(){
+    public IActionResult userlist()
+    {
+        return View();
+    }
+    public IActionResult menu()
+    {
         return View();
     }
 }

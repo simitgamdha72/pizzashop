@@ -11,6 +11,7 @@
           "MailKit": "4.10.0",
           "Microsoft.EntityFrameworkCore.Design": "7.0.20",
           "Microsoft.EntityFrameworkCore.Tools": "7.0.20",
+          "MimeKit": "4.10.0",
           "Npgsql.EntityFrameworkCore.PostgreSQL": "7.0.18",
           "Npgsql.EntityFrameworkCore.PostgreSQL.Design": "1.0.2",
           "SendGrid": "9.29.3"

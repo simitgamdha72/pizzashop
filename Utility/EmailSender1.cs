@@ -4,10 +4,7 @@ using System.Threading.Tasks;
 namespace Utility;
 
 
-// public interface IEmailSender
-// {
-//     Task SendEmailAsync(string email, string subject, string message);
-// }
+
 
 
 public class EmailSender1
@@ -18,16 +15,37 @@ public class EmailSender1
     private readonly int _smtpPort = 587; // Example for SMTP
 
     public async Task SendEmailAsync(string email, string subject, string message)
+
     {
+
+
+
         var mimeMessage = new MimeMessage();
         mimeMessage.From.Add(MailboxAddress.Parse(_smtpUser));
         mimeMessage.To.Add(MailboxAddress.Parse(email));
         mimeMessage.Subject = subject;
 
-        mimeMessage.Body = new TextPart("html")
-        {
-            Text = message
-        };
+        // mimeMessage.Body = new TextPart("html")
+        // {
+        //     Text = message
+        // };
+
+        //  var bodyBuilder = new BodyBuilder
+        // {
+        //     HtmlBody = message
+        // };
+        // mimeMessage.Body = bodyBuilder.ToMessageBody();
+
+        var bodyBuilder = new BodyBuilder();
+
+        bodyBuilder.HtmlBody = message;
+
+        
+
+
+         mimeMessage.Body = bodyBuilder.ToMessageBody();
+
+
 
         using (var client = new SmtpClient())
         {
@@ -37,4 +55,6 @@ public class EmailSender1
             await client.DisconnectAsync(true);
         }
     }
+
+    
 }
