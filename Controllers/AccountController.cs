@@ -7,6 +7,7 @@ using MimeKit;
 using pizzashop.Models;
 using pizzashop.ViewModels;
 using Utility;
+using YourProject.Models;
 
 
 
@@ -17,9 +18,6 @@ public class AccountController : Controller
 
     private readonly PizzashopContext _context;
     public readonly EmailSender1 es;
-
-
-
 
     public AccountController(PizzashopContext context, EmailSender1 ess1)
     {
@@ -57,23 +55,16 @@ public class AccountController : Controller
             return View(loginViewModel);
         }
 
-
-
-
-
-
-
-
-
-
-
-
         return RedirectToAction("userlist", "Account");
     }
 
 
 
-   
+    [HttpGet]
+    public IActionResult forgotpassword()
+    {
+        return View();
+    }
 
     [HttpPost]
     public async Task<IActionResult> SendResetLink(ForgotPasswordViewModel m)
@@ -88,13 +79,7 @@ public class AccountController : Controller
         return Ok("ok");
     }
 
-
-    [HttpGet]
-    public IActionResult forgotpassword()
-    {
-        return View();
-    }
-      public IActionResult resetpassword()
+    public IActionResult resetpassword()
     {
         return View();
     }
