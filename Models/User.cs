@@ -1,11 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
+using Microsoft.AspNetCore.Identity;
 
 namespace pizzashop.Models;
 
-public partial class User
+public partial class User 
 {
-  
+   
 
     public int UserId { get; set; }
 
@@ -168,4 +169,5 @@ public partial class User
     public virtual ICollection<WaitingList> WaitingListCreatedByNavigations { get; set; } = new List<WaitingList>();
 
     public virtual ICollection<WaitingList> WaitingListModifiedByNavigations { get; set; } = new List<WaitingList>();
+
 }

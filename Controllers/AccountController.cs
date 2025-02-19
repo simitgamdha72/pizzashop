@@ -7,7 +7,8 @@ using MimeKit;
 using pizzashop.Models;
 using pizzashop.ViewModels;
 using Utility;
-using YourProject.Models;
+using pizzashop.Models;
+using Microsoft.AspNetCore.Authorization;
 
 
 
@@ -19,10 +20,12 @@ public class AccountController : Controller
     private readonly PizzashopContext _context;
     public readonly EmailSender1 es;
 
+
     public AccountController(PizzashopContext context, EmailSender1 ess1)
     {
         _context = context;
         es = ess1;
+       
     }
 
     [HttpGet]
@@ -68,7 +71,15 @@ public class AccountController : Controller
 
     [HttpPost]
     public async Task<IActionResult> SendResetLink(ForgotPasswordViewModel m)
-    {
+    {   
+
+        
+
+
+       
+
+
+
         string subject = "reset password";
         Extrathings object1 = new();
         string object2 = object1.getEmail();
@@ -76,13 +87,48 @@ public class AccountController : Controller
         // Console.WriteLine(m.Email);
         await es.SendEmailAsync(m.Email, subject, object2);
 
-        return Ok("ok");
+        return RedirectToAction("ForgotPasswordConfirmation", "Account");
     }
 
+    [HttpGet]
     public IActionResult resetpassword()
     {
         return View();
     }
+
+
+    [HttpPost]
+    public IActionResult ResetPassword(ResetPasswordViewModel m) 
+    {
+        User v = (from c in _context.Users
+                                    where c.Email == m.Email
+                                    select c).FirstOrDefault();
+ 
+        if (v != null)
+        {
+            v.Password = m.Password;
+         
+            _context.SaveChanges();
+            ViewBag.Message = "Customer record updated.";
+        }
+        else
+        {
+            ViewBag.Message = "Customer not found.";
+        }
+ 
+        return RedirectToAction("ResetPasswordConfirmation", "Account");
+    }
+
+
+    
+
+    [HttpGet]
+    public IActionResult ResetPasswordConfirmation()
+    {
+        return View();
+    }
+
+
     public IActionResult userlist()
     {
         return View();

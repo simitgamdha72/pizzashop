@@ -1,3 +1,5 @@
+using Microsoft.AspNetCore.Identity;
+using Microsoft.EntityFrameworkCore;
 using pizzashop.Models;
 using Utility;
 
@@ -7,6 +9,9 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddControllersWithViews();
 builder.Services.AddDbContext<PizzashopContext>();
 builder.Services.AddScoped<EmailSender1>();
+
+
+
 
 
 

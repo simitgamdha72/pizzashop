@@ -1,21 +1,22 @@
 using System.ComponentModel.DataAnnotations;
+namespace pizzashop.ViewModels;
 
-namespace YourProject.Models
+public class ResetPasswordViewModel
 {
-    public class ResetPasswordViewModel
-    {
-        [Required]
-        [EmailAddress]
-        public string Email { get; set; }
+    [Required]
+    [EmailAddress]
+    public string Email { get; set; }
+  
 
-        [Required]
-        [DataType(DataType.Password)]
-        public string Password { get; set; }
 
-        [DataType(DataType.Password)]
-        [Compare("Password")]
-        public string ConfirmPassword { get; set; }
+    [Required]
+    [DataType(DataType.Password)]
+    [StringLength(100, MinimumLength = 6)]
+    public string Password { get; set; }
 
-        public string Token { get; set; }
-    }
+    [DataType(DataType.Password)]
+    [Compare("Password")]
+    public string ConfirmPassword { get; set; }
+
+
 }
