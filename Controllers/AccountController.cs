@@ -171,5 +171,10 @@ public class AccountController : Controller
     {
         return View();
     }
+
+     public IActionResult UserProfile()
+    {
+        return View();
+    }
 }
 
