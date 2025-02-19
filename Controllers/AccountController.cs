@@ -100,6 +100,8 @@ public class AccountController : Controller
     [HttpGet]
     public IActionResult forgotpassword()
     {
+
+    
         return View();
     }
 
@@ -111,7 +113,7 @@ public class AccountController : Controller
 
 
 
-
+//  User? user = _context.Users.FirstOrDefault(u => u.Email == m.Email);
 
 
         string subject = "reset password";
@@ -121,12 +123,21 @@ public class AccountController : Controller
         // Console.WriteLine(m.Email);
         await es.SendEmailAsync(m.Email, subject, object2);
 
+        //   Response.Cookies.Append("cookie2",user.Email,new CookieOptions{
+        //     Expires = DateTime.UtcNow.AddDays(30)
+        // });
+
         return RedirectToAction("ForgotPasswordConfirmation", "Account");
     }
 
     [HttpGet]
     public IActionResult resetpassword()
     {
+        //     var cookie = Request.Cookies["cookie2"];
+        //  User? user = _context.Users.FirstOrDefault(u => u.Email == cookie);
+        //  if (user == null){
+        //      return View();
+        //  }
         return View();
     }
 
@@ -161,6 +172,11 @@ public class AccountController : Controller
     {
         return View();
     }
+    public IActionResult ForgotPasswordConfirmation()
+    {
+        return View();
+    }
+
 
 
     public IActionResult userlist()
