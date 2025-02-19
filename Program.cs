@@ -3,12 +3,17 @@ using Microsoft.EntityFrameworkCore;
 using pizzashop.Models;
 using Utility;
 
+
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 builder.Services.AddControllersWithViews();
 builder.Services.AddDbContext<PizzashopContext>();
 builder.Services.AddScoped<EmailSender1>();
+builder.Services.AddAuthorization();
+builder.Services.AddAuthentication();
+
+builder.Services.AddHttpContextAccessor();
 
 
 

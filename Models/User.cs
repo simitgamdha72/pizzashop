@@ -169,5 +169,5 @@ public partial class User
     public virtual ICollection<WaitingList> WaitingListCreatedByNavigations { get; set; } = new List<WaitingList>();
 
     public virtual ICollection<WaitingList> WaitingListModifiedByNavigations { get; set; } = new List<WaitingList>();
-
+ 
 }

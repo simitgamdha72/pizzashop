@@ -20,20 +20,34 @@ public class AccountController : Controller
     private readonly PizzashopContext _context;
     public readonly EmailSender1 es;
 
+    //  private IHttpContextAccessor Accessor;
+    //   private IRequestCookieCollection Cookies
+    // {
+    //    get
+    //    {
+    //         return Accessor.HttpContext.Request.Cookies;
+    //    }
+    // }
+
 
     public AccountController(PizzashopContext context, EmailSender1 ess1)
     {
         _context = context;
         es = ess1;
-       
+        // Accessor = _accessor;
     }
 
     [HttpGet]
     public IActionResult Index()
     {
-
-        return View();
-    }
+        var cookie = Request.Cookies["cookie"];
+         User? user = _context.Users.FirstOrDefault(u => u.Email == cookie);
+         if (user == null){
+             return View();
+         }
+         
+         return RedirectToAction("userlist", "Account");
+     }
 
     [HttpPost]
 
@@ -57,8 +71,28 @@ public class AccountController : Controller
             TempData["error"] = "Password is Incorrect";
             return View(loginViewModel);
         }
+        // if (loginViewModel.RememberMe)
+        // {
+        //     CookieOptions option = new CookieOptions
+        //     {
+        //         Expires = DateTime.Now.AddDays(30),
+        //     };
+        //     Response.Cookies.Append("Email", user.Email, option);
+        //     Response.Cookies.Append("Password", user.Password, option);
+        // }
+        // else
+        // {
+        //     Response.Cookies.Delete("Email");
+        //     Response.Cookies.Delete("Password");
+        // }
 
+        Response.Cookies.Append("cookie",user.Email,new CookieOptions{
+            Expires = loginViewModel.RememberMe ? DateTime.UtcNow.AddDays(30) : DateTime.UtcNow.AddHours(1)
+        });
         return RedirectToAction("userlist", "Account");
+    
+
+       
     }
 
 
@@ -71,12 +105,12 @@ public class AccountController : Controller
 
     [HttpPost]
     public async Task<IActionResult> SendResetLink(ForgotPasswordViewModel m)
-    {   
-
-        
+    {
 
 
-       
+
+
+
 
 
 
@@ -98,16 +132,16 @@ public class AccountController : Controller
 
 
     [HttpPost]
-    public IActionResult ResetPassword(ResetPasswordViewModel m) 
+    public IActionResult ResetPassword(ResetPasswordViewModel m)
     {
         User v = (from c in _context.Users
-                                    where c.Email == m.Email
-                                    select c).FirstOrDefault();
- 
+                  where c.Email == m.Email
+                  select c).FirstOrDefault();
+
         if (v != null)
         {
             v.Password = m.Password;
-         
+
             _context.SaveChanges();
             ViewBag.Message = "Customer record updated.";
         }
@@ -115,12 +149,12 @@ public class AccountController : Controller
         {
             ViewBag.Message = "Customer not found.";
         }
- 
+
         return RedirectToAction("ResetPasswordConfirmation", "Account");
     }
 
 
-    
+
 
     [HttpGet]
     public IActionResult ResetPasswordConfirmation()
