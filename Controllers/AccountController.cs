@@ -14,6 +14,7 @@ using Microsoft.IdentityModel.Tokens;
 using System.Text;
 using System.IdentityModel.Tokens.Jwt;
 using System.Net;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 
 
 
@@ -73,6 +74,7 @@ public class AccountController : Controller
         {
             
             new (ClaimTypes.Email, email),
+           
           
         };
 
@@ -100,6 +102,7 @@ public class AccountController : Controller
         }
 
         User? user = _context.Users.FirstOrDefault(u => u.Email == loginViewModel.Email);
+      
 
         if (user == null)
         {

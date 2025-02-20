@@ -29,6 +29,15 @@ builder.Services.AddScoped<TokenService>();
 builder.Services.AddHttpContextAccessor();
 
 
+
+
+// builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
+//     .AddCookie(options =>
+//     {
+//         options.LoginPath = "/Account/Index"; // Specify your login page here
+//         options.AccessDeniedPath = "/Account/AccessDenied";  // Optional: redirect when user is not authorized
+//     });
+
 //
 builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
     .AddJwtBearer(options =>
@@ -43,6 +52,7 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
             ValidAudience = "localhost",
             IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes("hey1234567890ojykjrkr6uluyk")),
             ClockSkew = TimeSpan.Zero,
+            // RoleClaimType = ClaimTypes.Role
            
         };
         options.Events = new JwtBearerEvents{
@@ -60,9 +70,6 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
 
 
 //
-
-
-builder.Services.ConfigureApplicationCookie(options => options.LoginPath = "/AccountController/Index"); 
 
 
 
