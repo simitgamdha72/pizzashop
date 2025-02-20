@@ -9,16 +9,26 @@ using pizzashop.ViewModels;
 using Utility;
 using pizzashop.Models;
 using Microsoft.AspNetCore.Authorization;
+using System.Security.Claims;
+using Microsoft.IdentityModel.Tokens;
+using System.Text;
+using System.IdentityModel.Tokens.Jwt;
 
 
 
 namespace pizzashop.Controllers;
+
 
 public class AccountController : Controller
 {
 
     private readonly PizzashopContext _context;
     public readonly EmailSender1 es;
+
+    //
+     private readonly IConfiguration _configuration;
+
+     
 
     //  private IHttpContextAccessor Accessor;
     //   private IRequestCookieCollection Cookies
@@ -30,10 +40,11 @@ public class AccountController : Controller
     // }
 
 
-    public AccountController(PizzashopContext context, EmailSender1 ess1)
+    public AccountController(PizzashopContext context, EmailSender1 ess1, IConfiguration configuration)
     {
         _context = context;
         es = ess1;
+        _configuration = configuration;
         // Accessor = _accessor;
     }
 
@@ -45,6 +56,8 @@ public class AccountController : Controller
          if (user == null){
              return View();
          }
+
+         
          
          return RedirectToAction("userlist", "Account");
      }
@@ -71,6 +84,29 @@ public class AccountController : Controller
             TempData["error"] = "Password is Incorrect";
             return View(loginViewModel);
         }
+
+        if (loginViewModel.Email == "admin@gmail.com" && loginViewModel.Password == "123")
+            {
+                var claims = new[]
+                {
+                    new Claim(ClaimTypes.Email, loginViewModel.Email),
+                    new Claim(ClaimTypes.Role, "Admin"),  // Assign a role (Admin or User)
+                };
+
+                var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_configuration["Jwt:SecretKey"]));
+                var creds = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);
+                var token = new JwtSecurityToken(
+                    _configuration["Jwt:Issuer"],
+                    _configuration["Jwt:Audience"],
+                    claims,
+                    expires: DateTime.Now.AddDays(1),
+                    signingCredentials: creds
+                );
+
+                return Ok(new { token = new JwtSecurityTokenHandler().WriteToken(token) });
+            }
+
+       
         // if (loginViewModel.RememberMe)
         // {
         //     CookieOptions option = new CookieOptions
@@ -179,14 +215,21 @@ public class AccountController : Controller
 
 
 
+// [Authorize]
     public IActionResult userlist()
     {
         return View();
     }
+
+    
+// [Authorize]
     public IActionResult menu()
     {
         return View();
     }
+
+    
+// [Authorize]
 
      public IActionResult UserProfile()
     {
