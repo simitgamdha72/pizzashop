@@ -13,6 +13,8 @@ using System.Security.Claims;
 using Microsoft.IdentityModel.Tokens;
 using System.Text;
 using System.IdentityModel.Tokens.Jwt;
+using System.Net;
+
 
 
 
@@ -22,35 +24,36 @@ namespace pizzashop.Controllers;
 public class AccountController : Controller
 {
 
+
     private readonly PizzashopContext _context;
     public readonly EmailSender1 es;
-
     //
      private readonly IConfiguration _configuration;
+      private readonly TokenService _tokenService;
 
-     
-
-    //  private IHttpContextAccessor Accessor;
-    //   private IRequestCookieCollection Cookies
-    // {
-    //    get
-    //    {
-    //         return Accessor.HttpContext.Request.Cookies;
-    //    }
-    // }
+    
 
 
-    public AccountController(PizzashopContext context, EmailSender1 ess1, IConfiguration configuration)
+    public AccountController(PizzashopContext context, EmailSender1 ess1, IConfiguration configuration, TokenService tokenService)
     {
+
+       
         _context = context;
         es = ess1;
         _configuration = configuration;
-        // Accessor = _accessor;
+        _tokenService = tokenService;
+       
     }
 
     [HttpGet]
+    
     public IActionResult Index()
     {
+        
+
+         
+           
+   
         var cookie = Request.Cookies["cookie"];
          User? user = _context.Users.FirstOrDefault(u => u.Email == cookie);
          if (user == null){
@@ -60,7 +63,32 @@ public class AccountController : Controller
          
          
          return RedirectToAction("userlist", "Account");
+       
      }
+
+
+     private string GenerateToken(string email)
+    {
+        var claims = new List<Claim>
+        {
+            
+            new (ClaimTypes.Email, email),
+          
+        };
+
+        var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes("hey1234567890ojykjrkr6uluyk"));
+        var creds = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);
+
+        var token = new JwtSecurityToken(
+            issuer: _configuration["JwtConfig:Issuer"],
+            audience: _configuration["JwtConfig:Audience"],
+            claims: claims,
+            expires: DateTime.UtcNow.AddDays(30),
+            signingCredentials: creds
+        );
+
+        return new JwtSecurityTokenHandler().WriteToken(token);
+    }
 
     [HttpPost]
 
@@ -85,43 +113,16 @@ public class AccountController : Controller
             return View(loginViewModel);
         }
 
-        if (loginViewModel.Email == "admin@gmail.com" && loginViewModel.Password == "123")
-            {
-                var claims = new[]
+       
+        var tokenString = GenerateToken(user.Email);
+        var cookieOptions = new CookieOptions
                 {
-                    new Claim(ClaimTypes.Email, loginViewModel.Email),
-                    new Claim(ClaimTypes.Role, "Admin"),  // Assign a role (Admin or User)
+                    Secure = true,
+                    HttpOnly = true,
+                    SameSite = SameSiteMode.Strict
                 };
 
-                var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_configuration["Jwt:SecretKey"]));
-                var creds = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);
-                var token = new JwtSecurityToken(
-                    _configuration["Jwt:Issuer"],
-                    _configuration["Jwt:Audience"],
-                    claims,
-                    expires: DateTime.Now.AddDays(1),
-                    signingCredentials: creds
-                );
-
-                return Ok(new { token = new JwtSecurityTokenHandler().WriteToken(token) });
-            }
-
-       
-        // if (loginViewModel.RememberMe)
-        // {
-        //     CookieOptions option = new CookieOptions
-        //     {
-        //         Expires = DateTime.Now.AddDays(30),
-        //     };
-        //     Response.Cookies.Append("Email", user.Email, option);
-        //     Response.Cookies.Append("Password", user.Password, option);
-        // }
-        // else
-        // {
-        //     Response.Cookies.Delete("Email");
-        //     Response.Cookies.Delete("Password");
-        // }
-
+        Response.Cookies.Append("authtoken",tokenString,cookieOptions);
         Response.Cookies.Append("cookie",user.Email,new CookieOptions{
             Expires = loginViewModel.RememberMe ? DateTime.UtcNow.AddDays(30) : DateTime.UtcNow.AddHours(1)
         });
@@ -215,21 +216,24 @@ public class AccountController : Controller
 
 
 
-// [Authorize]
+    [Authorize]
     public IActionResult userlist()
     {
+     
+       
         return View();
+       
     }
 
     
-// [Authorize]
+[Authorize]
     public IActionResult menu()
     {
         return View();
     }
 
     
-// [Authorize]
+[Authorize]
 
      public IActionResult UserProfile()
     {

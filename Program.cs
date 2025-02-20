@@ -5,6 +5,8 @@ using Utility;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
 using System.Text;
+using Microsoft.AspNetCore.Authentication.Cookies;
+using System.Security.Claims;
 
 
 
@@ -18,7 +20,8 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddControllersWithViews();
 builder.Services.AddDbContext<PizzashopContext>();
 builder.Services.AddScoped<EmailSender1>();
-// builder.Services.ConfigureApplicationCookie(options => options.LoginPath = "/AccountController/Index"); 
+// Add TokenService to the DI container
+builder.Services.AddScoped<TokenService>();
 
 // builder.Services.AddAuthentication();
 
@@ -30,24 +33,37 @@ builder.Services.AddHttpContextAccessor();
 builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
     .AddJwtBearer(options =>
     {
-        options.TokenValidationParameters = new TokenValidationParameters
+      options.TokenValidationParameters = new TokenValidationParameters
         {
             ValidateIssuer = true,
             ValidateAudience = true,
+            ValidateIssuerSigningKey = true,
             ValidateLifetime = true,
-            ValidIssuer = "your_issuer", // Set your valid issuer
-            ValidAudience = "your_audience", // Set your valid audience
-            IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes("your_secret_key")) // Use your secret key
+            ValidIssuer = "localhost",
+            ValidAudience = "localhost",
+            IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes("hey1234567890ojykjrkr6uluyk")),
+            ClockSkew = TimeSpan.Zero,
+           
         };
-    });
+        options.Events = new JwtBearerEvents{
+            OnMessageReceived = context => {
+                var token = context.Request.Cookies["authtoken"];
+                if (!string.IsNullOrEmpty(token))
+                {
+                    context.Token = token;
+                }
+                return Task.CompletedTask;
+            }
+        };
+    }
+    );
 
-builder.Services.AddAuthorization(options =>
-{
-    options.AddPolicy("Admin", policy => policy.RequireRole("Admin"));
-    options.AddPolicy("User", policy => policy.RequireRole("User"));
-});
 
 //
+
+
+builder.Services.ConfigureApplicationCookie(options => options.LoginPath = "/AccountController/Index"); 
+
 
 
 var app = builder.Build();
