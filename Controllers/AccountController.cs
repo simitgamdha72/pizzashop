@@ -118,6 +118,7 @@ public class AccountController : Controller
         }
 
 
+
         var tokenString = GenerateToken(user.Email);
         var cookieOptions = new CookieOptions
         {
@@ -224,7 +225,10 @@ public class AccountController : Controller
 
 
 
-        //  User? user = _context.Users.FirstOrDefault(u => u.Email == m.Email);
+
+
+
+
 
 
         string subject = "reset password";
@@ -234,9 +238,8 @@ public class AccountController : Controller
         // Console.WriteLine(m.Email);
         await es.SendEmailAsync(m.Email, subject, object2);
 
-        //   Response.Cookies.Append("cookie2",user.Email,new CookieOptions{
-        //     Expires = DateTime.UtcNow.AddDays(30)
-        // });
+        Response.Cookies.Append("cookie2", m.Email);
+
 
         return RedirectToAction("ForgotPasswordConfirmation", "Account");
     }
@@ -256,13 +259,18 @@ public class AccountController : Controller
     [HttpPost]
     public IActionResult ResetPassword(ResetPasswordViewModel m)
     {
-        User v = (from c in _context.Users
-                  where c.Email == m.Email
-                  select c).FirstOrDefault();
 
-        if (v != null)
+
+        var cookie = Request.Cookies["cookie2"];
+        User? user = _context.Users.FirstOrDefault(u => u.Email == cookie);
+
+        // User v = (from c in _context.Users
+        //           where c.Email == m.Email
+        //           select c).FirstOrDefault();
+
+        if (user != null)
         {
-            v.Password = m.Password;
+            user.Password = m.Password;
 
             _context.SaveChanges();
             ViewBag.Message = "Customer record updated.";
@@ -314,17 +322,36 @@ public class AccountController : Controller
     {
         // 1. Delete the authentication token cookie (if you're using a token like JWT)
         Response.Cookies.Delete("AuthToken");
-         Response.Cookies.Delete("cookie");
+        Response.Cookies.Delete("cookie");
         // 2. Sign out the user using cookie authentication (ASP.NET Core Identity or cookie authentication)
         HttpContext.SignOutAsync(CookieAuthenticationDefaults.AuthenticationScheme);
 
         // 3. Redirect the user to the login page after logout
         return RedirectToAction("Index", "Account");
     }
-     [Authorize]
+    [HttpGet]
+    [Authorize]
     public IActionResult changepassword()
     {
         return View();
+    }
+    [HttpPost]
+    public IActionResult changepassword(ChangePasswordViewModel model){
+         var cookie = Request.Cookies["cookie"];
+        User? user = _context.Users.FirstOrDefault(u => u.Email == cookie);
+
+        if(user.Password == model.Password){
+            user.Password = model.newPassword;
+             _context.Users.Update(user);
+        _context.SaveChanges();
+         Response.Cookies.Delete("AuthToken");
+        Response.Cookies.Delete("cookie");
+        return RedirectToAction("Index", "Account");
+
+        }
+      else{
+        return RedirectToAction("changepassword", "Account");
+      }
     }
 
 

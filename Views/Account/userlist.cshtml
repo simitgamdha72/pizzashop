@@ -445,7 +445,7 @@
 
 
 
-    <!-- delete confirm -->
+@* Logout model *@
 
     <div class="modal fade" style="margin-top: 13%;" id="delete" tabindex="-1" aria-labelledby="exampleModalLabel"
         aria-hidden="true">
@@ -466,11 +466,13 @@
                         </svg>
                     </div>
                     <div>
-                        <p>are you sure you want to delete Category?</p>
+                        <p>are you sure you want to Logout</p>
                     </div>
                     <div class="modal-footer">
-
+                        <form asp-action="Logout" method="post">
+                                    @Html.AntiForgeryToken()
                         <button type="button" class="btn btn-primary">Yes</button>
+                        </form>
                         <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">No</button>
                     </div>
                 </div>
@@ -478,6 +480,8 @@
             </div>
         </div>
     </div>
+
+
 
 
 
