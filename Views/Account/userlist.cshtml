@@ -317,7 +317,7 @@
                            <div class="pagination">
     @for (var i = 1; i <= Model.TotalPages; i++)
     {
-        <a href="@Url.Action("UserList", new { page = i })" class="btn btn-secondary @(i == Model.CurrentPage ? "active" : "")">
+        <a href="@Url.Action("UserList", new { page = i })" class="btn @(i == Model.CurrentPage ? "active" : "")">
             @i
         </a>
     }
