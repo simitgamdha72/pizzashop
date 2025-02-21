@@ -16,6 +16,7 @@ using System.IdentityModel.Tokens.Jwt;
 using System.Net;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authentication.Cookies;
+using Microsoft.EntityFrameworkCore;
 
 
 
@@ -28,6 +29,8 @@ public class AccountController : Controller
 
 
     private readonly PizzashopContext _context;
+
+       private const int PageSize = 10;
     public readonly EmailSender1 es;
     //
     private readonly IConfiguration _configuration;
@@ -300,14 +303,14 @@ public class AccountController : Controller
 
 
 
-    [Authorize]
-    public IActionResult userlist()
-    {
+    // [Authorize]
+    // public IActionResult userlist()
+    // {
 
 
-        return View();
+    //     return View();
 
-    }
+    // }
 
 
     [Authorize]
@@ -352,6 +355,28 @@ public class AccountController : Controller
       else{
         return RedirectToAction("changepassword", "Account");
       }
+    }
+
+
+
+
+    public async Task<IActionResult> userlist(int page = 1)
+    {
+        var totalUsers = await _context.Users.CountAsync();
+        var users = await _context.Users
+            .Skip((page - 1) * PageSize) // Skip users for the current page
+            .Take(PageSize) // Get the users for the current page
+            .ToListAsync();
+
+        var model = new UserListViewModel
+        {
+            Users = users,
+            
+            CurrentPage = page,
+            TotalPages = (int)Math.Ceiling((double)totalUsers / PageSize)
+        };
+
+        return View(model);
     }
 
 
