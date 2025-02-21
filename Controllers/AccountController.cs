@@ -321,6 +321,11 @@ public class AccountController : Controller
         // 3. Redirect the user to the login page after logout
         return RedirectToAction("Index", "Account");
     }
+     [Authorize]
+    public IActionResult changepassword()
+    {
+        return View();
+    }
 
 
 }
