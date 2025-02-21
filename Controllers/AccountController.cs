@@ -15,6 +15,7 @@ using System.Text;
 using System.IdentityModel.Tokens.Jwt;
 using System.Net;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Authentication.Cookies;
 
 
 
@@ -29,53 +30,53 @@ public class AccountController : Controller
     private readonly PizzashopContext _context;
     public readonly EmailSender1 es;
     //
-     private readonly IConfiguration _configuration;
-      private readonly TokenService _tokenService;
-
-    
+    private readonly IConfiguration _configuration;
 
 
-    public AccountController(PizzashopContext context, EmailSender1 ess1, IConfiguration configuration, TokenService tokenService)
+
+
+
+    public AccountController(PizzashopContext context, EmailSender1 ess1, IConfiguration configuration)
     {
 
-       
+
         _context = context;
         es = ess1;
         _configuration = configuration;
-        _tokenService = tokenService;
-       
+
     }
 
     [HttpGet]
-    
+
     public IActionResult Index()
     {
-        
 
-         
-           
-   
+
+
+
+
         var cookie = Request.Cookies["cookie"];
-         User? user = _context.Users.FirstOrDefault(u => u.Email == cookie);
-         if (user == null){
-             return View();
-         }
-
-         
-         
-         return RedirectToAction("userlist", "Account");
-       
-     }
+        User? user = _context.Users.FirstOrDefault(u => u.Email == cookie);
+        if (user == null)
+        {
+            return View();
+        }
 
 
-     private string GenerateToken(string email)
+
+        return RedirectToAction("userlist", "Account");
+
+    }
+
+
+    private string GenerateToken(string email)
     {
         var claims = new List<Claim>
         {
-            
+
             new (ClaimTypes.Email, email),
-           
-          
+
+
         };
 
         var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes("hey1234567890ojykjrkr6uluyk"));
@@ -102,7 +103,7 @@ public class AccountController : Controller
         }
 
         User? user = _context.Users.FirstOrDefault(u => u.Email == loginViewModel.Email);
-      
+
 
         if (user == null)
         {
@@ -116,32 +117,102 @@ public class AccountController : Controller
             return View(loginViewModel);
         }
 
-       
+
         var tokenString = GenerateToken(user.Email);
         var cookieOptions = new CookieOptions
-                {
-                    Secure = true,
-                    HttpOnly = true,
-                    SameSite = SameSiteMode.Strict
-                };
+        {
+            Secure = true,
+            HttpOnly = true,
+            SameSite = SameSiteMode.Strict
+        };
 
-        Response.Cookies.Append("authtoken",tokenString,cookieOptions);
-        Response.Cookies.Append("cookie",user.Email,new CookieOptions{
+
+        Response.Cookies.Append("AuthToken", tokenString, new CookieOptions
+        {
+            Expires = DateTimeOffset.UtcNow.AddDays(7),
+            HttpOnly = true,
+            Secure = true,
+            SameSite = SameSiteMode.Strict
+        });
+
+        Response.Cookies.Append("cookie", user.Email, new CookieOptions
+        {
             Expires = loginViewModel.RememberMe ? DateTime.UtcNow.AddDays(30) : DateTime.UtcNow.AddHours(1)
         });
         return RedirectToAction("userlist", "Account");
-    
 
-       
+
+
     }
 
+    [HttpGet]
+    public async Task<IActionResult> UserProfile()
+    {
+        var cookie = Request.Cookies["cookie"];
+        User? user = _context.Users.FirstOrDefault(u => u.Email == cookie);
+        if (user == null)
+        {
+            return NotFound();
+        }
+        var viewModel = new UserProfileViewModel
+        {
+
+
+
+            Email = user.Email,
+            FirstName = user.FirstName,
+            LastName = user.LastName,
+            UserName = user.UserName,
+            Phone = user.Phone,
+            Country = user.Country,
+            State = user.State,
+            City = user.City,
+            Address = user.Address,
+            Zipcode = user.Zipcode,
+
+
+
+        };
+
+        return View(viewModel);
+
+    }
+
+    [HttpPost]
+    public IActionResult UserProfile(UserProfileViewModel model)
+    {
+        var cookie = Request.Cookies["cookie"];
+        User? user = _context.Users.FirstOrDefault(u => u.Email == cookie);
+
+
+
+        if (user == null)
+        {
+            return NotFound();
+        }
+
+        // user.Email = model.Email;
+        user.FirstName = model.FirstName;
+        user.LastName = model.LastName;
+        user.UserName = model.UserName;
+        user.Phone = model.Phone;
+        user.Address = model.Address;
+        user.Zipcode = model.Zipcode;
+
+        _context.Users.Update(user);
+        _context.SaveChanges();
+
+        return RedirectToAction("UserProfile", "Account");
+
+
+    }
 
 
     [HttpGet]
     public IActionResult forgotpassword()
     {
 
-    
+
         return View();
     }
 
@@ -153,7 +224,7 @@ public class AccountController : Controller
 
 
 
-//  User? user = _context.Users.FirstOrDefault(u => u.Email == m.Email);
+        //  User? user = _context.Users.FirstOrDefault(u => u.Email == m.Email);
 
 
         string subject = "reset password";
@@ -219,28 +290,38 @@ public class AccountController : Controller
 
 
 
+
+
     [Authorize]
     public IActionResult userlist()
     {
-     
-       
+
+
         return View();
-       
+
     }
 
-    
-[Authorize]
+
+    [Authorize]
     public IActionResult menu()
     {
         return View();
     }
 
-    
-[Authorize]
-
-     public IActionResult UserProfile()
+    [HttpPost]
+    [ValidateAntiForgeryToken]
+    public IActionResult Logout()
     {
-        return View();
+        // 1. Delete the authentication token cookie (if you're using a token like JWT)
+        Response.Cookies.Delete("AuthToken");
+         Response.Cookies.Delete("cookie");
+        // 2. Sign out the user using cookie authentication (ASP.NET Core Identity or cookie authentication)
+        HttpContext.SignOutAsync(CookieAuthenticationDefaults.AuthenticationScheme);
+
+        // 3. Redirect the user to the login page after logout
+        return RedirectToAction("Index", "Account");
     }
+
+
 }
 

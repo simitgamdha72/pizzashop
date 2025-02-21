@@ -1,3 +1,4 @@
+@model pizzashop.ViewModels.UserProfileViewModel
 <!doctype html>
 <html lang="en">
 
@@ -220,29 +221,29 @@
                 <div class="">admin@gmail.com</div>
             </div>
         </div>
-        <form action="" class="p-2 p-sm-3 p-md-4">
+        <form asp-action="UserProfile" method="post" class="p-2 p-sm-3 p-md-4">
             <div class="row row-cols-1 row-cols-md-2 g-3">
                 <div class="col">
                     <div class="form-floating">
-                        <input type="text" class="form-control" id="fname" placeholder="First Name">
+                        <input type="text" asp-for="FirstName" value="@Model.FirstName" class="form-control" id="fname"  placeholder="First Name">
                         <label for="fname">First Name</label>
                     </div>
                 </div>
                 <div class="col">
                     <div class="form-floating">
-                        <input type="text" class="form-control" id="lname" placeholder="Last Name">
+                        <input type="text" asp-for="LastName" value="@Model.LastName" class="form-control" id="lname" placeholder="Last Name">
                         <label for="lname">Last Name</label>
                     </div>
                 </div>
                 <div class="col">
                     <div class="form-floating">
-                        <input type="text" class="form-control" id="uname" placeholder="User Name">
+                        <input type="text" asp-for="UserName" value="@Model.UserName" class="form-control" id="uname" placeholder="User Name">
                         <label for="uname">User Name</label>
                     </div>
                 </div>
                 <div class="col">
                     <div class="form-floating">
-                        <input type="text" class="form-control" id="phone" placeholder="Phone">
+                        <input type="text" asp-for="Phone" value="@Model.Phone" class="form-control" id="phone" placeholder="Phone">
                         <label for="phone">Phone</label>
                     </div>
                 </div>
@@ -283,7 +284,7 @@
                 </div>
                 <div class="col d-block d-lg-none">
                     <div class="form-floating">
-                        <input type="text" class="form-control" id="zipcode" placeholder="Zipcode">
+                        <input type="text" asp-for="Zipcode" value="@Model.Zipcode" class="form-control" id="zipcode" placeholder="Zipcode">
                         <label for="zipcode">Zipcode</label>
                     </div>
                 </div>
@@ -291,20 +292,20 @@
             <div class="row gy-3 gx-4 mt-0">
                 <div class="col-12 col-lg-8">
                     <div class="form-floating">
-                        <input type="text" class="form-control" id="address" placeholder="Address">
+                        <input type="text" asp-for="Address" value="@Model.Address" class="form-control" id="address" placeholder="Address">
                         <label for="address">Address</label>
                     </div>
                 </div>
                 <div class="col d-none d-lg-block">
                     <div class="form-floating">
-                        <input type="text" class="form-control" id="zipcode" placeholder="Zipcode">
+                        <input type="text" asp-for="Zipcode" value="@Model.Zipcode" class="form-control" id="zipcode" placeholder="Zipcode">
                         <label for="zipcode">Zipcode</label>
                     </div>
                 </div>
             </div>
             <div class="d-flex justify-content-end align-items-center mt-4">
-                <button class="customBtnPrimary me-2">Update</button>
-                <button class="customBtnSecondary">cancel</button>
+                <button type="submit" class="customBtnPrimary me-2">Update</button>
+                <button type="reset" class="customBtnSecondary">cancel</button>
             </div>
         </form>
     </div>

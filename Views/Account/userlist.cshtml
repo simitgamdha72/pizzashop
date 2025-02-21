@@ -43,7 +43,7 @@
             <div>
                 <div class="canvas-logo-div"
                     style="justify-content: center;align-items: center;display: flex ;margin-bottom: 30px;"><img
-                        src="images/logos/pizzashop_logo.png" alt="" style="height: 50px;">&nbsp;&nbsp;<span
+                        src="~/images/logos/pizzashop_logo.png" alt="" style="height: 50px;">&nbsp;&nbsp;<span
                         style="font-weight: 700;font-size: 15px;color: #006cac;">PIZZASHOP</span></div>
 
 
@@ -178,15 +178,30 @@
                             <path fill-rule="evenodd"
                                 d="M2.5 12a.5.5 0 0 1 .5-.5h10a.5.5 0 0 1 0 1H3a.5.5 0 0 1-.5-.5m0-4a.5.5 0 0 1 .5-.5h10a.5.5 0 0 1 0 1H3a.5.5 0 0 1-.5-.5m0-4a.5.5 0 0 1 .5-.5h10a.5.5 0 0 1 0 1H3a.5.5 0 0 1-.5-.5" />
                         </svg></button>
-                    <div class="btn nav-profile">
-                        <img src="images/icons/customer.svg" alt="">
+
+                    <div class="navbar-nav nav-pills pe-md-4 flex align-items-center">
+                        <div class="nav-item dropdown">
+                            <a class="d-block" data-bs-toggle="dropdown" aria-expanded="false" aria-haspopup="true">
+                                <img src="~/images/Default_pfp.svg.png" height="45px" width="45px">
+                            </a>
+                            <div class="dropdown-menu dropdown-menu-end mt-2">
+                                <a href="@Url.Action("UserProfile", "Account")" class="dropdown-item" type="button">My
+                                    Profile</a>
+                                @* <a href="index.html" class="dropdown-item" type="button">Sign Out</a> *@
+                                <form asp-action="Logout" method="post">
+                                    @Html.AntiForgeryToken()
+                                    <button type="submit" class="btn btn-danger dropdown-item">Logout</button>
+                                </form>
+                            </div>
+                        </div>
                     </div>
+
                 </div>
 
             </nav>
 
             <!-- userlist -->
-            
+
             <div style="width: 100%;background-color: #fafafa;margin-top: 40px;">
                 <div class="userlist-searchbar"
                     style="display: flex; width: 100%;height: 7%;justify-content: space-between;padding-top: 10px;align-items: center;">
