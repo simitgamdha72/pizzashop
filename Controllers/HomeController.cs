@@ -1,6 +1,6 @@
 using System.Diagnostics;
 using Microsoft.AspNetCore.Mvc;
-using pizzashop.Models;
+using pizzashop.Models.Models;
 
 namespace pizzashop.Controllers;
 

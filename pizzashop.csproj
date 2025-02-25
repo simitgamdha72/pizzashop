@@ -1,17 +1,14 @@
 <Project Sdk="Microsoft.NET.Sdk.Web">
-
   <PropertyGroup>
     <TargetFramework>net7.0</TargetFramework>
     <Nullable>enable</Nullable>
     <ImplicitUsings>enable</ImplicitUsings>
+    <!-- <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
+    <GenerateTargetFrameworkAttribute>false</GenerateTargetFrameworkAttribute> -->
   </PropertyGroup>
-
   <ItemGroup>
-   
     <PackageReference Include="MailKit" Version="4.10.0" />
-   
     <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="6.0.1" />
-   
     <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="7.0.20">
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
       <PrivateAssets>all</PrivateAssets>
@@ -25,5 +22,10 @@
     <PackageReference Include="Npgsql.EntityFrameworkCore.PostgreSQL.Design" Version="1.0.2" />
     <PackageReference Include="SendGrid" Version="9.29.3" />
   </ItemGroup>
-
+  <ItemGroup>
+    <ProjectReference Include="..\pizzashop.Service\pizzashop.Service.csproj" />
+  </ItemGroup>
+  <!-- <ItemGroup>
+    <ProjectReference Include="pizzashop.Service\pizzashop.Service.csproj" />
+  </ItemGroup> -->
 </Project>

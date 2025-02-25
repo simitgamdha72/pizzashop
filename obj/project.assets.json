@@ -1683,6 +1683,62 @@
             "related": ".xml"
           }
         }
+      },
+      "pizzashop.Models/1.0.0": {
+        "type": "project",
+        "framework": ".NETCoreApp,Version=v7.0",
+        "dependencies": {
+          "MailKit": "4.10.0",
+          "Microsoft.AspNetCore.Authentication.JwtBearer": "6.0.1",
+          "MimeKit": "4.10.0",
+          "Npgsql.EntityFrameworkCore.PostgreSQL": "7.0.18",
+          "Npgsql.EntityFrameworkCore.PostgreSQL.Design": "1.0.2",
+          "SendGrid": "9.29.3"
+        },
+        "compile": {
+          "bin/placeholder/pizzashop.Models.dll": {}
+        },
+        "runtime": {
+          "bin/placeholder/pizzashop.Models.dll": {}
+        }
+      },
+      "pizzashop.Repository/1.0.0": {
+        "type": "project",
+        "framework": ".NETCoreApp,Version=v7.0",
+        "dependencies": {
+          "MailKit": "4.10.0",
+          "Microsoft.AspNetCore.Authentication.JwtBearer": "6.0.1",
+          "MimeKit": "4.10.0",
+          "Npgsql.EntityFrameworkCore.PostgreSQL": "7.0.18",
+          "Npgsql.EntityFrameworkCore.PostgreSQL.Design": "1.0.2",
+          "SendGrid": "9.29.3",
+          "pizzashop.Models": "1.0.0"
+        },
+        "compile": {
+          "bin/placeholder/pizzashop.Repository.dll": {}
+        },
+        "runtime": {
+          "bin/placeholder/pizzashop.Repository.dll": {}
+        }
+      },
+      "pizzashop.Service/1.0.0": {
+        "type": "project",
+        "framework": ".NETCoreApp,Version=v7.0",
+        "dependencies": {
+          "MailKit": "4.10.0",
+          "Microsoft.AspNetCore.Authentication.JwtBearer": "6.0.1",
+          "MimeKit": "4.10.0",
+          "Npgsql.EntityFrameworkCore.PostgreSQL": "7.0.18",
+          "Npgsql.EntityFrameworkCore.PostgreSQL.Design": "1.0.2",
+          "SendGrid": "9.29.3",
+          "pizzashop.Repository": "1.0.0"
+        },
+        "compile": {
+          "bin/placeholder/pizzashop.Service.dll": {}
+        },
+        "runtime": {
+          "bin/placeholder/pizzashop.Service.dll": {}
+        }
       }
     }
   },
@@ -5433,6 +5489,21 @@
         "system.threading.tasks.4.0.11.nupkg.sha512",
         "system.threading.tasks.nuspec"
       ]
+    },
+    "pizzashop.Models/1.0.0": {
+      "type": "project",
+      "path": "../pizzashop.Models/pizzashop.Models.csproj",
+      "msbuildProject": "../pizzashop.Models/pizzashop.Models.csproj"
+    },
+    "pizzashop.Repository/1.0.0": {
+      "type": "project",
+      "path": "../pizzashop.Repository/pizzashop.Repository.csproj",
+      "msbuildProject": "../pizzashop.Repository/pizzashop.Repository.csproj"
+    },
+    "pizzashop.Service/1.0.0": {
+      "type": "project",
+      "path": "../pizzashop.Service/pizzashop.Service.csproj",
+      "msbuildProject": "../pizzashop.Service/pizzashop.Service.csproj"
     }
   },
   "projectFileDependencyGroups": {
@@ -5444,7 +5515,8 @@
       "MimeKit >= 4.10.0",
       "Npgsql.EntityFrameworkCore.PostgreSQL >= 7.0.18",
       "Npgsql.EntityFrameworkCore.PostgreSQL.Design >= 1.0.2",
-      "SendGrid >= 9.29.3"
+      "SendGrid >= 9.29.3",
+      "pizzashop.Service >= 1.0.0"
     ]
   },
   "packageFolders": {
@@ -5471,18 +5543,17 @@
       "frameworks": {
         "net7.0": {
           "targetAlias": "net7.0",
-          "projectReferences": {}
+          "projectReferences": {
+            "D:\\PIZZASHOP\\pizzashop.Service\\pizzashop.Service.csproj": {
+              "projectPath": "D:\\PIZZASHOP\\pizzashop.Service\\pizzashop.Service.csproj"
+            }
+          }
         }
       },
       "warningProperties": {
         "warnAsError": [
           "NU1605"
         ]
-      },
-      "restoreAuditProperties": {
-        "enableAudit": "true",
-        "auditLevel": "low",
-        "auditMode": "direct"
       }
     },
     "frameworks": {
@@ -5545,7 +5616,7 @@
             "privateAssets": "all"
           }
         },
-        "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\8.0.303\\RuntimeIdentifierGraph.json"
+        "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\7.0.410\\RuntimeIdentifierGraph.json"
       }
     }
   }
