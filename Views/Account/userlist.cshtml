@@ -8,11 +8,11 @@
                     <h1 style="margin-left: 3%;color: #006cac;">Users</h1>
                     <div class="search-add" style="padding-right: 3%;display: flex;">
                         <form style="position: relative;margin-right: 10px;">
-                            <input type="search" placeholder="  Search" aria-label="Search" class="form-control" style="width: 200px;height: 52px;margin-right: 2px; border: 2px solid #eee;
+                            <input type="search"  placeholder="  Search" aria-label="Search" class="form-control" style="width: 200px;height: 52px;margin-right: 2px; border: 2px solid #eee;
                                 border-radius: 4px;">
                             <i class="bi bi-search" style="position: absolute;right: 10px;top: 15px;"></i>
                         </form>
-                        <button class="adduser-btn">+Add
+                        <button class="adduser-btn" onclick="window.location.href='@Url.Action("addnewuser","Account")'">+Add
                             User</button>
 
                     </div>
@@ -89,8 +89,10 @@
                                            
                                            <form action="">
                                                  <div style="display: flex">
+                                                    @* <a href="@Url.Action("edituser", "Account", new { id = user.UserId })" class="nav-item nav-link" style="margin-left: 15px;margin-right: 10px;"><i class="bi bi-pen"></i></a> *@
+                                                  
                                                 <button class="btn"><i class="bi bi-pen"></i></button>
-                                               
+                                                @* <a href="@Url.Action("Delete", "Account", new { id = user.UserId })" class="nav-item nav-link"><i class="bi bi-trash"></i></a> *@
                                                     <button class="btn"><i class="bi bi-trash"></i></button>
                                                   
                                                 

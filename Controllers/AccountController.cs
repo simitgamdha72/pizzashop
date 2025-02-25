@@ -150,6 +150,33 @@ public class AccountController : Controller
     }
 
     [HttpGet]
+    public IActionResult addnewuser()
+    {
+      
+      return View();
+    }
+
+    [HttpPost]
+    public async Task<IActionResult> addnewuser([Bind("FirstName,LastName,UserName,Email,Password,Zipcode,Address,Phone")]User model){
+        if (!ModelState.IsValid)
+        {
+            return View(model);
+        }
+
+        
+
+    
+
+        _context.Add(model);
+        await _context.SaveChangesAsync();
+
+        return RedirectToAction("userlist", "Account");
+
+
+    }
+
+
+    [HttpGet]
     public async Task<IActionResult> UserProfile()
     {
         var cookie = Request.Cookies["cookie"];
@@ -377,6 +404,102 @@ public class AccountController : Controller
         };
 
         return View(model);
+    }
+
+
+//  public async Task<IActionResult> Delete(int? id)
+//     {
+//         if (id == null)
+//         {
+//             return NotFound();
+//         }
+
+//         var user = await _context.Users
+//             .FirstOrDefaultAsync(m => m.UserId == id);
+//         if (user == null)
+//         {
+//             return NotFound();
+//         }
+
+//         return View(user);  // This will pass the user to the Delete view
+//     }
+
+//    [HttpPost, ActionName("Delete")]
+//     [ValidateAntiForgeryToken]
+//     public async Task<IActionResult> DeleteConfirmed(int UserId)
+//     {   
+//         Console.WriteLine("123");
+//         Console.WriteLine(UserId);
+//         var user = await _context.Users.FindAsync(UserId);
+//         if (user != null)
+//         {
+//             _context.Users.Remove(user);
+//             await _context.SaveChangesAsync();
+//         }
+        
+//         return RedirectToAction(nameof(Index));  // Redirect to the Users List (Index page)
+//     }
+  
+  [HttpGet]
+   public IActionResult edituser(int? id)
+    {
+         User? user = _context.Users.FirstOrDefault(u => u.UserId == id);
+        if (user == null)
+        {
+            return NotFound();
+        }
+        var viewModel = new User
+        {
+
+
+
+            Email = user.Email,
+            FirstName = user.FirstName,
+            LastName = user.LastName,
+            UserName = user.UserName,
+            Phone = user.Phone,
+            Country = user.Country,
+            State = user.State,
+            City = user.City,
+            Address = user.Address,
+            Zipcode = user.Zipcode,
+
+
+
+        };
+        Console.WriteLine(id);
+        return View(viewModel);
+    }
+
+        [HttpPost]
+    public IActionResult edituser(User u)
+    {
+     
+        User? user = _context.Users.FirstOrDefault(u => u.UserId == u.UserId);
+        Console.WriteLine(u.Email);
+
+
+        if (user == null)
+        {
+            return NotFound();
+        }
+
+       
+            user.Email = u.Email;
+            user.FirstName = u.FirstName;
+           user.LastName = u.LastName;
+            user.UserName = u.UserName;
+            user.Phone = u.Phone;
+           user.Password = u.Password;
+         user.Address = u.Address;
+           user.Zipcode = u.Zipcode;
+
+        _context.Users.Update(user);
+        _context.SaveChanges();
+
+        return RedirectToAction("userlist", "Account");
+
+
     }
 
 
