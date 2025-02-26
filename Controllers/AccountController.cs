@@ -17,6 +17,7 @@ using System.Net;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.EntityFrameworkCore;
+using MailKit;
 
 
 
@@ -179,12 +180,21 @@ public class AccountController : Controller
             return View(model);
         }
 
-        
-
-    
-
         _context.Add(model);
         await _context.SaveChangesAsync();
+
+         string subject = "Login Details";
+        Extrathingsforadduser object1 = new();
+        string object2 = object1.getEmail();
+        //  object2.Replace("{email}", model.Email);
+        string emailbody = object2.Replace("{password}", model.Password);
+        emailbody = emailbody.Replace("{email}",model.Email);
+        // string object1 ="";
+        // Console.WriteLine(m.Email);
+        await es.SendEmailAsync(model.Email, subject, emailbody);
+
+      
+
 
         return RedirectToAction("userlist", "Account");
 
@@ -267,17 +277,6 @@ public class AccountController : Controller
     [HttpPost]
     public async Task<IActionResult> SendResetLink(ForgotPasswordViewModel m)
     {
-
-
-
-
-
-
-
-
-
-
-
         string subject = "reset password";
         Extrathings object1 = new();
         string object2 = object1.getEmail();

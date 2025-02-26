@@ -12,6 +12,7 @@
                                 border-radius: 4px;">
                             <i class="bi bi-search" style="position: absolute;right: 10px;top: 15px;"></i>
                         </form>
+                        
                         <button class="adduser-btn" onclick="window.location.href='@Url.Action("addnewuser","Account")'">+Add
                             User</button>
 
@@ -89,9 +90,9 @@
                                            
                                            <form action="">
                                                  <div style="display: flex">
-                                                    @* <a href="@Url.Action("edituser", "Account", new { id = user.UserId })" class="nav-item nav-link" style="margin-left: 15px;margin-right: 10px;"><i class="bi bi-pen"></i></a> *@
+                                                    <a href="@Url.Action("edituser", "Account", new { id = user.UserId })" class="nav-item nav-link" style="margin-left: 15px;margin-right: 10px;"><i class="bi bi-pen"></i></a>
                                                   
-                                                <button class="btn"><i class="bi bi-pen"></i></button>
+                                                @* <button class="btn"><i class="bi bi-pen"></i></button> *@
                                                 @* <a href="@Url.Action("Delete", "Account", new { id = user.UserId })" class="nav-item nav-link"><i class="bi bi-trash"></i></a> *@
                                                     <button class="btn"><i class="bi bi-trash"></i></button>
                                                   

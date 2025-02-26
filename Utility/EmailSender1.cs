@@ -1,7 +1,9 @@
+using MailKit;
 using MailKit.Net.Smtp;
 using MimeKit;
 using System.Threading.Tasks;
 namespace Utility;
+
 
 
 
@@ -23,6 +25,7 @@ public class EmailSender1
         var mimeMessage = new MimeMessage();
         mimeMessage.From.Add(MailboxAddress.Parse(_smtpUser));
         mimeMessage.To.Add(MailboxAddress.Parse(email));
+       
         mimeMessage.Subject = subject;
 
         // mimeMessage.Body = new TextPart("html")
@@ -56,5 +59,4 @@ public class EmailSender1
         }
     }
 
-    
 }

@@ -1,6 +1,6 @@
 {
   "Version": 1,
-  "Hash": "bykp05MxDibk9E7VexvTmw+iC0bGMNEZ3997wkBdjsc=",
+  "Hash": "U7n/fNsDgd42r2vzaImPxVHIjQtDZ1RWTytLhwugT14=",
   "Source": "pizzashop",
   "BasePath": "_content/pizzashop",
   "Mode": "Default",
@@ -1528,6 +1528,23 @@
       "CopyToOutputDirectory": "Never",
       "CopyToPublishDirectory": "PreserveNewest",
       "OriginalItemSpec": "wwwroot\\Template\\email.html"
+    },
+    {
+      "Identity": "D:\\PIZZASHOP\\pizzashop\\wwwroot\\Template\\emailadduser.html",
+      "SourceId": "pizzashop",
+      "SourceType": "Discovered",
+      "ContentRoot": "D:\\PIZZASHOP\\pizzashop\\wwwroot\\",
+      "BasePath": "_content/pizzashop",
+      "RelativePath": "Template/emailadduser.html",
+      "AssetKind": "All",
+      "AssetMode": "All",
+      "AssetRole": "Primary",
+      "RelatedAsset": "",
+      "AssetTraitName": "",
+      "AssetTraitValue": "",
+      "CopyToOutputDirectory": "Never",
+      "CopyToPublishDirectory": "PreserveNewest",
+      "OriginalItemSpec": "wwwroot\\Template\\emailadduser.html"
     }
   ]
 }
