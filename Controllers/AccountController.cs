@@ -73,12 +73,14 @@ public class AccountController : Controller
     }
 
 
-    private string GenerateToken(string email)
-    {
+    private string GenerateToken(string email,int? role)
+    { 
+        string Role = role.ToString();
         var claims = new List<Claim>
         {
 
             new (ClaimTypes.Email, email),
+            new (ClaimTypes.Role, Role),
 
 
         };
@@ -107,7 +109,10 @@ public class AccountController : Controller
         }
 
         User? user = _context.Users.FirstOrDefault(u => u.Email == loginViewModel.Email);
-
+        // User? user2 = _context.Users.FirstOrDefault(u2 => u2.Email == user.Email);
+        // Console.WriteLine(user2.Email);
+        
+       
 
         if (user == null)
         {
@@ -123,7 +128,7 @@ public class AccountController : Controller
 
 
 
-        var tokenString = GenerateToken(user.Email);
+        var tokenString = GenerateToken(user.Email,user.RoleId);
         var cookieOptions = new CookieOptions
         {
             Secure = true,
@@ -131,19 +136,29 @@ public class AccountController : Controller
             SameSite = SameSiteMode.Strict
         };
 
-
-        Response.Cookies.Append("AuthToken", tokenString, new CookieOptions
+        if (loginViewModel.RememberMe == true)
+        {
+            Response.Cookies.Append("cookie", user.Email, new CookieOptions
+        {
+            Expires = loginViewModel.RememberMe ? DateTime.UtcNow.AddDays(30) : DateTime.UtcNow.AddHours(1)
+        }); 
+        }
+      Response.Cookies.Append("AuthToken", tokenString, new CookieOptions
         {
             Expires = DateTimeOffset.UtcNow.AddDays(7),
             HttpOnly = true,
             Secure = true,
             SameSite = SameSiteMode.Strict
         });
-
-        Response.Cookies.Append("cookie", user.Email, new CookieOptions
+         Response.Cookies.Append("cookieforid", user.Email, new CookieOptions
         {
             Expires = loginViewModel.RememberMe ? DateTime.UtcNow.AddDays(30) : DateTime.UtcNow.AddHours(1)
-        });
+        }); 
+        
+
+        
+
+      
         return RedirectToAction("userlist", "Account");
 
 
@@ -178,9 +193,10 @@ public class AccountController : Controller
 
 
     [HttpGet]
+    [Authorize]
     public async Task<IActionResult> UserProfile()
     {
-        var cookie = Request.Cookies["cookie"];
+        var cookie = Request.Cookies["cookieforid"];
         User? user = _context.Users.FirstOrDefault(u => u.Email == cookie);
         if (user == null)
         {
@@ -354,6 +370,7 @@ public class AccountController : Controller
         // 1. Delete the authentication token cookie (if you're using a token like JWT)
         Response.Cookies.Delete("AuthToken");
         Response.Cookies.Delete("cookie");
+        Response.Cookies.Delete("cookieforid");
         // 2. Sign out the user using cookie authentication (ASP.NET Core Identity or cookie authentication)
         HttpContext.SignOutAsync(CookieAuthenticationDefaults.AuthenticationScheme);
 
@@ -501,6 +518,12 @@ public class AccountController : Controller
         return RedirectToAction("userlist", "Account");
 
 
+    }
+
+    [Authorize]
+    [HttpGet]
+    public IActionResult Dashboard(){
+        return View();
     }
 
 

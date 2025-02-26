@@ -1,0 +1,22 @@
+@using Microsoft.AspNetCore.Identity
+
+@{
+    var user = Context.User;  // Access current user from context
+}
+
+<div>
+    <h1>Welcome to the Dashboard!</h1>
+    
+    @if (user.IsInRole("1"))
+    {
+        <p>Welcome, Admin! You have full access.</p>
+    }
+    else if (user.IsInRole("2"))
+    {
+        <p>Welcome, Account Manager! You have limited access.</p>
+    }
+    else
+    {
+        <p>Welcome, Chef! You have read-only access.</p>
+    }
+</div>
