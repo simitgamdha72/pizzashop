@@ -407,13 +407,14 @@ public class AccountController : Controller
     public async Task<IActionResult> userlist(int page = 1)
     {
         var totalUsers = await _context.Users.CountAsync();
-        var users = await _context.Users
+        var users = await _context.Users.Where(u => u.Isdeleted != true)
             .Skip((page - 1) * PageSize) // Skip users for the current page
             .Take(PageSize) // Get the users for the current page
             .ToListAsync();
-
+        
         var model = new UserListViewModel
-        {
+        {   
+          
             Users = users,
             
             CurrentPage = page,
@@ -423,39 +424,30 @@ public class AccountController : Controller
         return View(model);
     }
 
+    // UsersController.cs
 
-//  public async Task<IActionResult> Delete(int? id)
-//     {
-//         if (id == null)
-//         {
-//             return NotFound();
-//         }
+[HttpPost]
+[ValidateAntiForgeryToken]
+public async Task<IActionResult> DeleteUser(int id)
+{
+    Console.WriteLine(id);
+    var user = await _context.Users.FindAsync(id);
+    if (user == null)
+    {
+        return NotFound();
+    }
 
-//         var user = await _context.Users
-//             .FirstOrDefaultAsync(m => m.UserId == id);
-//         if (user == null)
-//         {
-//             return NotFound();
-//         }
+    user.Isdeleted = true;
+    Console.WriteLine(user.Isdeleted);
+    _context.Users.Update(user);
+    await _context.SaveChangesAsync();
 
-//         return View(user);  // This will pass the user to the Delete view
-//     }
+    // Redirect to the user list after deleting the user
+    return RedirectToAction("userlist","Account");
+}
 
-//    [HttpPost, ActionName("Delete")]
-//     [ValidateAntiForgeryToken]
-//     public async Task<IActionResult> DeleteConfirmed(int UserId)
-//     {   
-//         Console.WriteLine("123");
-//         Console.WriteLine(UserId);
-//         var user = await _context.Users.FindAsync(UserId);
-//         if (user != null)
-//         {
-//             _context.Users.Remove(user);
-//             await _context.SaveChangesAsync();
-//         }
-        
-//         return RedirectToAction(nameof(Index));  // Redirect to the Users List (Index page)
-//     }
+
+
   
   [HttpGet]
    public IActionResult edituser(int? id)
@@ -524,6 +516,8 @@ public class AccountController : Controller
     public IActionResult Dashboard(){
         return View();
     }
+
+    
 
 
 }
