@@ -9,9 +9,15 @@
     <link rel="stylesheet" href="~/css/style.css">
     <script src="~/js/bootstrap.bundle.min.js"></script>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
-    <link href="https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100..900;1,100..900&display=swap"
-        rel="stylesheet">
+    @* <link href="https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100..900;1,100..900&display=swap"
+        rel="stylesheet"> *@
         <!-- Add Bootstrap CSS -->
+
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+
+<!-- Bootstrap JS (needed for dropdowns and modals) -->
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
 
 
 <!-- Add Bootstrap JS and Popper.js -->
@@ -207,7 +213,7 @@
 
             <!-- userlist -->
 
- <div class="container">
+ <div>
         <main role="main" class="pb-3">
             @RenderBody()
         </main>
@@ -270,8 +276,10 @@
 
 
 
-
-
+ @RenderSection("Scripts", false)
+<script src="~/lib/jquery/dist/jquery.min.js"></script>
+    <script src="~/js/script.js" asp-append-version="true"></script>
+    <script src="~/js/site.js" asp-append-version="true"></script>
 
 </body>
 

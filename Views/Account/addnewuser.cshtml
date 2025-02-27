@@ -1,4 +1,5 @@
-@model pizzashop.Models.Models.User
+@model pizzashop.Models.ViewModels.AddnewUserViewModel
+
                 <div
                     style="display: flex; width: 100%;height: 7%;justify-content: space-between;padding-top: 10px;align-items: center;">
                     <h1 style="margin-left: 5.2%;color: #006cac;">Add New User</h1>
@@ -36,13 +37,16 @@
                                     <label for="floatingInputusername" style="margin-left: 10px;">User Name</label>
                                     <span asp-validation-for="UserName" class="text-danger"></span>
                                 </div>
-                                @* <div class="form-floating col adduser-form-coloumn " style="margin-top: 15px;">
+                                <div class="form-floating col adduser-form-coloumn " style="margin-top: 15px;">
 
-                                    <select id="role" class="form-control">
-                                        <option value="">Chef</option>
+                                    <select asp-for="RoleId" id="role" class="form-control">
+                                        <option value="1">Admin</option>
+                                          <option value="2">Account Manager</option>
+                                            <option value="3">Chef</option>
                                     </select>
+                                    <label for="role" style="margin-left: 10px;">Role</label>
 
-                                </div> *@
+                                </div>
 
                             </div>
                             <div class="row container-fluid">
@@ -76,30 +80,47 @@
                                 </div>
                             </div> *@
 
-                            @* <div class="row container-fluid">
+                           <div class="row container-fluid">
                                 <div class="form-floating col adduser-form-coloumn2" style="margin-top: 15px;">
 
-                                    <select id="country" class="form-control">
+                                    @* <select id="country" class="form-control">
                                         <option value="">United States</option>
-                                    </select>
+                                    </select> *@
+                                     <select asp-for="CountryId" class="form-control" id="CountryId">
+            <option value="">Select Country</option>
+            @foreach (var country in ViewBag.Countries as List<Country>)
+            {
+                <option value="@country.Id">@country.Country1</option>
+            }
+        </select>
+                                   
 
                                 </div>
-                                <div class="form-floating col adduser-form-coloumn2" style="margin-top: 15px;">
+                                 <div class="form-floating col adduser-form-coloumn2" style="margin-top: 15px;">
 
-                                    <select id="state" class="form-control">
+                                    @* <select id="state" class="form-control">
                                         <option value="">Texas</option>
-                                    </select>
+                                    </select> *@
+                                     <select asp-for="StateId" class="form-control" id="StateId">
+            <option value="">Select State</option>
+        </select>
+                                   
 
                                 </div>
                                 <div class="form-floating col adduser-form-coloumn2" style="margin-top: 15px;">
 
-                                    <select id="city" class="form-control">
+                                    @* <select id="city" class="form-control">
                                         <option value="">Housten </option>
-                                    </select>
+                                    </select> *@
+                                      <select asp-for="CityId" class="form-control" id="CityId">
+            <option value="">Select City</option>
+        </select>
 
                                 </div>
 
-                            </div> *@
+                            </div> 
+
+                           
 
                             <div class="row container-fluid">
                                 <div class="form-floating col adduser-form-coloumn2" style="margin-top: 15px;">
@@ -137,3 +158,82 @@
 
                 </div>
 
+
+
+
+@* 
+<h1>Create User</h1>
+
+<form asp-action="addnewuser">
+    <div class="form-group">
+        <label asp-for="CountryId" class="control-label"></label>
+        <select asp-for="CountryId" class="form-control" id="CountryId">
+            <option value="">Select Country</option>
+            @foreach (var country in ViewBag.Countries as List<Country>)
+            {
+                <option value="@country.Id">@country.Country1</option>
+            }
+        </select>
+    </div>
+
+    <div class="form-group">
+        <label asp-for="StateId" class="control-label"></label>
+        <select asp-for="StateId" class="form-control" id="StateId">
+            <option value="">Select State</option>
+        </select>
+    </div>
+
+    <div class="form-group">
+        <label asp-for="CityId" class="control-label"></label>
+        <select asp-for="CityId" class="form-control" id="CityId">
+            <option value="">Select City</option>
+        </select>
+    </div>
+
+    <button type="submit" class="btn btn-primary">Create</button>
+</form> *@
+@section Scripts{
+
+    <script>
+
+        $(document).ready(function () {
+            console.log("helo")
+            // Trigger the state dropdown when country is selected
+            $("#CountryId").change(function () {
+                console.log("hello");
+                var countryId = $(this).val();
+                console.log(countryId);
+                if (countryId) {
+                    $.get("/Account/GetStatesByCountry?countryId=" + countryId, function (data) {
+                        $("#StateId").empty().append('<option value="">Select State</option>');
+                        
+                        $.each(data, function (index, state) {
+                            console.log(index,state);
+                            $("#StateId").append('<option value="' + state.value + '">' + state.text + '</option>');
+                        });
+                        $("#CityId").empty().append('<option value="">Select City</option>');
+                    });
+                } else {
+                    $("#StateId").empty().append('<option value="">Select State</option>');
+                    $("#CityId").empty().append('<option value="">Select City</option>');
+                }
+            });
+
+            // Trigger the city dropdown when state is selected
+            $("#StateId").change(function () {
+                var stateId = $(this).val();
+                if (stateId) {
+                    $.get("/Account/GetCitiesByState?stateId=" + stateId, function (data) {
+                        $("#CityId").empty().append('<option value="">Select City</option>');
+                        $.each(data, function (index, city) {
+                            $("#CityId").append('<option value="' + city.value + '">' + city.text + '</option>');
+                        });
+                    });
+                } else {
+                    $("#CityId").empty().append('<option value="">Select City</option>');
+                }
+            });
+        });
+    </script>
+
+}

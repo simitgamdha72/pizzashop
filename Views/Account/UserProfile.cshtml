@@ -1,4 +1,5 @@
 @model pizzashop.Models.ViewModels.UserProfileViewModel
+
 <div id="rolesPageContent" class="container-fluid px-3 py-4 p-md-5" >
                     
     <div class="fs-2 fw-semibold mb-3" style="color: #006CAC;">My Profile</div>
@@ -7,7 +8,7 @@
         <img class="object-fit-cover" src="~/images/profile_div_bg.jpg" width="100%" height="50px">
         <div class="d-flex w-100 px-2 px-md-4">
             <div class="position-relative">
-                <img style="margin-top: -1.8rem; border-radius: 50%;" src="~/images/Default_pfp.svg.png" id="imagePreview" height="125px" width="125px" >
+                <img style="margin-top: -1.8rem; border-radius: 50%;" src="@Model.Image" id="imagePreview" height="125px" width="125px" >
                 <div class="" style="position: absolute;/* height: 306px; */top: 51px;right: -2px;">
                     <input class=" d-none form-control" type="file" id="imageUpload" required>
                     <label class="profileImgUpload" for="imageUpload">
@@ -18,13 +19,13 @@
             <div class="d-flex flex-column flex-md-row text-end text-md-start w-100 ms-md-3 py-1 py-md-2">
                 <div class="me-md-auto">
                     <div class="fs-4 fw-semibold">
-                        Admin admin
+                        @Model.FirstName @Model.LastName
                     </div>
                     <div class="">
-                        admin
+                        @Model.FirstName
                     </div>
                 </div>
-                <div class="">admin@gmail.com</div>
+                <div class="">@Model.Email</div>
             </div>
         </div>
         <form asp-action="UserProfile" method="post" class="p-2 p-sm-3 p-md-4">
@@ -57,7 +58,8 @@
             <div class="row row-cols-1 row-cols-sm-2 row-cols-lg-3 gy-3 gx-4 my-0">
                 <div class="col">
                     <div class="form-floating">
-                        <select class="form-select" id="country">
+                        <select class="form-select" id="CountryId" name="CountryId">
+                            
                         <option selected>Select Country</option>
                         <option value="1">India</option>
                         <option value="2">USA</option>
@@ -67,6 +69,7 @@
                     </div>
                 </div>
                 <div class="col">
+                    
                     <div class="form-floating">
                         <select class="form-select" id="state">
                         <option selected>Select State</option>
@@ -78,6 +81,7 @@
                     </div>
                 </div>
                 <div class="col">
+                    
                     <div class="form-floating">
                         <select class="form-select" id="city">
                         <option selected>Select City</option>
@@ -116,4 +120,3 @@
         </form>
     </div>
 </div>
-

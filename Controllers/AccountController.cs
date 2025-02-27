@@ -18,6 +18,7 @@ using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.EntityFrameworkCore;
 using MailKit;
+using Microsoft.AspNetCore.Mvc.Rendering;
 
 
 
@@ -32,7 +33,7 @@ public class AccountController : Controller
 
     private readonly PizzashopContext _context;
 
-       private const int PageSize = 10;
+    private const int PageSize = 10;
     public readonly EmailSender1 es;
     //
     private readonly IConfiguration _configuration;
@@ -74,8 +75,8 @@ public class AccountController : Controller
     }
 
 
-    private string GenerateToken(string email,int? role)
-    { 
+    private string GenerateToken(string email, int? role)
+    {
         string Role = role.ToString();
         var claims = new List<Claim>
         {
@@ -112,8 +113,8 @@ public class AccountController : Controller
         User? user = _context.Users.FirstOrDefault(u => u.Email == loginViewModel.Email);
         // User? user2 = _context.Users.FirstOrDefault(u2 => u2.Email == user.Email);
         // Console.WriteLine(user2.Email);
-        
-       
+
+
 
         if (user == null)
         {
@@ -129,7 +130,7 @@ public class AccountController : Controller
 
 
 
-        var tokenString = GenerateToken(user.Email,user.RoleId);
+        var tokenString = GenerateToken(user.Email, user.RoleId);
         var cookieOptions = new CookieOptions
         {
             Secure = true,
@@ -140,26 +141,26 @@ public class AccountController : Controller
         if (loginViewModel.RememberMe == true)
         {
             Response.Cookies.Append("cookie", user.Email, new CookieOptions
-        {
-            Expires = loginViewModel.RememberMe ? DateTime.UtcNow.AddDays(30) : DateTime.UtcNow.AddHours(1)
-        }); 
+            {
+                Expires = loginViewModel.RememberMe ? DateTime.UtcNow.AddDays(30) : DateTime.UtcNow.AddHours(1)
+            });
         }
-      Response.Cookies.Append("AuthToken", tokenString, new CookieOptions
+        Response.Cookies.Append("AuthToken", tokenString, new CookieOptions
         {
             Expires = DateTimeOffset.UtcNow.AddDays(7),
             HttpOnly = true,
             Secure = true,
             SameSite = SameSiteMode.Strict
         });
-         Response.Cookies.Append("cookieforid", user.Email, new CookieOptions
+        Response.Cookies.Append("cookieforid", user.Email, new CookieOptions
         {
             Expires = loginViewModel.RememberMe ? DateTime.UtcNow.AddDays(30) : DateTime.UtcNow.AddHours(1)
-        }); 
-        
+        });
 
-        
 
-      
+
+
+
         return RedirectToAction("userlist", "Account");
 
 
@@ -169,31 +170,94 @@ public class AccountController : Controller
     [HttpGet]
     public IActionResult addnewuser()
     {
-      
-      return View();
+
+        ViewBag.Countries = _context.Countries.ToList();
+    return View();
+
+       
+
+
+        // return View();
     }
 
+  
+// public JsonResult GetStatesByCountry(int countryId)
+// {
+//     try
+//     {
+//         var states = _context.States.Where(s => s.CountryId == countryId).ToList();
+//         return Json(states.Select(s => new { value = s.Id, text = s.Country }));
+//     }
+//     catch (Exception ex)
+//     {
+//         // Log the error (for debugging purposes)
+//         Console.WriteLine($"Error: {ex.Message}");
+//         // return StatusCode(500, "Internal server error");
+//         return null;
+//     }
+// }
+
+[HttpGet]
+    public JsonResult GetStatesByCountry(int countryId)
+    {
+        var states = _context.States.Where(s => s.CountryId == countryId).ToList();
+    return Json(states.Select(s => new { value = s.Id, text = s.State1 }));
+       
+    }
+[HttpGet]
+    public JsonResult GetCitiesByState(int stateId)
+    {       
+         var cities = _context.Cities.Where(c => c.StateId == stateId).ToList();
+    return Json(cities.Select(c => new { value = c.Id, text = c.City1 }));
+        // var cities = _context.Cities.Where(c => c.Id == stateId).ToList();
+        // return Json(cities);
+    }
+
+
     [HttpPost]
-    public async Task<IActionResult> addnewuser([Bind("FirstName,LastName,UserName,Email,Password,Zipcode,Address,Phone")]User model){
+    //  public async Task<IActionResult> addnewuser([Bind("FirstName,LastName,UserName,Email,Password,Zipcode,Address,Phone,RoleId")] User model)
+    public async Task<IActionResult> addnewuser(AddnewUserViewModel model)
+    {
+         Console.WriteLine(model.CountryId);
+        Country? country= _context.Countries.FirstOrDefault(c => c.Id == model.CountryId);
+        State? state= _context.States.FirstOrDefault(s => s.Id == model.StateId);
+        City? city= _context.Cities.FirstOrDefault(y => y.Id == model.CityId);
+        var viewmodel = new User
+        {
+            FirstName = model.FirstName,
+            LastName = model.LastName,
+            UserName = model.UserName,
+            Email = model.Email,
+            Password = model.Password,
+            Zipcode = model.Zipcode,
+            Address = model.Address,
+            Phone = model.Phone,
+            RoleId = model.RoleId,
+            Country = country.Country1,
+             State = state.State1,
+              City = city.City1,
+
+           
+        };
         if (!ModelState.IsValid)
         {
             return View(model);
         }
 
-        _context.Add(model);
+        _context.Add(viewmodel);
         await _context.SaveChangesAsync();
 
-         string subject = "Login Details";
+        string subject = "Login Details";
         Extrathingsforadduser object1 = new();
         string object2 = object1.getEmail();
         //  object2.Replace("{email}", model.Email);
         string emailbody = object2.Replace("{password}", model.Password);
-        emailbody = emailbody.Replace("{email}",model.Email);
+        emailbody = emailbody.Replace("{email}", model.Email);
         // string object1 ="";
         // Console.WriteLine(m.Email);
         await es.SendEmailAsync(model.Email, subject, emailbody);
 
-      
+
 
 
         return RedirectToAction("userlist", "Account");
@@ -230,7 +294,9 @@ public class AccountController : Controller
 
 
 
+
         };
+
 
         return View(viewModel);
 
@@ -239,7 +305,7 @@ public class AccountController : Controller
     [HttpPost]
     public IActionResult UserProfile(UserProfileViewModel model)
     {
-        var cookie = Request.Cookies["cookie"];
+        var cookie = Request.Cookies["cookieforid"];
         User? user = _context.Users.FirstOrDefault(u => u.Email == cookie);
 
 
@@ -383,40 +449,45 @@ public class AccountController : Controller
         return View();
     }
     [HttpPost]
-    public IActionResult changepassword(ChangePasswordViewModel model){
-         var cookie = Request.Cookies["cookie"];
+    public IActionResult changepassword(ChangePasswordViewModel model)
+    {
+        var cookie = Request.Cookies["cookie"];
         User? user = _context.Users.FirstOrDefault(u => u.Email == cookie);
 
-        if(user.Password == model.Password){
+        if (user.Password == model.Password)
+        {
             user.Password = model.newPassword;
-             _context.Users.Update(user);
-        _context.SaveChanges();
-         Response.Cookies.Delete("AuthToken");
-        Response.Cookies.Delete("cookie");
-        return RedirectToAction("Index", "Account");
+            _context.Users.Update(user);
+            _context.SaveChanges();
+            Response.Cookies.Delete("AuthToken");
+            Response.Cookies.Delete("cookie");
+            return RedirectToAction("Index", "Account");
 
         }
-      else{
-        return RedirectToAction("changepassword", "Account");
-      }
+        else
+        {
+            return RedirectToAction("changepassword", "Account");
+        }
     }
 
 
 
 
-    public async Task<IActionResult> userlist(int page = 1)
+    public async Task<IActionResult> userlist(string searchTerm, int page = 1)
     {
+
+
         var totalUsers = await _context.Users.CountAsync();
         var users = await _context.Users.Where(u => u.Isdeleted != true)
             .Skip((page - 1) * PageSize) // Skip users for the current page
             .Take(PageSize) // Get the users for the current page
             .ToListAsync();
-        
+
         var model = new UserListViewModel
-        {   
-          
+        {
+
             Users = users,
-            
+
             CurrentPage = page,
             TotalPages = (int)Math.Ceiling((double)totalUsers / PageSize)
         };
@@ -426,38 +497,36 @@ public class AccountController : Controller
 
     // UsersController.cs
 
-[HttpPost]
-[ValidateAntiForgeryToken]
-public async Task<IActionResult> DeleteUser(int id)
-{
-    Console.WriteLine(id);
-    var user = await _context.Users.FindAsync(id);
-    if (user == null)
+    [HttpPost]
+    [ValidateAntiForgeryToken]
+    public async Task<IActionResult> DeleteUser(int id)
     {
-        return NotFound();
-    }
-
-    user.Isdeleted = true;
-    Console.WriteLine(user.Isdeleted);
-    _context.Users.Update(user);
-    await _context.SaveChangesAsync();
-
-    // Redirect to the user list after deleting the user
-    return RedirectToAction("userlist","Account");
-}
-
-
-
-  
-  [HttpGet]
-   public IActionResult edituser(int? id)
-    {
-         User? user = _context.Users.FirstOrDefault(u => u.UserId == id);
+        Console.WriteLine(id);
+        var user = await _context.Users.FindAsync(id);
         if (user == null)
         {
             return NotFound();
         }
-        var viewModel = new User
+
+        user.Isdeleted = true;
+        Console.WriteLine(user.Isdeleted);
+        _context.Users.Update(user);
+        await _context.SaveChangesAsync();
+
+        // Redirect to the user list after deleting the user
+        return RedirectToAction("userlist", "Account");
+    }
+
+
+    [HttpGet]
+    public IActionResult edituser(int? id)
+    {
+        User? user = _context.Users.FirstOrDefault(u => u.UserId == id);
+        if (user == null)
+        {
+            return NotFound();
+        }
+        var viewModel = new EditUserViewModel
         {
 
 
@@ -467,9 +536,12 @@ public async Task<IActionResult> DeleteUser(int id)
             LastName = user.LastName,
             UserName = user.UserName,
             Phone = user.Phone,
-            Country = user.Country,
-            State = user.State,
-            City = user.City,
+            RoleId = user.RoleId,
+            // Status = user.Status,
+            // Image = user.Image,
+            // Country = user.Country,
+            // State = user.State,
+            // City = user.City,
             Address = user.Address,
             Zipcode = user.Zipcode,
 
@@ -477,15 +549,18 @@ public async Task<IActionResult> DeleteUser(int id)
 
         };
         Console.WriteLine(id);
+
         return View(viewModel);
     }
 
-        [HttpPost]
-    public IActionResult edituser(User u)
+
+
+    [HttpPost]
+    public IActionResult edituser(EditUserViewModel model)
     {
-     
-        User? user = _context.Users.FirstOrDefault(u => u.UserId == u.UserId);
-        Console.WriteLine(u.Email);
+
+        User? user = _context.Users.FirstOrDefault(u => u.Email == model.Email);
+        Console.WriteLine(model.Email);
 
 
         if (user == null)
@@ -493,17 +568,22 @@ public async Task<IActionResult> DeleteUser(int id)
             return NotFound();
         }
 
-       
-            user.Email = u.Email;
-            user.FirstName = u.FirstName;
-           user.LastName = u.LastName;
-            user.UserName = u.UserName;
-            user.Phone = u.Phone;
-           user.Password = u.Password;
-         user.Address = u.Address;
-           user.Zipcode = u.Zipcode;
 
-        _context.Users.Update(user);
+
+        user.FirstName = model.FirstName;
+        user.LastName = model.LastName;
+        user.UserName = model.UserName;
+        user.Phone = model.Phone;
+        // user.Status = u.Status;
+        // Console.WriteLine(model.MyImage);
+        // user.MyImage = model.MyImage.ToString();
+        // user.Password = u.Password;
+        Console.WriteLine(model.RoleId);
+        user.RoleId = model.RoleId;
+        user.Address = model.Address;
+        user.Zipcode = model.Zipcode;
+
+
         _context.SaveChanges();
 
         return RedirectToAction("userlist", "Account");
@@ -513,11 +593,13 @@ public async Task<IActionResult> DeleteUser(int id)
 
     [Authorize]
     [HttpGet]
-    public IActionResult Dashboard(){
+    public IActionResult Dashboard()
+    {
         return View();
     }
 
-    
+
+
 
 
 }
