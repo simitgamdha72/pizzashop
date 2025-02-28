@@ -1,74 +1,86 @@
 @model pizzashop.Models.ViewModels.EditUserViewModel
-                <div
-                    style="display: flex; width: 100%;height: 7%;justify-content: space-between;padding-top: 50px;align-items: center;">
-                    <h1 style="margin-left: 5.2%;color: #006cac;">Edit User</h1>
-                    <div style="padding-right: 5.2%;">
-                        <a href="@Url.Action("userlist", "Account")"><button
-                                style="border: 1px solid skyblue;background-color: white;color: #006cac; width: 80px;height: 42px;margin-bottom: 2px;">
-                                < Back </button></a>
+<div
+    style="display: flex; width: 100%;height: 7%;justify-content: space-between;padding-top: 50px;align-items: center;">
+    <h1 style="margin-left: 5.2%;color: #006cac;">Edit User</h1>
+    <div style="padding-right: 5.2%;">
+        <a href="@Url.Action("userlist", "Account")"><button
+                style="border: 1px solid skyblue;background-color: white;color: #006cac; width: 80px;height: 42px;margin-bottom: 2px;">
+                < Back </button></a>
 
-                    </div>
+    </div>
+</div>
+
+<div style="display: flex;justify-content: center;margin-top: 20px;">
+    <div class="row container-fluid shadow" style="width: 90%;background-color: #F8F9FA;margin-top: 15px;">
+        <form asp-action="edituser" method="post" style="margin-top: 30px;margin-bottom: 10px;">
+            <div class="row container-fluid">
+                <div class="form-floating col adduser-form-coloumn " style="margin-top: 15px;">
+                    <input asp-for="FirstName" type="text" class="form-control" id="floatingInputfirstname"
+                        placeholder="name@example.com" required>
+                    <label for="floatingInputfirstname" style="margin-left: 10px;">First Name</label>
+                    <span asp-validation-for="FirstName" class="text-danger"></span>
+                </div>
+                <div class="form-floating col adduser-form-coloumn " style="margin-top: 15px;">
+                    <input asp-for="LastName" type="text" class="form-control" id="floatingInputlastname"
+                        placeholder="name@example.com" required>
+                    <label for="floatingInputlastname" style="margin-left: 10px;">Last Name</label>
+                    <span asp-validation-for="LastName" class="text-danger"></span>
                 </div>
 
-                <div style="display: flex;justify-content: center;margin-top: 20px;">
-                    <div class="row container-fluid"
-                        style="width: 90%;background-color: rgba(255, 255, 255, 0.753);margin-top: 15px;">
-                        <form asp-action="edituser" method="post">
-                            <div class="row container-fluid">
-                                <div class="form-floating col adduser-form-coloumn " style="margin-top: 15px;">
-                                    <input asp-for="FirstName" type="text" class="form-control" id="floatingInputfirstname"
-                                        placeholder="name@example.com">
-                                    <label for="floatingInputfirstname" style="margin-left: 10px;">First Name</label>
-                                </div>
-                                <div class="form-floating col adduser-form-coloumn " style="margin-top: 15px;">
-                                    <input asp-for="LastName" type="text" class="form-control" id="floatingInputlastname"
-                                        placeholder="name@example.com">
-                                    <label for="floatingInputlastname" style="margin-left: 10px;">Last Name</label>
-                                </div>
+            </div>
+            <div class="row container-fluid">
+                <div class="form-floating col adduser-form-coloumn " style="margin-top: 15px;">
+                    <input asp-for="UserName" type="text" class="form-control" id="floatingInputusername"
+                        placeholder="name@example.com" required>
 
-                            </div>
-                            <div class="row container-fluid">
-                                <div class="form-floating col adduser-form-coloumn " style="margin-top: 15px;">
-                                    <input asp-for="UserName" type="text" class="form-control" id="floatingInputusername"
-                                        placeholder="name@example.com">
-                                        
-                                    <label for="floatingInputusername" style="margin-left: 10px;">User Name</label>
-                                </div>
-                                @* <div class="form-floating col adduser-form-coloumn " style="margin-top: 15px;">
+                    <label for="floatingInputusername" style="margin-left: 10px;">User Name</label>
+                    <span asp-validation-for="UserName" class="text-danger"></span>
+                </div>
+                @* <div class="form-floating col adduser-form-coloumn " style="margin-top: 15px;">
 
                                     <select id="role" class="form-control">
                                         <option value="">Chef</option>
                                     </select>
                                   
                                 </div> *@
-                                 <div class="form-floating col adduser-form-coloumn " style="margin-top: 15px;">
+                <div class="form-floating col adduser-form-coloumn " style="margin-top: 15px;">
 
-                                    <select asp-for="RoleId" id="role" class="form-control">
-                                        <option value="1">Admin</option>
-                                          <option value="2">Account Manager</option>
-                                            <option value="3">Chef</option>
-                                    </select>
-                                    <label for="role" style="margin-left: 10px;">Role</label>
+                    <select asp-for="RoleId" id="role" class="form-control" required>
+                        <option value="1">Admin</option>
+                        <option value="2">Account Manager</option>
+                        <option value="3">Chef</option>
+                    </select>
+                    <span asp-validation-for="RoleId" class="text-danger"></span>
+                    <label for="role" style="margin-left: 10px;">Role</label>
 
-                                </div>
+                </div>
 
-                            </div>
-                            <div class="row container-fluid">
-                                <div class="form-floating col adduser-form-coloumn " style="margin-top: 15px;">
-                                    <input asp-for="Email" type="email" disabled class="form-control" id="floatingInputemail"
-                                        placeholder="name@example.com">
-                                          <input asp-for="Email" type="hidden" class="form-control" id="floatingInputemail"
-                                        placeholder="name@example.com">
-                                    <label for="floatingInputemail" style="margin-left: 10px;">Email</label>
-                                </div>
-                                @* <div class="form-floating col adduser-form-coloumn " style="margin-top: 15px;">
+            </div>
+            <div class="row container-fluid">
+                <div class="form-floating col adduser-form-coloumn " style="margin-top: 15px;">
+                    <input asp-for="Email" type="email" disabled class="form-control" id="floatingInputemail"
+                        placeholder="name@example.com">
+                    <input asp-for="Email" type="hidden" class="form-control" id="floatingInputemail"
+                        placeholder="name@example.com">
+                    <span asp-validation-for="Email" class="text-danger"></span>
+                    <label for="floatingInputemail" style="margin-left: 10px;">Email</label>
+                </div>
+                <div class="form-floating col adduser-form-coloumn " style="margin-top: 15px;">
+                    <select asp-for="Status" class="form-control" required>
+                        <option value="null">status</option>
+                        <option value="true">Active</option>
+                        <option value="false">InActive</option>
+                    </select>
+                    <span asp-validation-for="Status" class="text-danger"></span>
+                </div>
+                @* <div class="form-floating col adduser-form-coloumn " style="margin-top: 15px;">
                                     <input asp-for="Password" type="password" class="form-control" id="floatingInputpass"
                                         placeholder="name@example.com">
                                     <label for="floatingInputpass" style="margin-left: 10px;">password</label>
                                 </div> *@
 
-                            </div>
-                            @* <div
+            </div>
+            @* <div
                                 style="margin-top: 10px;border: 1px dotted black; width: 97%;height: 90px;margin-left: 0.8%;justify-content: center;align-items: center;">
                                 <div>
                                     <div style="display: flex;margin-top: 5px;" class=" justify-content-center align-items-center">
@@ -89,64 +101,134 @@
                                    
                                 </div>
                             </div> *@
-                            
-                            
 
-                            @* <div class="row container-fluid">
-                                <div class="form-floating col adduser-form-coloumn2" style="margin-top: 15px;">
+            <div class="row container-fluid">
+                <div class="form-floating col adduser-form-coloumn2" style="margin-top: 15px;">
 
-                                    <select id="country" class="form-control">
+                    @* <select id="country" class="form-control">
                                         <option value="">United States</option>
-                                    </select>
-                                    
-                                </div>
-                                <div class="form-floating col adduser-form-coloumn2" style="margin-top: 15px;">
+                                    </select> *@
+                    <select asp-for="CountryId" class="form-control" id="CountryId" required>
+                        <option value="">Select Country</option>
+                        @foreach (var country in ViewBag.Countries as List<Country>)
+                        {
+                            <option value="@country.Id">@country.Country1</option>
+                        }
+                    </select>
+                    <span asp-validation-for="CountryId" class="text-danger"></span>
 
-                                    <select id="state" class="form-control">
+
+                </div>
+                <div class="form-floating col adduser-form-coloumn2" style="margin-top: 15px;">
+
+                    @* <select id="state" class="form-control">
                                         <option value="">Texas</option>
-                                    </select>
-                                   
-                                </div> 
-                                <div class="form-floating col adduser-form-coloumn2" style="margin-top: 15px;">
+                                    </select> *@
+                    <select asp-for="StateId" class="form-control" id="StateId" required>
+                        <option value="">Select State</option>
+                        @* <option value="" selected>@ViewBag.state</option> *@
+                    </select>
+                    <span asp-validation-for="StateId" class="text-danger"></span>
 
-                                    <select id="city" class="form-control">
+
+                </div>
+                <div class="form-floating col adduser-form-coloumn2" style="margin-top: 15px;">
+
+                    @* <select id="city" class="form-control">
                                         <option value="">Housten </option>
-                                    </select>
-                                   
-                                </div>
-
-                            </div> *@
-
-                            <div class="row container-fluid">
-                                <div class="form-floating col adduser-form-coloumn2" style="margin-top: 15px;">
-                                    <input asp-for="Zipcode" type="number" class="form-control" id="floatingInputzipcode"
-                                        placeholder="name@example.com">
-                                    <label for="floatingInputzipcode" style="margin-left: 10px;">Zipcode</label>
-                                </div>
-                                <div class="form-floating col adduser-form-coloumn2" style="margin-top: 15px;">
-                                    <input asp-for="Address" type="text" class="form-control" id="floatingInputadress"
-                                        placeholder="name@example.com">
-                                    <label for="floatingInputadress" style="margin-left: 10px;">Adress</label>
-                                </div>
-                                <div class="form-floating col adduser-form-coloumn2" style="margin-top: 15px;">
-                                    <input asp-for="Phone" type="number" class="form-control" id="floatingInputphone"
-                                        placeholder="name@example.com">
-                                    <label for="floatingInputphone" style="margin-left: 10px;">Phone</label>
-                                </div>
-
-                            </div>
-
-                            <div style="margin-top: 20px;margin-bottom: 20px;">
-                                <button type="submit" class="btn" style="background-color: #006cac;color: white;">Update</button>
-                                <button type="reset" class="btn" style="background-color: white;border: 1px solid #006cac;color: #006cac;">cancel</button>
-                                
-                            </div>
-                            
-                        </form>
-
-                    </div>
+                                    </select> *@
+                    <select asp-for="CityId" class="form-control" id="CityId" required>
+                        <option value="">Select City</option>
+                    </select>
+                    <span asp-validation-for="CityId" class="text-danger"></span>
 
                 </div>
 
+            </div>
 
 
+
+
+            <div class="row container-fluid">
+                <div class="form-floating col adduser-form-coloumn2" style="margin-top: 15px;">
+                    <input asp-for="Zipcode" type="number" class="form-control" id="floatingInputzipcode"
+                        placeholder="name@example.com" required>
+                    <label for="floatingInputzipcode" style="margin-left: 10px;">Zipcode</label>
+                    <span asp-validation-for="Zipcode" class="text-danger"></span>
+                </div>
+                <div class="form-floating col adduser-form-coloumn2" style="margin-top: 15px;">
+                    <input asp-for="Address" type="text" class="form-control" id="floatingInputadress"
+                        placeholder="name@example.com" required>
+                    <label for="floatingInputadress" style="margin-left: 10px;">Adress</label>
+                    <span asp-validation-for="Address" class="text-danger"></span>
+                </div>
+                <div class="form-floating col adduser-form-coloumn2" style="margin-top: 15px;">
+                    <input asp-for="Phone" type="number" class="form-control" id="floatingInputphone"
+                        placeholder="name@example.com" required>
+                    <span asp-validation-for="Phone" class="text-danger"></span>
+                    <label for="floatingInputphone" style="margin-left: 10px;">Phone</label>
+                </div>
+
+            </div>
+
+            <div style="margin-top: 20px;margin-bottom: 20px;margin-left: 10px;">
+                <button type="submit" class="btn" style="background-color: #006cac;color: white;">Update</button>
+                <button type="reset" class="btn"
+                    style="background-color: white;border: 1px solid #006cac;color: #006cac;">cancel</button>
+
+            </div>
+
+        </form>
+
+    </div>
+
+</div>
+
+
+
+
+@section Scripts {
+
+    <script>
+
+        $(document).ready(function () {
+            console.log("helo")
+            // Trigger the state dropdown when country is selected
+            $("#CountryId").change(function () {
+                console.log("hello");
+                var countryId = $(this).val();
+                console.log(countryId);
+                if (countryId) {
+                    $.get("/Account/GetStatesByCountry?countryId=" + countryId, function (data) {
+                        $("#StateId").empty().append('<option value="">Select State</option>');
+
+                        $.each(data, function (index, state) {
+                            console.log(index, state);
+                            $("#StateId").append('<option value="' + state.value + '">' + state.text + '</option>');
+                        });
+                        $("#CityId").empty().append('<option value="">Select City</option>');
+                    });
+                } else {
+                    $("#StateId").empty().append('<option value="">Select State</option>');
+                    $("#CityId").empty().append('<option value="">Select City</option>');
+                }
+            });
+
+            // Trigger the city dropdown when state is selected
+            $("#StateId").change(function () {
+                var stateId = $(this).val();
+                if (stateId) {
+                    $.get("/Account/GetCitiesByState?stateId=" + stateId, function (data) {
+                        $("#CityId").empty().append('<option value="">Select City</option>');
+                        $.each(data, function (index, city) {
+                            $("#CityId").append('<option value="' + city.value + '">' + city.text + '</option>');
+                        });
+                    });
+                } else {
+                    $("#CityId").empty().append('<option value="">Select City</option>');
+                }
+            });
+        });
+    </script>
+
+}

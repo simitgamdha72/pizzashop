@@ -19,6 +19,7 @@ using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.EntityFrameworkCore;
 using MailKit;
 using Microsoft.AspNetCore.Mvc.Rendering;
+using Microsoft.EntityFrameworkCore.Metadata.Internal;
 
 
 
@@ -33,7 +34,7 @@ public class AccountController : Controller
 
     private readonly PizzashopContext _context;
 
-    private const int PageSize = 10;
+    private const int PageSize = 5;
     public readonly EmailSender1 es;
     //
     private readonly IConfiguration _configuration;
@@ -168,60 +169,62 @@ public class AccountController : Controller
     }
 
     [HttpGet]
+    [Authorize]
     public IActionResult addnewuser()
     {
 
         ViewBag.Countries = _context.Countries.ToList();
-    return View();
+        return View();
 
-       
+
 
 
         // return View();
     }
 
-  
-// public JsonResult GetStatesByCountry(int countryId)
-// {
-//     try
-//     {
-//         var states = _context.States.Where(s => s.CountryId == countryId).ToList();
-//         return Json(states.Select(s => new { value = s.Id, text = s.Country }));
-//     }
-//     catch (Exception ex)
-//     {
-//         // Log the error (for debugging purposes)
-//         Console.WriteLine($"Error: {ex.Message}");
-//         // return StatusCode(500, "Internal server error");
-//         return null;
-//     }
-// }
 
-[HttpGet]
+    // public JsonResult GetStatesByCountry(int countryId)
+    // {
+    //     try
+    //     {
+    //         var states = _context.States.Where(s => s.CountryId == countryId).ToList();
+    //         return Json(states.Select(s => new { value = s.Id, text = s.Country }));
+    //     }
+    //     catch (Exception ex)
+    //     {
+    //         // Log the error (for debugging purposes)
+    //         Console.WriteLine($"Error: {ex.Message}");
+    //         // return StatusCode(500, "Internal server error");
+    //         return null;
+    //     }
+    // }
+
+    [HttpGet]
     public JsonResult GetStatesByCountry(int countryId)
     {
         var states = _context.States.Where(s => s.CountryId == countryId).ToList();
-    return Json(states.Select(s => new { value = s.Id, text = s.State1 }));
-       
+        return Json(states.Select(s => new { value = s.Id, text = s.State1 }));
+
     }
-[HttpGet]
+    [HttpGet]
     public JsonResult GetCitiesByState(int stateId)
-    {       
-         var cities = _context.Cities.Where(c => c.StateId == stateId).ToList();
-    return Json(cities.Select(c => new { value = c.Id, text = c.City1 }));
+    {
+        var cities = _context.Cities.Where(c => c.StateId == stateId).ToList();
+        return Json(cities.Select(c => new { value = c.Id, text = c.City1 }));
         // var cities = _context.Cities.Where(c => c.Id == stateId).ToList();
         // return Json(cities);
     }
 
 
     [HttpPost]
+
     //  public async Task<IActionResult> addnewuser([Bind("FirstName,LastName,UserName,Email,Password,Zipcode,Address,Phone,RoleId")] User model)
     public async Task<IActionResult> addnewuser(AddnewUserViewModel model)
     {
-         Console.WriteLine(model.CountryId);
-        Country? country= _context.Countries.FirstOrDefault(c => c.Id == model.CountryId);
-        State? state= _context.States.FirstOrDefault(s => s.Id == model.StateId);
-        City? city= _context.Cities.FirstOrDefault(y => y.Id == model.CityId);
+        Console.WriteLine(model.CountryId);
+        Country? country = _context.Countries.FirstOrDefault(c => c.Id == model.CountryId);
+        State? state = _context.States.FirstOrDefault(s => s.Id == model.StateId);
+        City? city = _context.Cities.FirstOrDefault(y => y.Id == model.CityId);
         var viewmodel = new User
         {
             FirstName = model.FirstName,
@@ -234,10 +237,10 @@ public class AccountController : Controller
             Phone = model.Phone,
             RoleId = model.RoleId,
             Country = country.Country1,
-             State = state.State1,
-              City = city.City1,
+            State = state.State1,
+            City = city.City1,
 
-           
+
         };
         if (!ModelState.IsValid)
         {
@@ -270,8 +273,15 @@ public class AccountController : Controller
     [Authorize]
     public async Task<IActionResult> UserProfile()
     {
+
+        ViewBag.Countries = _context.Countries.ToList();
+
         var cookie = Request.Cookies["cookieforid"];
         User? user = _context.Users.FirstOrDefault(u => u.Email == cookie);
+        //  Country? country= _context.Countries.FirstOrDefault(c => c.Country1 == user.Country);
+        // State? state= _context.States.FirstOrDefault(s => s.State1 == user.State);
+        // City? city= _context.Cities.FirstOrDefault(y => y.City1 == user.City);
+
         if (user == null)
         {
             return NotFound();
@@ -286,9 +296,9 @@ public class AccountController : Controller
             LastName = user.LastName,
             UserName = user.UserName,
             Phone = user.Phone,
-            Country = user.Country,
-            State = user.State,
-            City = user.City,
+            // CountryId = country.Id,
+            // StateId = state.Id,
+            // CityId = city.Id,
             Address = user.Address,
             Zipcode = user.Zipcode,
 
@@ -307,6 +317,9 @@ public class AccountController : Controller
     {
         var cookie = Request.Cookies["cookieforid"];
         User? user = _context.Users.FirstOrDefault(u => u.Email == cookie);
+        Country? country = _context.Countries.FirstOrDefault(c => c.Id == model.CountryId);
+        State? state = _context.States.FirstOrDefault(s => s.Id == model.StateId);
+        City? city = _context.Cities.FirstOrDefault(y => y.Id == model.CityId);
 
 
 
@@ -322,6 +335,9 @@ public class AccountController : Controller
         user.Phone = model.Phone;
         user.Address = model.Address;
         user.Zipcode = model.Zipcode;
+        user.Country = country.Country1;
+        user.State = state.State1;
+        user.City = city.City1;
 
         _context.Users.Update(user);
         _context.SaveChanges();
@@ -423,6 +439,7 @@ public class AccountController : Controller
 
 
     [Authorize]
+    [Authorize]
     public IActionResult menu()
     {
         return View();
@@ -472,10 +489,11 @@ public class AccountController : Controller
 
 
 
-
+    [Authorize]
     public async Task<IActionResult> userlist(string searchTerm, int page = 1)
     {
 
+        // int pageSize = itemsPerPage;
 
         var totalUsers = await _context.Users.CountAsync();
         var users = await _context.Users.Where(u => u.Isdeleted != true)
@@ -483,10 +501,15 @@ public class AccountController : Controller
             .Take(PageSize) // Get the users for the current page
             .ToListAsync();
 
+        //  int totalPages = (int)Math.Ceiling((double)totalUsers / pageSize);
+
         var model = new UserListViewModel
         {
 
             Users = users,
+
+            // TotalPages = totalPages,
+            // ItemsPerPage = pageSize,
 
             CurrentPage = page,
             TotalPages = (int)Math.Ceiling((double)totalUsers / PageSize)
@@ -519,9 +542,21 @@ public class AccountController : Controller
 
 
     [HttpGet]
+    [Authorize]
     public IActionResult edituser(int? id)
     {
+
+        ViewBag.Countries = _context.Countries.ToList();
+        //      ViewBag.States = _context.States.ToList();
+        //  ViewBag.cities = _context.Cities.ToList();
+
+
+
         User? user = _context.Users.FirstOrDefault(u => u.UserId == id);
+        //  Country? country= _context.Countries.FirstOrDefault(c => c.Country1 == user.Country);
+        //  State? state= _context.States.FirstOrDefault(s => s.State1 == user.State);
+        // City? city= _context.Cities.FirstOrDefault(y => y.City1 == user.City);
+        //ViewBag.state = state.State1;
         if (user == null)
         {
             return NotFound();
@@ -537,13 +572,16 @@ public class AccountController : Controller
             UserName = user.UserName,
             Phone = user.Phone,
             RoleId = user.RoleId,
-            // Status = user.Status,
+            Status = user.Status,
+
             // Image = user.Image,
-            // Country = user.Country,
-            // State = user.State,
-            // City = user.City,
+            // CountryId = country.Id,
+
+            // StateId = state.Id,
+            //  CityId= city.Id,
             Address = user.Address,
             Zipcode = user.Zipcode,
+
 
 
 
@@ -558,9 +596,11 @@ public class AccountController : Controller
     [HttpPost]
     public IActionResult edituser(EditUserViewModel model)
     {
-
+        Country? country = _context.Countries.FirstOrDefault(c => c.Id == model.CountryId);
+        State? state = _context.States.FirstOrDefault(s => s.Id == model.StateId);
+        City? city = _context.Cities.FirstOrDefault(y => y.Id == model.CityId);
         User? user = _context.Users.FirstOrDefault(u => u.Email == model.Email);
-        Console.WriteLine(model.Email);
+
 
 
         if (user == null)
@@ -578,11 +618,14 @@ public class AccountController : Controller
         // Console.WriteLine(model.MyImage);
         // user.MyImage = model.MyImage.ToString();
         // user.Password = u.Password;
-        Console.WriteLine(model.RoleId);
+        // Console.WriteLine(model.RoleId);
+        user.Status = model.Status;
         user.RoleId = model.RoleId;
         user.Address = model.Address;
         user.Zipcode = model.Zipcode;
-
+        user.Country = country.Country1;
+        user.State = state.State1;
+        user.City = city.City1;
 
         _context.SaveChanges();
 

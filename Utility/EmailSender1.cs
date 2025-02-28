@@ -25,7 +25,7 @@ public class EmailSender1
         var mimeMessage = new MimeMessage();
         mimeMessage.From.Add(MailboxAddress.Parse(_smtpUser));
         mimeMessage.To.Add(MailboxAddress.Parse(email));
-       
+
         mimeMessage.Subject = subject;
 
         // mimeMessage.Body = new TextPart("html")
@@ -43,10 +43,10 @@ public class EmailSender1
 
         bodyBuilder.HtmlBody = message;
 
-        
 
 
-         mimeMessage.Body = bodyBuilder.ToMessageBody();
+
+        mimeMessage.Body = bodyBuilder.ToMessageBody();
 
 
 

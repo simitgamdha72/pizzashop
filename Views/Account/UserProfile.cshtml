@@ -8,7 +8,7 @@
         <img class="object-fit-cover" src="~/images/profile_div_bg.jpg" width="100%" height="50px">
         <div class="d-flex w-100 px-2 px-md-4">
             <div class="position-relative">
-                <img style="margin-top: -1.8rem; border-radius: 50%;" src="@Model.Image" id="imagePreview" height="125px" width="125px" >
+                <img style="margin-top: -1.8rem; border-radius: 50%;" src="https://th.bing.com/th?id=OIP.sDGudWbPLYyfB9reTqQ6kgHaHa&w=250&h=250&c=8&rs=1&qlt=90&r=0&o=6&pid=3.1&rm=2" id="imagePreview" height="125px" width="125px" >
                 <div class="" style="position: absolute;/* height: 306px; */top: 51px;right: -2px;">
                     <input class=" d-none form-control" type="file" id="imageUpload" required>
                     <label class="profileImgUpload" for="imageUpload">
@@ -55,50 +55,45 @@
                     </div>
                 </div>
             </div>
-            <div class="row row-cols-1 row-cols-sm-2 row-cols-lg-3 gy-3 gx-4 my-0">
-                <div class="col">
-                    <div class="form-floating">
-                        <select class="form-select" id="CountryId" name="CountryId">
-                            
-                        <option selected>Select Country</option>
-                        <option value="1">India</option>
-                        <option value="2">USA</option>
-                        <option value="3">Canada</option>
-                        </select>
-                        <label for="country">Country</label>
-                    </div>
-                </div>
-                <div class="col">
-                    
-                    <div class="form-floating">
-                        <select class="form-select" id="state">
-                        <option selected>Select State</option>
-                        <option value="1">Gujarat</option>
-                        <option value="2">Maharashtra</option>
-                        <option value="3">Delhi</option>
-                        </select>
-                        <label for="state">State</label>
-                    </div>
-                </div>
-                <div class="col">
-                    
-                    <div class="form-floating">
-                        <select class="form-select" id="city">
-                        <option selected>Select City</option>
-                        <option value="1">Rajkot</option>
-                        <option value="2">Ahmedabad</option>
-                        <option value="3">Baroda</option>
-                        </select>
-                        <label for="city">City</label>
-                    </div>
-                </div>
-                <div class="col d-block d-lg-none">
-                    <div class="form-floating">
-                        <input type="text" asp-for="Zipcode" value="@Model.Zipcode" class="form-control" id="zipcode" placeholder="Zipcode">
-                        <label for="zipcode">Zipcode</label>
-                    </div>
-                </div>
-            </div>
+             <div class="row container-fluid">
+                                <div class="form-floating col adduser-form-coloumn2" style="margin-top: 15px;">
+
+                                    @* <select id="country" class="form-control">
+                                        <option value="">United States</option>
+                                    </select> *@
+                                     <select asp-for="CountryId" class="form-control" id="CountryId">
+            <option value="">Select Country</option>
+            @foreach (var country in ViewBag.Countries as List<Country>)
+            {
+                <option value="@country.Id">@country.Country1</option>
+            }
+        </select>
+                                   
+
+                                </div>
+                                 <div class="form-floating col adduser-form-coloumn2" style="margin-top: 15px;">
+
+                                    @* <select id="state" class="form-control">
+                                        <option value="">Texas</option>
+                                    </select> *@
+                                     <select asp-for="StateId" class="form-control" id="StateId">
+            <option value="">Select State</option>
+        </select>
+                                   
+
+                                </div>
+                                <div class="form-floating col adduser-form-coloumn2" style="margin-top: 15px;">
+
+                                    @* <select id="city" class="form-control">
+                                        <option value="">Housten </option>
+                                    </select> *@
+                                      <select asp-for="CityId" class="form-control" id="CityId">
+            <option value="">Select City</option>
+        </select>
+
+                                </div>
+
+                            </div> 
             <div class="row gy-3 gx-4 mt-0">
                 <div class="col-12 col-lg-8">
                     <div class="form-floating">
@@ -111,7 +106,7 @@
                         <input type="text" asp-for="Zipcode" value="@Model.Zipcode" class="form-control" id="zipcode" placeholder="Zipcode">
                         <label for="zipcode">Zipcode</label>
                     </div>
-                </div>
+                </div> 
             </div>
             <div class="d-flex justify-content-end align-items-center mt-4">
                 <button type="submit" class="customBtnPrimary me-2">Update</button>
@@ -120,3 +115,51 @@
         </form>
     </div>
 </div>
+
+
+
+@section Scripts{
+
+    <script>
+
+        $(document).ready(function () {
+            console.log("helo")
+            // Trigger the state dropdown when country is selected
+            $("#CountryId").change(function () {
+                console.log("hello");
+                var countryId = $(this).val();
+                console.log(countryId);
+                if (countryId) {
+                    $.get("/Account/GetStatesByCountry?countryId=" + countryId, function (data) {
+                        $("#StateId").empty().append('<option value="">Select State</option>');
+                        
+                        $.each(data, function (index, state) {
+                            console.log(index,state);
+                            $("#StateId").append('<option value="' + state.value + '">' + state.text + '</option>');
+                        });
+                        $("#CityId").empty().append('<option value="">Select City</option>');
+                    });
+                } else {
+                    $("#StateId").empty().append('<option value="">Select State</option>');
+                    $("#CityId").empty().append('<option value="">Select City</option>');
+                }
+            });
+
+            // Trigger the city dropdown when state is selected
+            $("#StateId").change(function () {
+                var stateId = $(this).val();
+                if (stateId) {
+                    $.get("/Account/GetCitiesByState?stateId=" + stateId, function (data) {
+                        $("#CityId").empty().append('<option value="">Select City</option>');
+                        $.each(data, function (index, city) {
+                            $("#CityId").append('<option value="' + city.value + '">' + city.text + '</option>');
+                        });
+                    });
+                } else {
+                    $("#CityId").empty().append('<option value="">Select City</option>');
+                }
+            });
+        });
+    </script>
+
+}
