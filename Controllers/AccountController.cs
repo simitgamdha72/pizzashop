@@ -607,8 +607,10 @@ public class AccountController : Controller
         {
             return NotFound();
         }
-
-
+        // if (!ModelState.IsValid)
+        // {
+        //     return View(model);
+        // }
 
         user.FirstName = model.FirstName;
         user.LastName = model.LastName;
@@ -629,7 +631,9 @@ public class AccountController : Controller
 
         _context.SaveChanges();
 
+
         return RedirectToAction("userlist", "Account");
+
 
 
     }
