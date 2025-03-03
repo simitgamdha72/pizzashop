@@ -125,6 +125,10 @@
       "PackagePath": "staticwebassets\\js\\bootstrap.bundle.min.js"
     },
     {
+      "Id": "D:\\PIZZASHOP\\pizzashop\\wwwroot\\js\\script.js",
+      "PackagePath": "staticwebassets\\js\\script.js"
+    },
+    {
       "Id": "D:\\PIZZASHOP\\pizzashop\\wwwroot\\js\\site.js",
       "PackagePath": "staticwebassets\\js\\site.js"
     },

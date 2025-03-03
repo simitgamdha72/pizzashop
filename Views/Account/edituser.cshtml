@@ -16,13 +16,13 @@
             <div class="row container-fluid">
                 <div class="form-floating col adduser-form-coloumn " style="margin-top: 15px;">
                     <input asp-for="FirstName" type="text" class="form-control" id="floatingInputfirstname"
-                        placeholder="name@example.com" required>
+                        placeholder="name@example.com">
                     <label for="floatingInputfirstname" style="margin-left: 10px;">First Name</label>
                     <span asp-validation-for="FirstName" class="text-danger"></span>
                 </div>
                 <div class="form-floating col adduser-form-coloumn " style="margin-top: 15px;">
                     <input asp-for="LastName" type="text" class="form-control" id="floatingInputlastname"
-                        placeholder="name@example.com" required>
+                        placeholder="name@example.com">
                     <label for="floatingInputlastname" style="margin-left: 10px;">Last Name</label>
                     <span asp-validation-for="LastName" class="text-danger"></span>
                 </div>
@@ -31,7 +31,7 @@
             <div class="row container-fluid">
                 <div class="form-floating col adduser-form-coloumn " style="margin-top: 15px;">
                     <input asp-for="UserName" type="text" class="form-control" id="floatingInputusername"
-                        placeholder="name@example.com" required>
+                        placeholder="name@example.com">
 
                     <label for="floatingInputusername" style="margin-left: 10px;">User Name</label>
                     <span asp-validation-for="UserName" class="text-danger"></span>
@@ -45,7 +45,7 @@
                                 </div> *@
                 <div class="form-floating col adduser-form-coloumn " style="margin-top: 15px;">
 
-                    <select asp-for="RoleId" id="role" class="form-control" required>
+                    <select asp-for="RoleId" id="role" class="form-control">
                         <option value="1">Admin</option>
                         <option value="2">Account Manager</option>
                         <option value="3">Chef</option>
@@ -66,7 +66,7 @@
                     <label for="floatingInputemail" style="margin-left: 10px;">Email</label>
                 </div>
                 <div class="form-floating col adduser-form-coloumn " style="margin-top: 15px;">
-                    <select asp-for="Status" class="form-control" required>
+                    <select asp-for="Status" class="form-control">
                         <option value="null">status</option>
                         <option value="true">Active</option>
                         <option value="false">InActive</option>
@@ -108,11 +108,13 @@
                     @* <select id="country" class="form-control">
                                         <option value="">United States</option>
                                     </select> *@
-                    <select asp-for="CountryId" class="form-control" id="CountryId" required>
+                    <select asp-for="CountryId" class="form-control" id="CountryId">
                         <option value="">Select Country</option>
                         @foreach (var country in ViewBag.Countries as List<Country>)
                         {
                             <option value="@country.Id">@country.Country1</option>
+                            @* <option value="@Model.CountryId">@country.Country1</option> *@
+
                         }
                     </select>
                     <span asp-validation-for="CountryId" class="text-danger"></span>
@@ -124,7 +126,7 @@
                     @* <select id="state" class="form-control">
                                         <option value="">Texas</option>
                                     </select> *@
-                    <select asp-for="StateId" class="form-control" id="StateId" required>
+                    <select asp-for="StateId" class="form-control" id="StateId">
                         <option value="">Select State</option>
                         @* <option value="" selected>@ViewBag.state</option> *@
                     </select>
@@ -137,7 +139,7 @@
                     @* <select id="city" class="form-control">
                                         <option value="">Housten </option>
                                     </select> *@
-                    <select asp-for="CityId" class="form-control" id="CityId" required>
+                    <select asp-for="CityId" class="form-control" id="CityId">
                         <option value="">Select City</option>
                     </select>
                     <span asp-validation-for="CityId" class="text-danger"></span>
@@ -152,19 +154,19 @@
             <div class="row container-fluid">
                 <div class="form-floating col adduser-form-coloumn2" style="margin-top: 15px;">
                     <input asp-for="Zipcode" type="number" class="form-control" id="floatingInputzipcode"
-                        placeholder="name@example.com" required>
+                        placeholder="name@example.com">
                     <label for="floatingInputzipcode" style="margin-left: 10px;">Zipcode</label>
                     <span asp-validation-for="Zipcode" class="text-danger"></span>
                 </div>
                 <div class="form-floating col adduser-form-coloumn2" style="margin-top: 15px;">
                     <input asp-for="Address" type="text" class="form-control" id="floatingInputadress"
-                        placeholder="name@example.com" required>
+                        placeholder="name@example.com">
                     <label for="floatingInputadress" style="margin-left: 10px;">Adress</label>
                     <span asp-validation-for="Address" class="text-danger"></span>
                 </div>
                 <div class="form-floating col adduser-form-coloumn2" style="margin-top: 15px;">
                     <input asp-for="Phone" type="number" class="form-control" id="floatingInputphone"
-                        placeholder="name@example.com" required>
+                        placeholder="name@example.com">
                     <span asp-validation-for="Phone" class="text-danger"></span>
                     <label for="floatingInputphone" style="margin-left: 10px;">Phone</label>
                 </div>
@@ -216,6 +218,7 @@
 
             // Trigger the city dropdown when state is selected
             $("#StateId").change(function () {
+                console.log("hello2");
                 var stateId = $(this).val();
                 if (stateId) {
                     $.get("/Account/GetCitiesByState?stateId=" + stateId, function (data) {

@@ -20,6 +20,8 @@ using Microsoft.EntityFrameworkCore;
 using MailKit;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore.Metadata.Internal;
+using pizzashop.Repository;
+using pizzashop.Repository.implementation;
 
 
 
@@ -30,51 +32,39 @@ namespace pizzashop.Controllers;
 
 public class AccountController : Controller
 {
-
-
     private readonly PizzashopContext _context;
-
+    private readonly iuser _user;
+    private readonly icountry _country;
+    private readonly istate _state;
+    private readonly icity _city;
     private const int PageSize = 5;
     public readonly EmailSender1 es;
-    //
     private readonly IConfiguration _configuration;
 
 
-
-
-
-    public AccountController(PizzashopContext context, EmailSender1 ess1, IConfiguration configuration)
+    public AccountController(PizzashopContext context, EmailSender1 ess1, IConfiguration configuration, iuser user, icountry country, istate state, icity city)
     {
-
-
+        _user = user;
         _context = context;
+        _country = country;
+        _state = state;
+        _city = city;
         es = ess1;
         _configuration = configuration;
-
     }
 
     [HttpGet]
 
     public IActionResult Index()
     {
-
-
-
-
-
         var cookie = Request.Cookies["cookie"];
-        User? user = _context.Users.FirstOrDefault(u => u.Email == cookie);
+        User? user = _user.GetFirstOrDefault(u => u.Email == cookie);
         if (user == null)
         {
             return View();
         }
-
-
-
         return RedirectToAction("userlist", "Account");
-
     }
-
 
     private string GenerateToken(string email, int? role)
     {
@@ -84,7 +74,6 @@ public class AccountController : Controller
 
             new (ClaimTypes.Email, email),
             new (ClaimTypes.Role, Role),
-
 
         };
 
@@ -111,11 +100,9 @@ public class AccountController : Controller
             return View(loginViewModel);
         }
 
-        User? user = _context.Users.FirstOrDefault(u => u.Email == loginViewModel.Email);
+        User? user = _user.GetFirstOrDefault(u => u.Email == loginViewModel.Email);
         // User? user2 = _context.Users.FirstOrDefault(u2 => u2.Email == user.Email);
         // Console.WriteLine(user2.Email);
-
-
 
         if (user == null)
         {
@@ -128,8 +115,6 @@ public class AccountController : Controller
             TempData["error"] = "Password is Incorrect";
             return View(loginViewModel);
         }
-
-
 
         var tokenString = GenerateToken(user.Email, user.RoleId);
         var cookieOptions = new CookieOptions
@@ -157,59 +142,30 @@ public class AccountController : Controller
         {
             Expires = loginViewModel.RememberMe ? DateTime.UtcNow.AddDays(30) : DateTime.UtcNow.AddHours(1)
         });
-
-
-
-
-
         return RedirectToAction("userlist", "Account");
-
-
-
     }
 
     [HttpGet]
     [Authorize]
     public IActionResult addnewuser()
     {
-
-        ViewBag.Countries = _context.Countries.ToList();
+        ViewBag.Countries = _country.ToList();
         return View();
-
-
-
-
-        // return View();
     }
-
-
-    // public JsonResult GetStatesByCountry(int countryId)
-    // {
-    //     try
-    //     {
-    //         var states = _context.States.Where(s => s.CountryId == countryId).ToList();
-    //         return Json(states.Select(s => new { value = s.Id, text = s.Country }));
-    //     }
-    //     catch (Exception ex)
-    //     {
-    //         // Log the error (for debugging purposes)
-    //         Console.WriteLine($"Error: {ex.Message}");
-    //         // return StatusCode(500, "Internal server error");
-    //         return null;
-    //     }
-    // }
 
     [HttpGet]
     public JsonResult GetStatesByCountry(int countryId)
     {
-        var states = _context.States.Where(s => s.CountryId == countryId).ToList();
+        var states = _state.GetStatesByCountryId(countryId);
+        // var states = _context.States.Where(s => s.CountryId == countryId).ToList();
         return Json(states.Select(s => new { value = s.Id, text = s.State1 }));
 
     }
     [HttpGet]
     public JsonResult GetCitiesByState(int stateId)
     {
-        var cities = _context.Cities.Where(c => c.StateId == stateId).ToList();
+        var cities = _city.GetCitiesByStateId(stateId);
+        // var cities = _context.Cities.Where(c => c.StateId == stateId).ToList();
         return Json(cities.Select(c => new { value = c.Id, text = c.City1 }));
         // var cities = _context.Cities.Where(c => c.Id == stateId).ToList();
         // return Json(cities);
@@ -221,10 +177,20 @@ public class AccountController : Controller
     //  public async Task<IActionResult> addnewuser([Bind("FirstName,LastName,UserName,Email,Password,Zipcode,Address,Phone,RoleId")] User model)
     public async Task<IActionResult> addnewuser(AddnewUserViewModel model)
     {
+
+        if (!ModelState.IsValid)
+        {
+            ViewBag.Countries = _country.ToList();
+            // ViewBag.States = _context.States.ToList();
+            // ViewBag.cities = _context.Cities.ToList();
+            return View(model);
+        }
+
         Console.WriteLine(model.CountryId);
-        Country? country = _context.Countries.FirstOrDefault(c => c.Id == model.CountryId);
-        State? state = _context.States.FirstOrDefault(s => s.Id == model.StateId);
-        City? city = _context.Cities.FirstOrDefault(y => y.Id == model.CityId);
+        Country? country = _country.GetFirstOrDefault(c => c.Id == model.CountryId);
+        // Country? country = _context.Countries.FirstOrDefault(c => c.Id == model.CountryId);
+        State? state = _state.GetFirstOrDefault(s => s.Id == model.StateId);
+        City? city = _city.GetFirstOrDefault(y => y.Id == model.CityId);
         var viewmodel = new User
         {
             FirstName = model.FirstName,
@@ -239,16 +205,14 @@ public class AccountController : Controller
             Country = country.Country1,
             State = state.State1,
             City = city.City1,
-
-
         };
         if (!ModelState.IsValid)
         {
             return View(model);
         }
 
-        _context.Add(viewmodel);
-        await _context.SaveChangesAsync();
+        _user.Add(viewmodel);
+        await _user.SaveAsync();
 
         string subject = "Login Details";
         Extrathingsforadduser object1 = new();
@@ -259,13 +223,7 @@ public class AccountController : Controller
         // string object1 ="";
         // Console.WriteLine(m.Email);
         await es.SendEmailAsync(model.Email, subject, emailbody);
-
-
-
-
         return RedirectToAction("userlist", "Account");
-
-
     }
 
 
@@ -273,11 +231,10 @@ public class AccountController : Controller
     [Authorize]
     public async Task<IActionResult> UserProfile()
     {
-
-        ViewBag.Countries = _context.Countries.ToList();
+        ViewBag.Countries = _country.ToList();
 
         var cookie = Request.Cookies["cookieforid"];
-        User? user = _context.Users.FirstOrDefault(u => u.Email == cookie);
+        User? user = _user.GetFirstOrDefault(u => u.Email == cookie);
         //  Country? country= _context.Countries.FirstOrDefault(c => c.Country1 == user.Country);
         // State? state= _context.States.FirstOrDefault(s => s.State1 == user.State);
         // City? city= _context.Cities.FirstOrDefault(y => y.City1 == user.City);
@@ -288,9 +245,6 @@ public class AccountController : Controller
         }
         var viewModel = new UserProfileViewModel
         {
-
-
-
             Email = user.Email,
             FirstName = user.FirstName,
             LastName = user.LastName,
@@ -301,33 +255,32 @@ public class AccountController : Controller
             // CityId = city.Id,
             Address = user.Address,
             Zipcode = user.Zipcode,
-
-
-
-
         };
-
-
         return View(viewModel);
-
     }
 
     [HttpPost]
     public IActionResult UserProfile(UserProfileViewModel model)
     {
+
+        if (!ModelState.IsValid)
+        {
+            ViewBag.Countries = _country.ToList();
+            // ViewBag.States = _context.States.ToList();
+            // ViewBag.cities = _context.Cities.ToList();
+            return View(model);
+        }
+
         var cookie = Request.Cookies["cookieforid"];
-        User? user = _context.Users.FirstOrDefault(u => u.Email == cookie);
-        Country? country = _context.Countries.FirstOrDefault(c => c.Id == model.CountryId);
-        State? state = _context.States.FirstOrDefault(s => s.Id == model.StateId);
-        City? city = _context.Cities.FirstOrDefault(y => y.Id == model.CityId);
-
-
+        User? user = _user.GetFirstOrDefault(u => u.Email == cookie);
+        Country? country = _country.GetFirstOrDefault(c => c.Id == model.CountryId);
+        State? state = _state.GetFirstOrDefault(s => s.Id == model.StateId);
+        City? city = _city.GetFirstOrDefault(y => y.Id == model.CityId);
 
         if (user == null)
         {
             return NotFound();
         }
-
         // user.Email = model.Email;
         user.FirstName = model.FirstName;
         user.LastName = model.LastName;
@@ -338,21 +291,15 @@ public class AccountController : Controller
         user.Country = country.Country1;
         user.State = state.State1;
         user.City = city.City1;
-
-        _context.Users.Update(user);
-        _context.SaveChanges();
-
+        _user.Update(user);
+        _user.Save();
         return RedirectToAction("UserProfile", "Account");
-
-
     }
 
 
     [HttpGet]
     public IActionResult forgotpassword()
     {
-
-
         return View();
     }
 
@@ -365,21 +312,14 @@ public class AccountController : Controller
         // string object1 ="";
         // Console.WriteLine(m.Email);
         await es.SendEmailAsync(m.Email, subject, object2);
-
         Response.Cookies.Append("cookie2", m.Email);
-
-
         return RedirectToAction("ForgotPasswordConfirmation", "Account");
     }
 
     [HttpGet]
     public IActionResult resetpassword()
     {
-        //     var cookie = Request.Cookies["cookie2"];
-        //  User? user = _context.Users.FirstOrDefault(u => u.Email == cookie);
-        //  if (user == null){
-        //      return View();
-        //  }
+
         return View();
     }
 
@@ -387,20 +327,14 @@ public class AccountController : Controller
     [HttpPost]
     public IActionResult ResetPassword(ResetPasswordViewModel m)
     {
-
-
         var cookie = Request.Cookies["cookie2"];
-        User? user = _context.Users.FirstOrDefault(u => u.Email == cookie);
-
-        // User v = (from c in _context.Users
-        //           where c.Email == m.Email
-        //           select c).FirstOrDefault();
+        User? user = _user.GetFirstOrDefault(u => u.Email == cookie);
 
         if (user != null)
         {
             user.Password = m.Password;
 
-            _context.SaveChanges();
+            _user.Save();
             ViewBag.Message = "Customer record updated.";
         }
         else
@@ -410,9 +344,6 @@ public class AccountController : Controller
 
         return RedirectToAction("ResetPasswordConfirmation", "Account");
     }
-
-
-
 
     [HttpGet]
     public IActionResult ResetPasswordConfirmation()
@@ -425,20 +356,6 @@ public class AccountController : Controller
     }
 
 
-
-
-
-    // [Authorize]
-    // public IActionResult userlist()
-    // {
-
-
-    //     return View();
-
-    // }
-
-
-    [Authorize]
     [Authorize]
     public IActionResult menu()
     {
@@ -459,27 +376,32 @@ public class AccountController : Controller
         // 3. Redirect the user to the login page after logout
         return RedirectToAction("Index", "Account");
     }
+
     [HttpGet]
     [Authorize]
     public IActionResult changepassword()
     {
         return View();
     }
+
     [HttpPost]
     public IActionResult changepassword(ChangePasswordViewModel model)
     {
-        var cookie = Request.Cookies["cookie"];
-        User? user = _context.Users.FirstOrDefault(u => u.Email == cookie);
+        // if (!ModelState.IsValid)
+        // {
+        //     return View(model);
+        // }
+        var cookie = Request.Cookies["cookieforid"];
+        User? user = _user.GetFirstOrDefault(u => u.Email == cookie);
 
         if (user.Password == model.Password)
         {
             user.Password = model.newPassword;
-            _context.Users.Update(user);
-            _context.SaveChanges();
+            _user.Update(user);
+            _user.Save();
             Response.Cookies.Delete("AuthToken");
             Response.Cookies.Delete("cookie");
             return RedirectToAction("Index", "Account");
-
         }
         else
         {
@@ -488,15 +410,13 @@ public class AccountController : Controller
     }
 
 
-
     [Authorize]
-    public async Task<IActionResult> userlist(string searchTerm, int page = 1)
+    public async Task<IActionResult> userlist(string searchTerm, int page = 1) // repo baki
     {
-
         // int pageSize = itemsPerPage;
-
-        var totalUsers = await _context.Users.CountAsync();
-        var users = await _context.Users.Where(u => u.Isdeleted != true)
+        var totalUsers = await _user.GetTotalUsersAsync();
+        // var users = await _user.GetActiveUsersAsync(); 
+        var users = await _context.Users.Where(u => u.Isdeleted != true) // <--
             .Skip((page - 1) * PageSize) // Skip users for the current page
             .Take(PageSize) // Get the users for the current page
             .ToListAsync();
@@ -505,16 +425,12 @@ public class AccountController : Controller
 
         var model = new UserListViewModel
         {
-
             Users = users,
-
             // TotalPages = totalPages,
             // ItemsPerPage = pageSize,
-
             CurrentPage = page,
             TotalPages = (int)Math.Ceiling((double)totalUsers / PageSize)
         };
-
         return View(model);
     }
 
@@ -525,17 +441,17 @@ public class AccountController : Controller
     public async Task<IActionResult> DeleteUser(int id)
     {
         Console.WriteLine(id);
-        var user = await _context.Users.FindAsync(id);
+        var user = await _user.GetUserByIdAsync(id);
+        Console.WriteLine(user);
+        // var user = await _context.Users.FindAsync(id);
         if (user == null)
         {
             return NotFound();
         }
-
         user.Isdeleted = true;
         Console.WriteLine(user.Isdeleted);
-        _context.Users.Update(user);
-        await _context.SaveChangesAsync();
-
+        _user.Update(user);
+        await _user.SaveAsync();
         // Redirect to the user list after deleting the user
         return RedirectToAction("userlist", "Account");
     }
@@ -545,72 +461,61 @@ public class AccountController : Controller
     [Authorize]
     public IActionResult edituser(int? id)
     {
-
-        ViewBag.Countries = _context.Countries.ToList();
+        ViewBag.Countries = _country.ToList();
         //      ViewBag.States = _context.States.ToList();
         //  ViewBag.cities = _context.Cities.ToList();
-
-
-
-        User? user = _context.Users.FirstOrDefault(u => u.UserId == id);
-        //  Country? country= _context.Countries.FirstOrDefault(c => c.Country1 == user.Country);
-        //  State? state= _context.States.FirstOrDefault(s => s.State1 == user.State);
-        // City? city= _context.Cities.FirstOrDefault(y => y.City1 == user.City);
+        User? user = _user.GetFirstOrDefault(u => u.UserId == id);
+        Country? country = _country.GetFirstOrDefault(c => c.Country1 == user.Country);
+        State? state = _state.GetFirstOrDefault(s => s.State1 == user.State);
+        City? city = _city.GetFirstOrDefault(y => y.City1 == user.City);
         //ViewBag.state = state.State1;
         if (user == null)
         {
             return NotFound();
         }
+
         var viewModel = new EditUserViewModel
         {
-
-
-
             Email = user.Email,
             FirstName = user.FirstName,
             LastName = user.LastName,
             UserName = user.UserName,
-            Phone = user.Phone,
-            RoleId = user.RoleId,
-            Status = user.Status,
-
+            Phone = user.Phone ?? 0,
+            RoleId = user.RoleId ?? 0,
+            Status = user.Status ?? true,
             // Image = user.Image,
             // CountryId = country.Id,
-
             // StateId = state.Id,
-            //  CityId= city.Id,
+            // CityId = city.Id,
             Address = user.Address,
-            Zipcode = user.Zipcode,
-
-
-
-
+            Zipcode = user.Zipcode ?? 0,
         };
         Console.WriteLine(id);
-
         return View(viewModel);
     }
-
 
 
     [HttpPost]
     public IActionResult edituser(EditUserViewModel model)
     {
-        Country? country = _context.Countries.FirstOrDefault(c => c.Id == model.CountryId);
-        State? state = _context.States.FirstOrDefault(s => s.Id == model.StateId);
-        City? city = _context.Cities.FirstOrDefault(y => y.Id == model.CityId);
-        User? user = _context.Users.FirstOrDefault(u => u.Email == model.Email);
 
+        if (!ModelState.IsValid)
+        {
+            ViewBag.Countries = _context.Countries.ToList();
+            // ViewBag.States = _context.States.ToList();
+            // ViewBag.cities = _context.Cities.ToList();
+            return View(model);
+        }
 
+        Country? country = _country.GetFirstOrDefault(c => c.Id == model.CountryId);
+        State? state = _state.GetFirstOrDefault(s => s.Id == model.StateId);
+        City? city = _city.GetFirstOrDefault(y => y.Id == model.CityId);
+        User? user = _user.GetFirstOrDefault(u => u.Email == model.Email);
 
         if (user == null)
         {
             return NotFound();
         }
-        // if (!ModelState.IsValid)
-        // {
-        //     return View(model);
-        // }
 
         user.FirstName = model.FirstName;
         user.LastName = model.LastName;
@@ -629,13 +534,9 @@ public class AccountController : Controller
         user.State = state.State1;
         user.City = city.City1;
 
-        _context.SaveChanges();
-
+        _user.Save();
 
         return RedirectToAction("userlist", "Account");
-
-
-
     }
 
     [Authorize]
@@ -644,10 +545,5 @@ public class AccountController : Controller
     {
         return View();
     }
-
-
-
-
-
 }
 

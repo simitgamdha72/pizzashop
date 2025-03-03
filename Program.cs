@@ -8,6 +8,8 @@ using System.Text;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using System.Security.Claims;
 using pizzashop.Models.Models;
+using pizzashop.Repository;
+using pizzashop.Repository.implementation;
 
 
 
@@ -21,6 +23,10 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddControllersWithViews();
 builder.Services.AddDbContext<PizzashopContext>();
 builder.Services.AddScoped<EmailSender1>();
+builder.Services.AddScoped<iuser, user>();
+builder.Services.AddScoped<icountry, country>();
+builder.Services.AddScoped<istate, state>();
+builder.Services.AddScoped<icity, city>();
 // Add TokenService to the DI container
 builder.Services.AddScoped<TokenService>();
 
@@ -43,7 +49,7 @@ builder.Services.AddHttpContextAccessor();
 builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
     .AddJwtBearer(options =>
     {
-      options.TokenValidationParameters = new TokenValidationParameters
+        options.TokenValidationParameters = new TokenValidationParameters
         {
             ValidateIssuer = true,
             ValidateAudience = true,
@@ -54,10 +60,12 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
             IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes("hey1234567890ojykjrkr6uluyk")),
             ClockSkew = TimeSpan.Zero,
             RoleClaimType = ClaimTypes.Role
-           
+
         };
-        options.Events = new JwtBearerEvents{
-            OnMessageReceived = context => {
+        options.Events = new JwtBearerEvents
+        {
+            OnMessageReceived = context =>
+            {
                 var token = context.Request.Cookies["authtoken"];
                 if (!string.IsNullOrEmpty(token))
                 {
@@ -71,7 +79,6 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
 
 
 //
-
 
 
 var app = builder.Build();
