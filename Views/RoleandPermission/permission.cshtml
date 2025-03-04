@@ -1,0 +1,342 @@
+@* <div id="permissionPageContent" class="container-fluid px-3 py-4 p-md-5">
+
+    <div class="d-flex justify-content-between align-items-center mb-3">
+        <div class="fs-2 fw-semibold" style="color: #006CAC;">Permissions</div>
+        <a class="customBtnSecondary text-decoration-none p-md-3" href="roles.html"><i
+                class="bi bi-chevron-left me-2"></i>Back</a>
+    </div>
+
+    <div class="bg-white p-5">
+        <div class="form-floating roleHolder mb-3">
+            <input type="text" class="form-control" id="role" placeholder="Role" value="Account Manager" disabled>
+            <label for="role">Role</label>
+        </div>
+        <div class="table-responsive">
+            <table class="tableList table align-middle">
+                <thead>
+                    <tr>
+                        <th scope="col">
+                            <div class="form-check">
+                                <input class="form-check-input" type="checkbox" value="" id="selectAllCheckbox">
+                            </div>
+                        </th>
+                        <th scope="col">Permission</th>
+                        <th scope="col">Can View</th>
+                        <th scope="col">Can Add/Edit</th>
+                        <th scope="col">Can Delete</th>
+                    </tr>
+                </thead>
+                <tbody class="table-group-divider">
+                    <tr>
+                        <td>
+                            <div class="form-check">
+                                <input class="form-check-input checkboxes" type="checkbox" value=""
+                                    id="flexCheckDefault">
+                            </div>
+                        </td>
+                        <td>Users</td>
+                        <td>
+                            <div class="form-check form-switch toggleSwitch abcd">
+                                <input class="form-check-input" type="checkbox" role="switch"
+                                    id="flexSwitchCheckChecked" checked>
+                            </div>
+                        </td>
+                        <td>
+                            <div class="form-check form-switch toggleSwitch">
+                                <input class="form-check-input" type="checkbox" role="switch"
+                                    id="flexSwitchCheckChecked" checked>
+                            </div>
+                        </td>
+                        <td>
+                            <div class="form-check form-switch toggleSwitch">
+                                <input class="form-check-input" type="checkbox" role="switch"
+                                    id="flexSwitchCheckChecked" checked>
+                            </div>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <div class="form-check">
+                                <input class="form-check-input checkboxes" type="checkbox" value=""
+                                    id="flexCheckDefault">
+                            </div>
+                        </td>
+                        <td>RolesAndPermission</td>
+                        <td>
+                            <div class="form-check form-switch toggleSwitch">
+                                <input class="form-check-input " type="checkbox" role="switch"
+                                    id="flexSwitchCheckChecked" checked>
+                            </div>
+                        </td>
+                        <td>
+                            <div class="form-check form-switch toggleSwitch">
+                                <input class="form-check-input" type="checkbox" role="switch"
+                                    id="flexSwitchCheckChecked" checked>
+                            </div>
+                        </td>
+                        <td>
+                            <div class="form-check form-switch toggleSwitch">
+                                <input class="form-check-input" type="checkbox" role="switch"
+                                    id="flexSwitchCheckChecked" checked>
+                            </div>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <div class="form-check">
+                                <input class="form-check-input checkboxes" type="checkbox" value=""
+                                    id="flexCheckDefault">
+                            </div>
+                        </td>
+                        <td>Menu</td>
+                        <td>
+                            <div class="form-check form-switch toggleSwitch">
+                                <input class="form-check-input" type="checkbox" role="switch"
+                                    id="flexSwitchCheckChecked" checked>
+                            </div>
+                        </td>
+                        <td>
+                            <div class="form-check form-switch toggleSwitch">
+                                <input class="form-check-input" type="checkbox" role="switch"
+                                    id="flexSwitchCheckChecked" checked>
+                            </div>
+                        </td>
+                        <td>
+                            <div class="form-check form-switch toggleSwitch">
+                                <input class="form-check-input" type="checkbox" role="switch"
+                                    id="flexSwitchCheckChecked" checked>
+                            </div>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <div class="form-check">
+                                <input class="form-check-input checkboxes" type="checkbox" value=""
+                                    id="flexCheckDefault">
+                            </div>
+                        </td>
+                        <td>TableAndSection</td>
+                        <td>
+                            <div class="form-check form-switch toggleSwitch">
+                                <input class="form-check-input" type="checkbox" role="switch"
+                                    id="flexSwitchCheckChecked" checked>
+                            </div>
+                        </td>
+                        <td>
+                            <div class="form-check form-switch toggleSwitch">
+                                <input class="form-check-input" type="checkbox" role="switch"
+                                    id="flexSwitchCheckChecked" checked>
+                            </div>
+                        </td>
+                        <td>
+                            <div class="form-check form-switch toggleSwitch">
+                                <input class="form-check-input" type="checkbox" role="switch"
+                                    id="flexSwitchCheckChecked" checked>
+                            </div>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <div class="form-check">
+                                <input class="form-check-input checkboxes" type="checkbox" value=""
+                                    id="flexCheckDefault">
+                            </div>
+                        </td>
+                        <td>TaxAndFee</td>
+                        <td>
+                            <div class="form-check form-switch toggleSwitch">
+                                <input class="form-check-input" type="checkbox" role="switch"
+                                    id="flexSwitchCheckChecked" checked>
+                            </div>
+                        </td>
+                        <td>
+                            <div class="form-check form-switch toggleSwitch">
+                                <input class="form-check-input" type="checkbox" role="switch"
+                                    id="flexSwitchCheckChecked" checked>
+                            </div>
+                        </td>
+                        <td>
+                            <div class="form-check form-switch toggleSwitch">
+                                <input class="form-check-input" type="checkbox" role="switch"
+                                    id="flexSwitchCheckChecked" checked>
+                            </div>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <div class="form-check">
+                                <input class="form-check-input checkboxes" type="checkbox" value=""
+                                    id="flexCheckDefault">
+                            </div>
+                        </td>
+                        <td>Order</td>
+                        <td>
+                            <div class="form-check form-switch toggleSwitch">
+                                <input class="form-check-input" type="checkbox" role="switch"
+                                    id="flexSwitchCheckChecked" checked>
+                            </div>
+                        </td>
+                        <td>
+                            <div class="form-check form-switch toggleSwitch">
+                                <input class="form-check-input" type="checkbox" role="switch"
+                                    id="flexSwitchCheckChecked" checked>
+                            </div>
+                        </td>
+                        <td>
+                            <div class="form-check form-switch toggleSwitch">
+                                <input class="form-check-input" type="checkbox" role="switch"
+                                    id="flexSwitchCheckChecked" checked>
+                            </div>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <div class="form-check">
+                                <input class="form-check-input checkboxes" type="checkbox" value=""
+                                    id="flexCheckDefault">
+                            </div>
+                        </td>
+                        <td>Customers</td>
+                        <td>
+                            <div class="form-check form-switch toggleSwitch">
+                                <input class="form-check-input" type="checkbox" role="switch"
+                                    id="flexSwitchCheckChecked" checked>
+                            </div>
+                        </td>
+                        <td>
+                            <div class="form-check form-switch toggleSwitch">
+                                <input class="form-check-input" type="checkbox" role="switch"
+                                    id="flexSwitchCheckChecked" checked>
+                            </div>
+                        </td>
+                        <td>
+                            <div class="form-check form-switch toggleSwitch">
+                                <input class="form-check-input" type="checkbox" role="switch"
+                                    id="flexSwitchCheckChecked" checked>
+                            </div>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+        <div class="d-flex justify-content-end align-items-center mt-3">
+            <button class="customBtnPrimary me-3">Save</button>
+            <button class="customBtnSecondary">cancel</button>
+        </div>
+    </div>
+</div> *@
+
+@model pizzashop.Models.ViewModels.RolePermissionsViewModel
+
+<div id="permissionPageContent" class="container-fluid px-3 py-4 p-md-5">
+    <div class="d-flex justify-content-between align-items-center mb-3">
+        <div class="fs-2 fw-semibold" style="color: #006CAC;">Permissions</div>
+        <a class="customBtnSecondary text-decoration-none p-md-3" href="@Url.Action("role", "RoleandPermission")">
+            <i class="bi bi-chevron-left me-2"></i>Back
+        </a>
+    </div>
+    
+
+    <div class="bg-white p-5">
+        <div class="form-floating roleHolder mb-3">
+            <input type="text" class="form-control" id="role" placeholder="Role" value="@Model.RoleName" disabled>
+            <label for="role">Role</label>
+        </div>
+        <form method="post" asp-controller="RoleandPermission" asp-action="SavePermissions">
+            <input type="hidden" name="RoleId" value="@Model.RoleId" />
+
+            <div class="table-responsive">
+                <table class="tableList table align-middle">
+                     <thead>
+                    <tr>
+                        <th scope="col">
+                            <div class="form-check">
+                                <input class="form-check-input" type="checkbox" value="" id="selectAllCheckbox"> Permission
+                            </div>
+                            
+                        </th>
+                       
+                        <th scope="col">Can View</th>
+                        <th scope="col">Can Add/Edit</th>
+                        <th scope="col">Can Delete</th>
+                    </tr>
+                </thead>
+                    @* <thead>
+                        <tr>
+                            <th scope="col">Permission</th>
+                            <th scope="col">Can View</th>
+                            <th scope="col">Can Add/Edit</th>
+                            <th scope="col">Can Delete</th>
+                        </tr>
+                    </thead>
+                    <tbody> *@
+
+                        @*start*@
+
+                                @{
+                                int i = 0;
+                                foreach (var permission in Model.Permissions)
+                                {
+                                    <tr class="alldata">
+                                        <td>
+                                            
+                                            <div class="d-flex mb-2 form-check">
+                                                @if (Model.Permissions[i].CanView || Model.Permissions[i].CanAddEdit ||
+                                                                                        Model.Permissions[i].CanDelete)
+                                                {
+                                                    
+                                                    <input type="checkbox" class="form-check-input checkboxes @Model.Permissions[i].PermissionId" id="flexCheckDefault" checked>
+                                                }
+                                                else
+                                                {
+                                                    <input type="checkbox" class="form-check-input checkboxes @Model.Permissions[i].PermissionId" id="flexCheckDefault">
+                                                }
+
+                                                <div class="ps-2">@Model.Permissions[i].PermissionName</div>
+                                                <input type="number" asp-for="@Model.Permissions[i].PermissionId" hidden
+                                                    class="d-none">
+                                            </div>
+                                        </td>
+                                        <td>
+                                           
+                                            <div class="form-check form-switch toggleSwitch">
+                                <input class="form-check-input" type="checkbox" role="switch"
+                                    id="flexSwitchCheckChecked"   asp-for="@Model.Permissions[i].CanView">
+                            </div>
+                                        </td>
+                                        <td>
+                                          
+                                             <div class="form-check form-switch toggleSwitch">
+                                <input class="form-check-input" type="checkbox" role="switch"
+                                    id="flexSwitchCheckChecked"   asp-for="@Model.Permissions[i].CanAddEdit">
+                            </div>
+                                            
+                                        </td>
+                                        <td>
+                                           
+                                            <div class="form-check form-switch toggleSwitch">
+                                <input class="form-check-input" type="checkbox" role="switch"
+                                    id="flexSwitchCheckChecked"  asp-for="@Model.Permissions[i].CanDelete">
+                            </div>
+                                        </td>
+                                    </tr>
+                                    i++;
+                                }
+                            }
+
+                        @*end*@
+
+                    </tbody>
+                </table>
+            </div>
+
+            <div class="d-flex justify-content-end align-items-center mt-3">
+                <button type="submit" class="btn" style="background-color: #006cac;color: white;margin-right: 10px;">Save</button>
+                <button type="button" class="btn"
+                    style="background-color: white;border: 1px solid #006cac;color: #006cac;" onclick="window.history.back()">Cancel</button>
+            </div>
+          
+            
+        </form>
+    </div>
+</div>

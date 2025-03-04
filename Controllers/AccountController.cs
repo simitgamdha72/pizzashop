@@ -698,5 +698,17 @@ public class AccountController : Controller
     {
         return View();
     }
+
+    [HttpGet]
+    public IActionResult role()
+    {
+        return View();
+    }
+
+    [HttpGet]
+    public IActionResult permission()
+    {
+        return View();
+    }
 }
 

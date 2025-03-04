@@ -139,7 +139,7 @@
 }
 
 .adduser-btn {
-  background-color: #006cac;
+  /* background-color: #006cac; */
   color: white;
   font-size: 16px;
   border: none;
@@ -182,4 +182,49 @@
 .adduser-form-coloumn2 {
   width: 33%;
   min-width: 250px;
+}
+
+/*role permission*/
+
+.toggleSwitch input {
+  background-color: #f3f3f3;
+  border: 1px solid #006cac;
+  padding: 0.7rem 1.3rem;
+}
+
+.toggleSwitch input:focus {
+  box-shadow: none;
+}
+
+.toggleSwitch input:checked {
+  background-color: #006cac;
+}
+
+.roleHolder {
+  position: relative;
+  border: 1px solid #006cac;
+  border-radius: 4px;
+  max-width: 450px;
+}
+
+.roleHolder input {
+  color: #727b83;
+}
+
+.roleHolder label {
+  background-color: transparent;
+}
+
+.roleHolder > .form-control:not(:placeholder-shown) {
+  padding-top: 0.625rem;
+  padding-bottom: 0.625rem;
+  background-color: #f3f3f3;
+}
+
+.roleHolder > .form-control:disabled ~ label::after {
+  background-color: white;
+}
+
+.roleHolder > .form-control:not(:placeholder-shown) ~ label {
+  transform: scale(0.75) translateY(-1.8rem) translateX(0.15rem);
 }
