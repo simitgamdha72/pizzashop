@@ -10,6 +10,9 @@ using System.Security.Claims;
 using pizzashop.Models.Models;
 using pizzashop.Repository;
 using pizzashop.Repository.implementation;
+using pizzashop.Utility;
+using pizzashop.Service;
+using pizzashop.Services;
 
 
 
@@ -23,10 +26,15 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddControllersWithViews();
 builder.Services.AddDbContext<PizzashopContext>();
 builder.Services.AddScoped<EmailSender1>();
+builder.Services.AddScoped<EmailSenderservice>();
+builder.Services.AddScoped<IAccountService, AccountService>();
 builder.Services.AddScoped<iuser, user>();
 builder.Services.AddScoped<icountry, country>();
 builder.Services.AddScoped<istate, state>();
 builder.Services.AddScoped<icity, city>();
+builder.Services.AddScoped<icountryservice, countryservice>();
+builder.Services.AddScoped<istateservice, stateservice>();
+builder.Services.AddScoped<icityservice, cityservice>();
 // Add TokenService to the DI container
 builder.Services.AddScoped<TokenService>();
 

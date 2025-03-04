@@ -38,6 +38,7 @@
                             placeholder="First Name">
                         <label for="fname">First Name</label>
                         <span asp-validation-for="FirstName" class="text-danger"></span>
+                        <input type="hidden" asp-for="Email" value="@Model.Email">
 
 
                     </div>
