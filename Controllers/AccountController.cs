@@ -502,11 +502,6 @@ public class AccountController : Controller
     }
 
 
-    [Authorize]
-    public IActionResult menu()
-    {
-        return View();
-    }
 
     [HttpPost]
     [ValidateAntiForgeryToken]

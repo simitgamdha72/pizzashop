@@ -13,7 +13,8 @@ using pizzashop.Repository.implementation;
 using pizzashop.Utility;
 using pizzashop.Service;
 using pizzashop.Services;
-using pizzashop.service;
+using pizzashop.Repositories;
+
 
 
 
@@ -37,8 +38,10 @@ builder.Services.AddScoped<icity, city>();
 builder.Services.AddScoped<icountryservice, countryservice>();
 builder.Services.AddScoped<istateservice, stateservice>();
 builder.Services.AddScoped<icityservice, cityservice>();
-builder.Services.AddScoped<irole, role>();
-builder.Services.AddScoped<iroleservice, roleservice>();
+builder.Services.AddScoped<icategory, category>();
+builder.Services.AddScoped<icategoryservice, categoryservice>();
+
+
 // Add TokenService to the DI container
 builder.Services.AddScoped<TokenService>();
 

@@ -228,3 +228,209 @@
 .roleHolder > .form-control:not(:placeholder-shown) ~ label {
   transform: scale(0.75) translateY(-1.8rem) translateX(0.15rem);
 }
+
+* {
+  font-family: "Roboto", serif;
+}
+
+/* menu-category-item */
+#menu {
+  padding: 1rem;
+}
+
+#menu .secondaryContainer {
+  background-color: #f8f9fa;
+  padding: 0.5rem;
+}
+
+#menu .tableList tr th {
+  background-color: transparent;
+  color: #727b83;
+  padding: 0.7rem 0.8rem;
+}
+
+#menu .tableList tr td {
+  background-color: transparent;
+  font-size: 14px;
+  font-weight: 500;
+  color: #727b83;
+  padding: 0.5rem 0.8rem;
+}
+
+#menu .tableList .table-group-divider {
+  color: #727b83;
+}
+
+#menu .listImgField {
+  display: flex;
+  align-items: center;
+}
+
+#menu .listImg {
+  height: 35px;
+  width: 35px;
+  margin-right: 8px;
+}
+
+#menu .menubtn {
+  border: none;
+  background-color: transparent;
+  font-size: 18px;
+  color: #727b83;
+  margin-right: 5px;
+}
+
+#menu .customBtnPrimary {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 16px;
+  border: none;
+  border-radius: 3px;
+  color: white;
+  background-color: #006cac;
+  padding: 0.6rem 0.8rem 0.6rem 0.8rem;
+  transition: all 0.3s ease;
+}
+
+#menu .customBtnSecondary {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 16px;
+  border: 1px solid #006cac;
+  color: #006cac;
+  border-radius: 3px;
+  padding: 0.5rem 0.8rem 0.5rem 0.8rem;
+  transition: all 0.3s ease;
+  background-color: transparent;
+}
+
+#menu .searchBar {
+  position: relative;
+  background: white;
+  transition: all 0.3s ease;
+}
+
+#menu .searchBar .searchIcon {
+  position: absolute;
+  right: 15px;
+  top: 50%;
+  transform: translateY(-50%);
+  font-size: 20px;
+  color: #666;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+#menu .searchBar input {
+  padding-right: 45px;
+  border: 2px solid #eee;
+  border-radius: 4px;
+  transition: all 0.3s ease;
+}
+
+#menu .searchBar:focus-within .searchIcon {
+  color: #006cac;
+}
+
+#menu .searchBar input:focus {
+  border-color: #006cac;
+  box-shadow: none;
+}
+
+#menu .customPagination #prePageBtn,
+.customPagination #nextPageBtn {
+  border: 1px solid black;
+  border-radius: 3px;
+  background-color: white;
+  padding: 0.2rem 0.5rem 0.2rem 0.5rem;
+}
+
+#menu .customPagination #prePageBtn:hover,
+.customPagination #nextPageBtn:hover {
+  filter: brightness(0.9);
+}
+
+#menu .customPagination select:focus {
+  box-shadow: none;
+}
+
+#menu .passwordField i {
+  position: absolute;
+  right: 15px;
+  top: 50%;
+  transform: translateY(-50%);
+  font-size: 20px;
+  cursor: pointer;
+}
+
+#menu .uploadFile {
+  border: 1px dashed #727b83;
+  border-radius: 5px;
+  width: 100%;
+  padding: 1rem;
+}
+
+#menu .menubar ul li a {
+  display: flex;
+  align-items: center;
+  font-size: 18px;
+  margin: 0px 10px;
+  color: black;
+  border: none;
+  border-bottom: 2px solid transparent;
+}
+
+#menu .menubar ul .active a {
+  color: #006cac;
+  font-weight: 700;
+  border-bottom: 2px solid;
+}
+
+#menu .menubar ul li a:hover {
+  color: #006cac;
+  border-bottom: 2px solid #006cac;
+}
+
+#menu .categorys {
+  list-style-type: none;
+  margin: 0;
+  padding: 0;
+}
+
+#menu .categorys li {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  padding: 0.3rem 0.6rem;
+}
+
+#menu .categorys li a {
+  padding: 0.6rem 0rem;
+}
+
+#menu .categorys li a {
+  font-weight: 600;
+  color: #727b83;
+}
+
+#menu .categorys li:hover {
+  background-color: white;
+}
+
+#menu .categorys .active a {
+  color: #006cac;
+}
+
+#menu .categorys li a:hover {
+  color: #006cac;
+}
+
+#menu .categorys li .categoryAction {
+  display: none;
+}
+
+#menu .categorys li:hover .categoryAction {
+  display: block;
+}
