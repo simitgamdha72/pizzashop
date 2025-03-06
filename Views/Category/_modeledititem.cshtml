@@ -1,0 +1,175 @@
+@model pizzashop.Models.ViewModels.ItemViewModel
+
+<!-- Add edit item modal start -->
+<div class="modal fade" id="editItemModal" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1"
+    aria-hidden="true">
+    <div class="modal-dialog modal-xl modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header border-bottom-0">
+                <h1 class="modal-title fs-5" id="staticBackdropLabel" style="color: #727b83;">Add New Menu Item</h1>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <form asp-controller="Category" asp-action="edititem" method="post">
+                <input type="hidden" asp-for="Id" value="@Model.Id">
+                <div class="modal-body p-0 p-md-2">
+
+                    <div class="container-fluid">
+                        <div class="row">
+                            <div class="col-12 col-lg-8">
+                                <div class="row row-cols-1 row-cols-lg-2 g-2 mb-2">
+                                    <div class="col">
+                                        <div class="form-floating">
+                                            <select asp-for="CategoryId" class="form-select" id="category">
+
+                                                @{
+                                                    foreach (var category in ViewBag.category as List<Category>)
+                                                    {
+                                                        <option value="@category.Id">@category.Category1</option>
+                                                    }
+                                                }
+
+
+
+
+
+                                                @* <option value="1" selected>Sandwich</option>
+                                                <option value="2">Pasta</option>
+                                                <option value="3">Salads</option> *@
+                                            </select>
+                                            <label for="category">Categories*</label>
+                                        </div>
+                                    </div>
+                                    <div class="col">
+                                        <div class="form-floating">
+                                            <input type="text" asp-for="Name" class="form-control" id="name" value=""
+                                                placeholder="Name">
+                                            <label for="name">Name*</label>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="row row-cols-2 row-cols-lg-3 row-cols-xl-4 g-2 mb-2">
+                                    <div class="col">
+                                        <div class="form-floating">
+                                            <select asp-for="ItemType" class="form-select" id="type">
+                                                <option selected>Select a type</option>
+                                                <option value="1">Veg</option>
+                                                <option value="2">Non-veg</option>
+                                                <option value="3">Vegan</option>
+                                            </select>
+                                            <label for="type">Item Type*</label>
+                                        </div>
+                                    </div>
+                                    <div class="col">
+                                        <div class="form-floating">
+                                            <input type="text" asp-for="Rate" class="form-control" id="rate"
+                                                placeholder="Rate" value="0">
+                                            <label for="rate">Rate*</label>
+                                        </div>
+                                    </div>
+                                    <div class="col">
+                                        <div class="form-floating">
+                                            <input type="text" asp-for="Quantity" class="form-control" id="quantity"
+                                                placeholder="Quantity" value="0">
+                                            <label for="quantity">Quantity*</label>
+                                        </div>
+                                    </div>
+                                    <div class="col">
+                                        <div class="form-floating">
+                                            <select asp-for="UnitId" class="form-select" id="unit">
+                                                @{
+                                                    foreach (var unit in ViewBag.unit as List<Unit>)
+                                                    {
+                                                        <option value="@unit.Id">@unit.Name</option>
+                                                    }
+                                                }
+                                                @* <option selected>Select a unit</option>
+                                                <option value="1">Liter</option>
+                                                <option value="2">Kg</option>
+                                                <option value="3">Piece</option> *@
+                                            </select>
+                                            <label for="unit">Unit*</label>
+                                        </div>
+                                    </div>
+                                    <div class="col">
+                                        <div class="d-flex align-items-center h-100">
+                                            <div class="form-check form-switch toggleSwitch me-2">
+                                                <input asp-for="Available" class="form-check-input border-0"
+                                                    style="padding: 1rem 1.8rem;" type="checkbox" role="switch"
+                                                    id="flexSwitchCheckChecked">
+                                            </div>
+                                            Available
+                                        </div>
+                                    </div>
+                                    <div class="col">
+                                        <div class="d-flex align-items-center h-100">
+                                            <div class="form-check form-switch toggleSwitch me-2">
+                                                <input asp-for="DefaultTax" class="form-check-input border-0"
+                                                    style="padding: 1rem 1.8rem;" type="checkbox" role="switch"
+                                                    id="flexSwitchCheckChecked">
+                                            </div>
+                                            DefaultTax
+                                        </div>
+                                    </div>
+                                    <div class="col">
+                                        <div class="form-floating">
+                                            <input asp-for="Taxpercentage" type="text" class="form-control" id="tax"
+                                                placeholder="Tax Percentage" value="0">
+                                            <label for="tax">Tax Percentage</label>
+                                        </div>
+                                    </div>
+                                    <div class="col">
+                                        <div class="form-floating">
+                                            <input type="text" asp-for="ShortCode" class="form-control" id="shortCode"
+                                                placeholder="Short Code" value="0">
+                                            <label for="shortCode">Short Code</label>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="row row-cols-1 g-2">
+                                    <div class="col">
+                                        <div class="form-floating">
+                                            <textarea asp-for="Description" class="form-control"
+                                                placeholder="Description" id="description"
+                                                style="height: 100px"></textarea>
+                                            <label for="description">Description</label>
+                                        </div>
+                                    </div>
+                                    @* <div class="col">
+                                        <input class=" d-none form-control" type="file" id="imageUpload" required>
+                                        <label class="uploadFile" for="imageUpload">
+                                            <div class="d-flex justify-content-center align-items-center">
+                                                <img class="d-none" src="#" alt="Image Preview" id="imagePreview"
+                                                    height="75px" width="75px">
+                                                <div class="d-flex align-items-center justify-content-center">
+                                                    <i class="bi bi-cloud-arrow-up-fill fs-4 me-2"></i>
+                                                    <div class="">Drag and Drop or Browse files</div>
+                                                </div>
+                                            </div>
+                                            <div id="fileName" class="ms-3"></div>
+                                        </label>
+                                    </div> *@
+                                </div>
+                            </div>
+                            @* <div class="cols-12 col-lg-4 mt-2 mt-lg-0">
+                                <div class="border-1 rounded-2 w-100 h-100 p-3" style="background-color: #fdf6e8;">
+                                    <select class="form-select" id="category">
+                                        <option selected>Select Modifier Group(s)</option>
+                                        <option value="1">s1</option>
+                                        <option value="2">s3</option>
+                                    </select>
+                                </div>
+                            </div> *@
+                        </div>
+                    </div>
+
+                </div>
+
+                <div class="modal-footer border-top-0 d-flex justify-content-end align-items-center">
+                    <button type="submit" class="btn btn-primary">Save</button>
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">No</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+<!-- Add edit item modal end -->

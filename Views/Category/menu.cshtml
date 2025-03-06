@@ -24,10 +24,10 @@
 
     <div class="d-flex">
 
+
         <!-- Categories Section -->
         <div class="offcanvas-lg start-0" data-bs-scroll="true" tabindex="-1" id="offcanvascategory">
-            <div class="bg-light min-vh-100"
-                style="width: 200px;display:flex;align-items: center;flex-direction: column;">
+            <div class="bg-light min-vh-100" style="width: 200px;display:flex;flex-direction: column;">
                 <div class="justify-content-between w-100 p-3" style="display: flex;align-items: center;">
                     <div class="fs-4 fw-semibold" style="color: #006CAC;">Category</div>
                     <button class="customBtnSecondary fs-4 py-0 px-2" data-bs-toggle="modal"
@@ -41,7 +41,9 @@
                         foreach (var Categories in Model.categories)
                         {
                             <li class="active">
-                                <a href="#" class="nav-link d-flex me-auto">
+
+                                <a href="@Url.Action("menu","Category",new {id = @Categories.Id})"
+                                    class="nav-link d-flex me-auto">
                                     <i class="bi bi-grid-1x2-fill" style="margin-right: 10px;"></i>
                                     @Categories.Category1
                                 </a>
@@ -144,11 +146,11 @@
 
 
                 </ul>
+
+
+
             </div>
         </div>
-
-
-
 
 
         <!-- Menu Items -->
@@ -168,9 +170,13 @@
                     </form>
                     <button class="customBtnSecondary px-md-3 me-3 fs-4" href="addNewUser.html"><i
                             class="bi bi-trash"></i></button>
-                    <button class="customBtnPrimary px-3 p-md-3" data-bs-toggle="modal"
+                    @* <button class="customBtnPrimary px-3 p-md-3" data-bs-toggle="modal"
                         data-bs-target="#addItemModal"><i class="bi bi-plus-lg me-0 me-sm-2"></i><span
-                            class="d-none d-sm-block">New Item</span></button>
+                            class="d-none d-sm-block">New Item</span></button> *@
+                    <button class="customBtnPrimary px-3 p-md-3" id="loadModalBtn"><i
+                            class="bi bi-plus-lg me-0 me-sm-2"></i><span class="d-none d-sm-block">New
+                            Item</span></button>
+                    @* <button id="loadModalBtn" class="btn btn-primary">Add New Item</button> *@
                 </div>
 
             </div>
@@ -201,104 +207,60 @@
                         </thead>
                         <tbody class="table-group-divider">
 
+                            @{
+                                foreach (var menuitems in Model.menuItems)
+                                {
+                                    <tr>
+                                        <td>
+                                            <div class="form-check">
+                                                <input class="form-check-input checkboxes" type="checkbox" value=""
+                                                    id="flexCheckDefault">
+                                            </div>
+                                        </td>
+                                        <td>
+                                            <div class="listImgField">
+                                                <img class="listImg" src="~/images/dining-menu.png">
+                                                @menuitems.Name
+                                            </div>
+                                        </td>
+                                        <td>
+                                            @if (menuitems.ItemType == 1)
+                                            {
+                                                <img src="~/images/icons/veg-icon.svg" height="20px">
+                                            }
+                                            @if (menuitems.ItemType == 2)
+                                            {
+                                                <img src="~/images/icons/non-veg-icon.svg" height="20px">
+                                            }
+                                            @if (menuitems.ItemType == 3)
+                                            {
+                                                <img src="~/images/icons/vegan-icon.svg" height=" 20px">
+                                            }
+
+                                        </td>
+                                        <td>@menuitems.Rate</td>
+                                        <td>@menuitems.Quantity</td>
+                                        <td>
+                                            <div class="form-check form-switch toggleSwitch">
+                                                <input class="form-check-input" type="checkbox" role="switch"
+                                                    id="flexSwitchCheckChecked" @(menuitems.Available ? "checked" : "")>
+                                            </div>
+                                        </td>
+                                        <td>
+                                            <div>
+                                                <button class="menubtn loadEditModalBtn" data-id="@menuitems.Id"><i
+                                                        class="bi bi-pen"></i></button>
+                                                <button class="menubtn" data-bs-toggle="modal" data-bs-target="#deleteitem"><i
+                                                        class="bi bi-trash"></i></button>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                }
+                            }
 
 
-                            <tr>
-                                <td>
-                                    <div class="form-check">
-                                        <input class="form-check-input checkboxes" type="checkbox" value=""
-                                            id="flexCheckDefault">
-                                    </div>
-                                </td>
-                                <td>
-                                    <div class="listImgField">
-                                        <img class="listImg" src="images/dining-menu.png">
-                                        Punjabi Tadka Sandwich
-                                    </div>
-                                </td>
-                                <td>
-                                    <img src="images/icons/veg-icon.svg" height="20px">
-                                </td>
-                                <td>75</td>
-                                <td>1</td>
-                                <td>
-                                    <div class="form-check form-switch toggleSwitch">
-                                        <input class="form-check-input" type="checkbox" role="switch"
-                                            id="flexSwitchCheckChecked" checked>
-                                    </div>
-                                </td>
-                                <td>
-                                    <div>
-                                        <button class="menubtn"><i class="bi bi-pen"></i></button>
-                                        <button class="menubtn" data-bs-toggle="modal" data-bs-target="#deleteitem"><i
-                                                class="bi bi-trash"></i></button>
-                                    </div>
-                                </td>
-                            </tr>
-                            <tr>
-                                <td>
-                                    <div class="form-check">
-                                        <input class="form-check-input checkboxes" type="checkbox" value=""
-                                            id="flexCheckDefault">
-                                    </div>
-                                </td>
-                                <td>
-                                    <div class="listImgField">
-                                        <img class="listImg" src="images/dining-menu.png">
-                                        Chicken Sandwich
-                                    </div>
-                                </td>
-                                <td>
-                                    <img src="images/icons/non-veg-icon.svg" height="20px">
-                                </td>
-                                <td>100</td>
-                                <td>1</td>
-                                <td>
-                                    <div class="form-check form-switch toggleSwitch">
-                                        <input class="form-check-input" type="checkbox" role="switch"
-                                            id="flexSwitchCheckChecked" checked>
-                                    </div>
-                                </td>
-                                <td>
-                                    <div>
-                                        <button class="menubtn"><i class="bi bi-pen"></i></button>
-                                        <button class="menubtn" data-bs-toggle="modal" data-bs-target="#deleteitem"><i
-                                                class="bi bi-trash"></i></button>
-                                    </div>
-                                </td>
-                            </tr>
-                            <tr>
-                                <td>
-                                    <div class="form-check">
-                                        <input class="form-check-input checkboxes" type="checkbox" value=""
-                                            id="flexCheckDefault">
-                                    </div>
-                                </td>
-                                <td>
-                                    <div class="listImgField">
-                                        <img class="listImg" src="images/dining-menu.png">
-                                        Cheese Sandwich
-                                    </div>
-                                </td>
-                                <td>
-                                    <img src="images/icons/veg-icon.svg" height="20px">
-                                </td>
-                                <td>120</td>
-                                <td>1</td>
-                                <td>
-                                    <div class="form-check form-switch toggleSwitch">
-                                        <input class="form-check-input" type="checkbox" role="switch"
-                                            id="flexSwitchCheckChecked" checked>
-                                    </div>
-                                </td>
-                                <td>
-                                    <div>
-                                        <button class="menubtn"><i class="bi bi-pen"></i></button>
-                                        <button class="menubtn" data-bs-toggle="modal" data-bs-target="#deleteitem"><i
-                                                class="bi bi-trash"></i></button>
-                                    </div>
-                                </td>
-                            </tr>
+
+
                         </tbody>
                     </table>
                 </div>
@@ -363,10 +325,10 @@
     </div>
 </div>
 
+<div id="modalContainer"></div>
 
 
-
-<!-- Add new item modal start -->
+@* <!-- Add new item modal start -->
 <div class="modal fade" id="addItemModal" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1"
     aria-hidden="true">
     <div class="modal-dialog modal-xl modal-dialog-centered">
@@ -511,7 +473,7 @@
         </div>
     </div>
 </div>
-<!-- Add new item modal end -->
+<!-- Add new item modal end --> *@
 
 
 
@@ -555,47 +517,23 @@
 
 @section Scripts {
 
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    @* <script src="https://code.jquery.com/jquery-1.12.4.min.js"></script> *@
 
-    <script src="https://code.jquery.com/jquery-1.12.4.min.js"></script>
+
 
     <script>
-        function handleSidebar() {
-
-            if ($('#offcanvasResponsive').is('.offcanvas-lg')) {
-                console.log('hello');
-                $('#offcanvasResponsive').removeClass('offcanvas-lg');
-                $('#offcanvasResponsive').addClass('offcanvas');
-            }
-            else {
-                console.log('hello2');
-                $('#offcanvasResponsive').removeClass('offcanvas');
-                $('#offcanvasResponsive').addClass('offcanvas-lg');
-            }
-        }
         document.getElementById('selectAllCheckbox').addEventListener('change', function () {
             let checkboxes = document.querySelectorAll('.checkboxes');
             checkboxes.forEach(function (checkbox) {
                 checkbox.checked = this.checked;
             }, this);
         });
-
-
-        var deleteModal = document.getElementById('deleteModal');
-        deleteModal.addEventListener('show.bs.modal', function (event) {
-            var button = event.relatedTarget; // The button that triggered the modal
-            var userId = button.getAttribute('data-id');
-            var userName = button.getAttribute('data-name');
-            console.log(userId);
-            // Set the modal content dynamically
-            var modalTitle = deleteModal.querySelector('.modal-title');
-
-            var userIdInput = deleteModal.querySelector('#catid');
-
-            userIdInput.value = userId; // Set the user ID in the hidden input field
-        });
-
-
     </script>
+
+
+
+
     <script>
         // When the delete button is clicked
         document.addEventListener('DOMContentLoaded', function () {
@@ -631,6 +569,82 @@
                     document.getElementById('CategoryId').value = categoryId;
                     document.getElementById('CategoryName').value = categoryName;
                     document.getElementById('Description').value = categoryDescription;
+                });
+            });
+        });
+    </script>
+
+
+
+
+
+
+
+
+
+    @* <script>
+        $(document).ready(function () {
+            // Load the categories on page load
+            loadCategories();
+
+            function loadCategories() {
+                $.ajax({
+                    url: '@Url.Action("GetCategories", "Category")', // Use the correct controller and action name
+                    type: 'GET',
+                    success: function (response) {
+                        $('#categoryListContainer').html(response); // Inject the partial view into the container
+                    },
+                    error: function () {
+                        alert('Error loading categories');
+                    }
+                });
+            }
+        });
+    </script> *@
+
+    <script>
+        $(document).ready(function () {
+
+            // When the 'Add New Item' button is clicked
+            $('#loadModalBtn').on('click', function () {
+                $.ajax({
+                    url: '@Url.Action("AddItemModal", "Category")', // Call the action in the Menu controller
+                    type: 'GET',
+                    success: function (response) {
+                        // Insert the partial view into the modalContainer
+                        $('#modalContainer').html(response);
+
+                        // Optionally, if you want to show the modal after loading
+                        $('#addItemModal').modal('show');
+                    },
+                    error: function () {
+                        alert("An error occurred while loading the modal.");
+                    }
+                });
+            });
+        });
+    </script>
+
+    <script>
+        $(document).ready(function () {
+            // When the 'Edit' button is clicked
+            $('.loadEditModalBtn').on('click', function () {
+                var itemId = $(this).data('id'); // Get the item id from the button's data-id attribute
+
+                $.ajax({
+                    url: '@Url.Action("EditItemModal", "Category")',  // Call the action in the Category controller
+                    type: 'GET',
+                    data: { id: itemId },  // Pass the itemId as part of the GET request
+                    success: function (response) {
+                        // Insert the partial view into the modalContainer
+                        $('#modalContainer').html(response);
+
+                        // Show the modal after loading
+                        $('#editItemModal').modal('show');
+                    },
+                    error: function () {
+                        alert("An error occurred while loading the modal.");
+                    }
                 });
             });
         });
