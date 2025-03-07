@@ -41,7 +41,7 @@
                                     </div>
                                     <div class="col">
                                         <div class="form-floating">
-                                            <input type="text" asp-for="Name" class="form-control" id="name" value=""
+                                            <input type="text" asp-for="Name" class="form-control" id="name" value="@Model.Name"
                                                 placeholder="Name">
                                             <label for="name">Name*</label>
                                         </div>
@@ -61,15 +61,15 @@
                                     </div>
                                     <div class="col">
                                         <div class="form-floating">
-                                            <input type="text" asp-for="Rate" class="form-control" id="rate"
-                                                placeholder="Rate" value="0">
+                                            <input type="text" asp-for="Rate" class="form-control" id="rate" value="@Model.Rate"
+                                                placeholder="Rate">
                                             <label for="rate">Rate*</label>
                                         </div>
                                     </div>
                                     <div class="col">
                                         <div class="form-floating">
-                                            <input type="text" asp-for="Quantity" class="form-control" id="quantity"
-                                                placeholder="Quantity" value="0">
+                                            <input type="text" asp-for="Quantity" class="form-control" id="quantity" value="@Model.Quantity"
+                                                placeholder="Quantity">
                                             <label for="quantity">Quantity*</label>
                                         </div>
                                     </div>
@@ -93,7 +93,7 @@
                                     <div class="col">
                                         <div class="d-flex align-items-center h-100">
                                             <div class="form-check form-switch toggleSwitch me-2">
-                                                <input asp-for="Available" class="form-check-input border-0"
+                                                <input asp-for="Available" class="form-check-input border-0" value="@Model.Available"
                                                     style="padding: 1rem 1.8rem;" type="checkbox" role="switch"
                                                     id="flexSwitchCheckChecked">
                                             </div>
@@ -103,7 +103,7 @@
                                     <div class="col">
                                         <div class="d-flex align-items-center h-100">
                                             <div class="form-check form-switch toggleSwitch me-2">
-                                                <input asp-for="DefaultTax" class="form-check-input border-0"
+                                                <input asp-for="DefaultTax" class="form-check-input border-0" value="@Model.DefaultTax"
                                                     style="padding: 1rem 1.8rem;" type="checkbox" role="switch"
                                                     id="flexSwitchCheckChecked">
                                             </div>
@@ -112,15 +112,15 @@
                                     </div>
                                     <div class="col">
                                         <div class="form-floating">
-                                            <input asp-for="Taxpercentage" type="text" class="form-control" id="tax"
-                                                placeholder="Tax Percentage" value="0">
+                                            <input asp-for="Taxpercentage" type="text" class="form-control" id="tax" value="@Model.Taxpercentage"
+                                                placeholder="Tax Percentage">
                                             <label for="tax">Tax Percentage</label>
                                         </div>
                                     </div>
                                     <div class="col">
                                         <div class="form-floating">
-                                            <input type="text" asp-for="ShortCode" class="form-control" id="shortCode"
-                                                placeholder="Short Code" value="0">
+                                            <input type="text" asp-for="ShortCode" class="form-control" id="shortCode" value="@Model.ShortCode"
+                                                placeholder="Short Code" >
                                             <label for="shortCode">Short Code</label>
                                         </div>
                                     </div>
@@ -128,7 +128,7 @@
                                 <div class="row row-cols-1 g-2">
                                     <div class="col">
                                         <div class="form-floating">
-                                            <textarea asp-for="Description" class="form-control"
+                                            <textarea asp-for="Description" class="form-control" value="@Model.Description"
                                                 placeholder="Description" id="description"
                                                 style="height: 100px"></textarea>
                                             <label for="description">Description</label>

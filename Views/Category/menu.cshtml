@@ -42,8 +42,12 @@
                         {
                             <li class="active">
 
-                                <a href="@Url.Action("menu","Category",new {id = @Categories.Id})"
-                                    class="nav-link d-flex me-auto">
+                                @* <a href="@Url.Action("menu","Category",new {id = @Categories.Id})"
+                                    data-category-id="@Categories.Id" class="nav-link d-flex me-auto">
+                                    <i class="bi bi-grid-1x2-fill" style="margin-right: 10px;"></i>
+                                    @Categories.Category1
+                                </a> *@
+                                <a href="javascript:void(0);" data-category-id="@Categories.Id" class="nav-link d-flex me-auto">
                                     <i class="bi bi-grid-1x2-fill" style="margin-right: 10px;"></i>
                                     @Categories.Category1
                                 </a>
@@ -188,7 +192,7 @@
             </div>
 
             <div class="">
-                <div class="table-responsive">
+                @* <div class="table-responsive">
                     <table class="tableList table align-middle">
                         <thead>
                             <tr>
@@ -250,7 +254,7 @@
                                             <div>
                                                 <button class="menubtn loadEditModalBtn" data-id="@menuitems.Id"><i
                                                         class="bi bi-pen"></i></button>
-                                                <button class="menubtn" data-bs-toggle="modal" data-bs-target="#deleteitem"><i
+                                                <button class="menubtn" data-bs-toggle="modal" data-bs-target="#deleteitem" data-id="@menuitems.Id"><i
                                                         class="bi bi-trash"></i></button>
                                             </div>
                                         </td>
@@ -263,6 +267,9 @@
 
                         </tbody>
                     </table>
+                </div> *@
+                <div id="menuItemsContainer">
+                    <!-- The table will be loaded here -->
                 </div>
 
                 <div class="customPagination d-flex flex-column align-items-center mt-1">
@@ -501,9 +508,11 @@
                     <p>are you sure you want to delete Item?</p>
                 </div>
                 <div class="modal-footer">
-
-                    <button type="button" class="btn btn-primary">Yes</button>
-                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">No</button>
+                    <form asp-controller="Category" asp-action="deleteitem" method="post">
+                        <input type="hidden" id="itemId" name="id" />
+                        <button type="submit" class="btn btn-primary">Yes</button>
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">No</button>
+                    </form>
                 </div>
             </div>
 
@@ -650,6 +659,82 @@
         });
     </script>
 
+
+    <script>
+        // When the delete button is clicked
+        document.addEventListener('DOMContentLoaded', function () {
+            var deleteButtons = document.querySelectorAll('.menubtn[data-bs-target="#deleteitem"]');
+
+            deleteButtons.forEach(function (button) {
+                button.addEventListener('click', function () {
+                    // Get the CategoryId from the data-id attribute of the button
+                    var itemId = this.getAttribute('data-id');
+                    console.log(itemId);
+                    // Set the value of the hidden input field in the modal
+                    document.getElementById('itemId').value = itemId;
+                });
+            });
+        });
+    </script>
+
+
+
+
+    <script>
+        $(document).ready(function () {
+            console.log("hello1");
+            // 1. Automatically load the menu items for the first category when the page loads
+            var firstCategoryId = $('a[data-category-id]').first().data('category-id'); // Get the ID of the first category
+            loadMenuItems(firstCategoryId);  // Call the function to load the menu items for the first category
+            console.log(firstCategoryId);
+            // 2. Event listener for clicking on category links
+            $('a[data-category-id]').click(function () {
+                var categoryId = $(this).data('category-id'); // Get category ID from clicked link
+                loadMenuItems(categoryId);  // Load menu items for the clicked category
+            });
+
+
+            // Function to load menu items via AJAX
+            function loadMenuItems(categoryId) {
+                console.log(categoryId);
+                $.ajax({
+                    url: '@Url.Action("GetMenuItemsTable", "Category")', // Your controller and action to fetch filtered items
+                    type: 'GET',
+                    data: { id: categoryId },  // Pass the category ID
+                    success: function (result) {
+                        $('#menuItemsContainer').html(result);  // Load the result (filtered menu items) into the container
+                    },
+                    error: function (xhr, status, error) {
+                        console.log("Error: " + error);  // Handle any errors
+                    }
+                });
+            }
+        });
+    </script>
+
+    @* <script>
+        $(document).ready(function () {
+
+            var firstCategoryId = $('a[data-category-id]').first().data('category-id'); // Get the ID of the first category
+            loadMenuItems(firstCategoryId);  // Call the function to load the menu items for the first category
+
+            $('a[data-category-id]').click(function () {
+                var categoryId = $(this).data('category-id');
+                // Trigger AJAX call when the page is ready (or you could trigger it based on a specific event)
+                $.ajax({
+                    url: '@Url.Action("GetMenuItemsTable", "Category")', // Adjust this to your controller and action
+                    type: 'GET',
+                    data: { id: categoryId }, // Pass the category ID
+                    success: function (result) {
+                        // Load the result (table) into the div
+                        $('#menuItemsContainer').html(result);
+                    },
+                    error: function (xhr, status, error) {
+                        console.log("Error: " + error);
+                    }
+                });
+            });
+    </script> *@
 
 
 }

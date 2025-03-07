@@ -112,7 +112,6 @@ namespace pizzashop.Controllers
 
         private readonly icategoryservice _categoryService;
 
-        // private readonly PizzashopContext _context;
 
 
         public CategoryController(icategoryservice categoryService, PizzashopContext context)
@@ -148,13 +147,13 @@ namespace pizzashop.Controllers
                 }
             }
 
-            var menuitems = _context.MenuItems.Where(m => m.CategoryId == id)
-            .ToList();
+            // var menuitems = _context.MenuItems.Where(m => m.CategoryId == id && m.Isdeleted != true)
+            // .ToList();
 
             var cat = new CategoryViewModel
             {
                 categories = categories,
-                menuItems = menuitems,
+                // menuItems = menuitems,
 
             };
 
@@ -329,6 +328,47 @@ namespace pizzashop.Controllers
             return View("menu", "Category");
 
         }
+
+        [HttpPost]
+        public IActionResult deleteitem(int id)
+        {
+            MenuItem item = _context.MenuItems.FirstOrDefault(x => x.Id == id);
+            item.Isdeleted = true;
+            _context.MenuItems.Update(item);
+            _context.SaveChanges();
+            return RedirectToAction("menu", "Category");
+        }
+
+
+
+        public IActionResult GetMenuItemsTable(int id)
+        {
+
+            // var categories = _categoryService.GetCategories();
+            // if (id == 0)
+            // {
+            //     // Check if the categories collection is not empty
+            //     if (categories.Any())
+            //     {
+            //         id = categories.First().Id;
+            //         Console.WriteLine(id);
+            //     }
+            //     else
+            //     {
+
+            //         Console.WriteLine("No categories available");
+
+            //         id = -1;
+            //     }
+            // }
+
+            // Fetch your menu items from the database
+            var menuItems = _context.MenuItems.Where(m => m.Isdeleted != true && m.CategoryId == id).ToList();
+
+            // Return the Partial View with the menu items
+            return PartialView("_itemlist", menuItems);
+        }
+
 
 
 
