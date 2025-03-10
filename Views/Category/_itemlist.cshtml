@@ -52,84 +52,81 @@
 
 
 
- @model IEnumerable<pizzashop.Models.Models.MenuItem>
+@model IEnumerable<pizzashop.Models.Models.MenuItem>
 <div class="table-responsive">
-                    <table class="tableList table align-middle">
-                        <thead>
-                            <tr>
-                                <th scope="col">
-                                    <div class="form-check">
-                                        <input class="form-check-input" type="checkbox" value="" id="selectAllCheckbox">
-                                    </div>
-                                </th>
-                                <th scope="col">Name</th>
-                                <th scope="col">ItemType</th>
-                                <th scope="col">Rate</th>
-                                <th scope="col">Quantity</th>
-                                <th scope="col">Available</th>
-                                <th scope="col">Action</th>
-                            </tr>
-                        </thead>
-                        <tbody class="table-group-divider">
+    <table class="tableList table align-middle">
+        <thead>
+            <tr>
+                <th scope="col">
+                    <div class="form-check">
+                        <input class="form-check-input" type="checkbox" value="" id="selectAllCheckbox">
+                    </div>
+                </th>
+                <th scope="col">Name</th>
+                <th scope="col">ItemType</th>
+                <th scope="col">Rate</th>
+                <th scope="col">Quantity</th>
+                <th scope="col">Available</th>
+                <th scope="col">Action</th>
+            </tr>
+        </thead>
+        <tbody class="table-group-divider">
 
-                            @{
-                                foreach (var menuitems in Model)
-                                {
-                                    <tr>
-                                        <td>
-                                            <div class="form-check">
-                                                <input class="form-check-input checkboxes" type="checkbox" value=""
-                                                    id="flexCheckDefault">
-                                            </div>
-                                        </td>
-                                        <td>
-                                            <div class="listImgField">
-                                                <img class="listImg" src="~/images/dining-menu.png">
-                                                @menuitems.Name
-                                            </div>
-                                        </td>
-                                        <td>
-                                            @if (menuitems.ItemType == 1)
-                                            {
-                                                <img src="~/images/icons/veg-icon.svg" height="20px">
-                                            }
-                                            @if (menuitems.ItemType == 2)
-                                            {
-                                                <img src="~/images/icons/non-veg-icon.svg" height="20px">
-                                            }
-                                            @if (menuitems.ItemType == 3)
-                                            {
-                                                <img src="~/images/icons/vegan-icon.svg" height=" 20px">
-                                            }
-
-                                        </td>
-                                        <td>@menuitems.Rate</td>
-                                        <td>@menuitems.Quantity</td>
-                                        <td>
-                                            <div class="form-check form-switch toggleSwitch">
-                                                <input class="form-check-input" type="checkbox" role="switch"
-                                                    id="flexSwitchCheckChecked" @(menuitems.Available ? "checked" : "")>
-                                            </div>
-                                        </td>
-                                        <td>
-                                            <div>
-                                                <button class="menubtn loadEditModalBtn" data-id="@menuitems.Id"><i
-                                                        class="bi bi-pen"></i></button>
-                                                <button class="menubtn" data-bs-toggle="modal" data-bs-target="#deleteitem" data-id="@menuitems.Id"><i
-                                                        class="bi bi-trash"></i></button>
-                                            </div>
-                                        </td>
-                                    </tr>
-                                }
+            @{
+                foreach (var menuitems in Model)
+                {
+                    <tr>
+                        <td>
+                            <div class="form-check">
+                                <input class="form-check-input checkboxes" type="checkbox" value="" id="flexCheckDefault">
+                            </div>
+                        </td>
+                        <td>
+                            <div class="listImgField">
+                                <img class="listImg" src="~/images/dining-menu.png">
+                                @menuitems.Name
+                            </div>
+                        </td>
+                        <td>
+                            @if (menuitems.ItemType == 1)
+                            {
+                                <img src="~/images/icons/veg-icon.svg" height="20px">
+                            }
+                            @if (menuitems.ItemType == 2)
+                            {
+                                <img src="~/images/icons/non-veg-icon.svg" height="20px">
+                            }
+                            @if (menuitems.ItemType == 3)
+                            {
+                                <img src="~/images/icons/vegan-icon.svg" height=" 20px">
                             }
 
+                        </td>
+                        <td>@menuitems.Rate</td>
+                        <td>@menuitems.Quantity</td>
+                        <td>
+                            <div class="form-check form-switch toggleSwitch">
+                                <input class="form-check-input" type="checkbox" role="switch" id="flexSwitchCheckChecked"
+                                    @(menuitems.Available ? "checked" : "")>
+                            </div>
+                        </td>
+                        <td>
+                            <div>
+                                <button class="menubtn loadEditModalBtn" data-id="@menuitems.Id" onclick="edititem(@menuitems.Id)"><i
+                                        class="bi bi-pen"></i></button>
+                                <button class="menubtn" data-bs-toggle="modal" data-bs-target="#deleteitem" data-id="@menuitems.Id"><i
+                                                        class="bi bi-trash"></i></button>
+                                @* <button class="menubtn" onclick="deletemodel(@menuitems.Id)"><i
+                                        class="bi bi-trash"></i></button> *@
+                            </div>
+                        </td>
+                    </tr>
+                }
+            }
 
 
 
-                        </tbody>
-                    </table>
-                </div> 
 
-
-
-               
+        </tbody>
+    </table>
+</div>

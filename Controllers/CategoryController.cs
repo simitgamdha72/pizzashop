@@ -325,7 +325,8 @@ namespace pizzashop.Controllers
 
             _context.MenuItems.Update(item);
             _context.SaveChanges();
-            return View("menu", "Category");
+            // return RedirectToAction("menu", "Category");
+            return PartialView("_dummy");
 
         }
 
@@ -341,27 +342,8 @@ namespace pizzashop.Controllers
 
 
 
-        public IActionResult GetMenuItemsTable(int id)
+        public IActionResult GetMenuItemsTable(int? id)
         {
-
-            // var categories = _categoryService.GetCategories();
-            // if (id == 0)
-            // {
-            //     // Check if the categories collection is not empty
-            //     if (categories.Any())
-            //     {
-            //         id = categories.First().Id;
-            //         Console.WriteLine(id);
-            //     }
-            //     else
-            //     {
-
-            //         Console.WriteLine("No categories available");
-
-            //         id = -1;
-            //     }
-            // }
-
             // Fetch your menu items from the database
             var menuItems = _context.MenuItems.Where(m => m.Isdeleted != true && m.CategoryId == id).ToList();
 

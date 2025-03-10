@@ -634,7 +634,7 @@
         });
     </script>
 
-    <script>
+    @* <script>
         $(document).ready(function () {
             // When the 'Edit' button is clicked
             $('.loadEditModalBtn').on('click', function () {
@@ -657,6 +657,31 @@
                 });
             });
         });
+    </script> *@
+
+    <script>
+
+        // When the 'Edit' button is clicked
+        function edititem(id) {
+
+
+            $.ajax({
+                url: '@Url.Action("EditItemModal", "Category")',  // Call the action in the Category controller
+                type: 'GET',
+                data: { id: id },  // Pass the itemId as part of the GET request
+                success: function (response) {
+                    // Insert the partial view into the modalContainer
+                    $('#modalContainer').html(response);
+
+                    // Show the modal after loading
+                    $('#editItemModal').modal('show');
+                },
+                error: function () {
+                    alert("An error occurred while loading the modal.");
+                }
+            });
+        }
+
     </script>
 
 
@@ -664,7 +689,6 @@
         // When the delete button is clicked
         document.addEventListener('DOMContentLoaded', function () {
             var deleteButtons = document.querySelectorAll('.menubtn[data-bs-target="#deleteitem"]');
-
             deleteButtons.forEach(function (button) {
                 button.addEventListener('click', function () {
                     // Get the CategoryId from the data-id attribute of the button
@@ -712,6 +736,8 @@
         });
     </script>
 
+
+
     @* <script>
         $(document).ready(function () {
 
@@ -735,6 +761,86 @@
                 });
             });
     </script> *@
+
+    @* 
+    <script>
+
+        function dynamicedit() {
+            var form = $('#addEditCategoryModal form');
+            var formData = form.serialize();
+            console.log(formData);
+            $.ajax({
+                url: '@Url.Action("edititem", "Category")',  // Call the action in the Category controller
+                type: 'POST',
+                data: formData,
+                success: function (response) {
+                    console.log(id);
+                    loadMenuItems(id);
+                },
+                error: function () {
+                    alert("An error occurred while loading the modal.");
+                }
+            });
+        }
+
+
+    </script> *@
+    <script>
+
+
+
+
+
+        function dynamicedit() {
+            // Prevent the default form submit action
+            console.log("abc")
+
+
+            @* e.preventDefault() *@
+                let formData = {};
+
+            $('#addEditCategoryModal').serializeArray().forEach(function (field) {
+                formData[field.name] = field.value;
+            });
+
+            console.log(formData)
+
+            // Make the AJAX call
+            $.ajax({
+                url: "/Category/edititem",  // Call the action in the Category controller
+                type: 'POST',
+                data: formData,  // Pass the serialized form data
+                dataType: "html",
+                success: function (response) {
+
+                    console.log(response);  // Optionally log the response
+                    var categoryId = $('a[data-category-id]').first().data('category-id'); // Get the ID of the first category
+
+                    loadMenuItems2(categoryId);
+                },
+                error: function () {
+                    alert("An error occurred while loading the modal.");
+                }
+            });
+        }
+
+        function loadMenuItems2(categoryId) {
+            console.log(categoryId);
+            $.ajax({
+                url: '@Url.Action("GetMenuItemsTable", "Category")', // Your controller and action to fetch filtered items
+                type: 'GET',
+                data: { id: categoryId },  // Pass the category ID
+                success: function (result) {
+                    $('#menuItemsContainer').html(result);  // Load the result (filtered menu items) into the container
+                },
+                error: function (xhr, status, error) {
+                    console.log("Error: " + error);  // Handle any errors
+                }
+            });
+        } 
+    </script>
+
+
 
 
 }

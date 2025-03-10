@@ -9,7 +9,7 @@
                 <h1 class="modal-title fs-5" id="staticBackdropLabel" style="color: #727b83;">Add New Menu Item</h1>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
-            <form method="post" id="addEditCategoryModal">
+            <form asp-controller="Category" asp-action="edititem" method="post">
                 <input type="hidden" asp-for="Id" value="@Model.Id">
                 <div class="modal-body p-0 p-md-2">
 
@@ -94,7 +94,7 @@
                                         <div class="d-flex align-items-center h-100">
                                             <div class="form-check form-switch toggleSwitch me-2">
                                                 <input asp-for="Available" class="form-check-input border-0" value="@Model.Available"
-                                                    style="padding: 1rem 1.8rem;" type="checkbox" role="switch" name="Available"
+                                                    style="padding: 1rem 1.8rem;" type="checkbox" role="switch"
                                                     id="flexSwitchCheckChecked">
                                             </div>
                                             Available
@@ -165,7 +165,7 @@
                 </div>
 
                 <div class="modal-footer border-top-0 d-flex justify-content-end align-items-center">
-                    <button type="submit" class="btn btn-primary" onclick="dynamicedit()">Save</button>
+                    <button type="submit" class="btn btn-primary">Save</button>
                     <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">No</button>
                 </div>
             </form>
@@ -173,4 +173,3 @@
     </div>
 </div>
 <!-- Add edit item modal end -->
-
