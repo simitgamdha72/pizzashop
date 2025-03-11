@@ -729,7 +729,7 @@
             var firstCategoryId = $('a[data-category-id]').first().data('category-id');
             loadMenuItems(firstCategoryId);
             console.log(firstCategoryId);
-            // 2. Event listener for clicking on category links
+            // clicking on category links
             $('a[data-category-id]').click(function () {
                 var categoryId = $(this).data('category-id');
                 loadMenuItems(categoryId);  // Load menu items for the clicked category
@@ -847,7 +847,7 @@
             console.log("aefbhaudg");
             $.ajax({
                 url: '/Category/GetMenuItemsTable',
-                                                @* url: '@Url.Action("GetMenuItemsTable", "Category")',  *@
+                                                    @* url: '@Url.Action("GetMenuItemsTable", "Category")',  *@
                 type: 'GET',
                 data: { id: categoryId },
                 success: function (result) {
@@ -856,8 +856,8 @@
                 error: function (xhr, status, error) {
                     console.log("Error: " + error);
                 }
-                                            });
-                                        } 
+                                                });
+                                            } 
     </script>
 
     <script>
