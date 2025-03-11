@@ -51,6 +51,8 @@ public class AccountController : Controller
             return View();
         }
 
+
+
         return RedirectToAction("UserList", "Account");
     }
 
@@ -69,6 +71,9 @@ public class AccountController : Controller
             TempData["error"] = "User not found or invalid password.";
             return View(loginViewModel);
         }
+
+        // Set success message in TempData
+        TempData["success"] = "Successfully logged in!";
 
         var tokenString = GenerateToken(user.Email, user.RoleId);
         var cookieOptions = new CookieOptions
@@ -112,6 +117,7 @@ public class AccountController : Controller
     [HttpGet]
     public async Task<JsonResult> GetStatesByCountry(int countryId)
     {
+
         var states = await _stateservice.GetStatesByCountryIdAsync(countryId);
         return Json(states.Select(s => new { value = s.Id, text = s.State1 }));
     }
@@ -126,12 +132,21 @@ public class AccountController : Controller
     [HttpPost]
     public async Task<IActionResult> addnewuser(AddnewUserViewModel model)
     {
+        var countries = await _countryservice.GetCountriesAsync();
         if (ModelState.IsValid)
         {
-            _accountService.CreateUser(model);
+            var valid = _accountService.CreateUser(model);
+
+            if (valid == 1)
+            {
+                ViewBag.Countries = countries;
+                TempData["alredyexist"] = "Email or UserName is Already exist";
+                return View();
+            }
+
             return RedirectToAction("UserList", "Account");
         }
-        var countries = await _countryservice.GetCountriesAsync();
+
         ViewBag.Countries = countries;
         return View(model);
     }
@@ -170,14 +185,23 @@ public class AccountController : Controller
     }
 
     [HttpPost]
-    public async Task<IActionResult> SendResetLink(ForgotPasswordViewModel m)
+    public async Task<IActionResult> forgotpassword(ForgotPasswordViewModel m)
     {
+        User? User = await _accountService.GetUserProfileforlogin(m.Email);
+        if (User == null)
+        {
+            TempData["usernotexist"] = "User Not Exist";
+            return View();
+        }
+
         string subject = "reset password";
         Extrathings object1 = new();
         string object2 = object1.getEmail();
         await es.SendEmailAsync(m.Email, subject, object2);
         Response.Cookies.Append("cookie2", m.Email);
-        return RedirectToAction("ForgotPasswordConfirmation", "Account");
+
+        TempData["emailIsSent"] = "Email is Sent on Email Address";
+        return View();
     }
 
     [HttpGet]
@@ -191,8 +215,18 @@ public class AccountController : Controller
     public IActionResult ResetPassword(ResetPasswordViewModel m)
     {
         var cookie = Request.Cookies["cookie2"];
+
+        if (cookie == null)
+        {
+            TempData["cookieIsNull"] = "Invalid Attempt";
+            return RedirectToAction("forgotpassword", "Account");
+        }
+
+        TempData["ResetPasswordConfirmation"] = "Password is Reset Successlly";
+
+
         _accountService.resetpassword(cookie, m);
-        return RedirectToAction("ResetPasswordConfirmation", "Account");
+        return RedirectToAction("Index", "Account");
     }
 
 
@@ -213,7 +247,7 @@ public class AccountController : Controller
     [ValidateAntiForgeryToken]
     public IActionResult Logout()
     {
-
+        TempData["logout"] = "successfully logged out";
         Response.Cookies.Delete("AuthToken");
         Response.Cookies.Delete("cookie");
         Response.Cookies.Delete("cookieforid");

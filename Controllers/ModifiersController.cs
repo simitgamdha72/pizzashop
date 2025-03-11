@@ -25,8 +25,43 @@ namespace pizzashop.Controllers
             return View(viewModel);
         }
 
-        [HttpPost]
-        public IActionResult addModifier(ModifiersViewModel model)
+        [HttpGet]
+        public IActionResult addModifierModal()
+        {
+            return PartialView("_AddModifierModal");
+        }
+
+        // [HttpPost]
+        // public IActionResult addModifier(ModifiersViewModel model)
+        // {
+        //     var viewModel = new ModifiersGroup
+        //     {
+        //         Name = model.Name,
+        //         Description = model.Description,
+        //     };
+
+
+
+        //     _context.ModifiersGroups.Add(viewModel);
+        //     _context.SaveChanges();
+
+        //     return RedirectToAction("Modifiers", "Modifiers");
+
+
+        // }
+
+        public IActionResult GetModifiers()
+        {
+            var modifiers = _context.ModifiersGroups.ToList();
+
+            var viewModel = new ModifiersViewModel
+            {
+                modifiersGroups = modifiers,
+            };
+            return PartialView("_ModifierSidebar", viewModel);
+        }
+
+        public IActionResult AddModifier(ModifiersViewModel model)
         {
             var viewModel = new ModifiersGroup
             {
@@ -34,12 +69,13 @@ namespace pizzashop.Controllers
                 Description = model.Description,
             };
 
+
+
             _context.ModifiersGroups.Add(viewModel);
             _context.SaveChanges();
 
-            return RedirectToAction("Modifiers", "Modifiers");
 
-
+            return Json(new { success = true });
         }
     }
 }

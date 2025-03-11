@@ -1,5 +1,7 @@
 @model pizzashop.Models.ViewModels.AddnewUserViewModel
-
+@{
+    var alredyexist = TempData["alredyexist"] as string;
+}
 <div
     style="display: flex; width: 100%;height: 7%;justify-content: space-between;padding-top: 50px;align-items: center;">
     <h1 style="margin-left: 5.2%;color: #006cac;">Add New User</h1>
@@ -54,7 +56,7 @@
             <div class="row container-fluid">
                 <div class="form-floating col adduser-form-coloumn " style="margin-top: 15px;">
                     <input asp-for="Email" type="email" class="form-control" id="floatingInputemail"
-                        placeholder="name@example.com" required>
+                        placeholder="name@example.com">
                     <label for="floatingInputemail" style="margin-left: 10px;">Email</label>
                     <span asp-validation-for="Email" class="text-danger"></span>
                 </div>
@@ -105,7 +107,7 @@
                     @* <select id="state" class="form-control">
                                         <option value="">Texas</option>
                                     </select> *@
-                    <select asp-for="StateId" class="form-control" id="StateId" required>
+                    <select asp-for="StateId" class="form-control" id="StateId">
                         <option value="">Select State</option>
                     </select>
                     <span asp-validation-for="StateId" class="text-danger"></span>
@@ -118,7 +120,7 @@
                     @* <select id="city" class="form-control">
                                         <option value="">Housten </option>
                                     </select> *@
-                    <select asp-for="CityId" class="form-control" id="CityId" required>
+                    <select asp-for="CityId" class="form-control" id="CityId">
                         <option value="">Select City</option>
                     </select>
                     <span asp-validation-for="CityId" class="text-danger"></span>
@@ -166,6 +168,13 @@
     </div>
 
 </div>
+
+@if (!string.IsNullOrEmpty(alredyexist))
+{
+    <script>
+        toastr.error('@alredyexist');  // Display the error message using Toastr
+    </script>
+}
 
 
 

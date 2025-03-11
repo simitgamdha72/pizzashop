@@ -1,0 +1,46 @@
+@model pizzashop.Models.ViewModels.ModifiersViewModel
+
+<ul class="categorys flex-column mb-auto w-100" style="overflow-y: scroll; max-height: 400px;">
+
+
+
+    @{
+        foreach (var modifiers in Model.modifiersGroups)
+        {
+            <li class="">
+                <a href="javascript:void(0);" data-category-id="@modifiers.Id" class="nav-link d-flex me-auto">
+                    @* <i class="bi bi-grid-1x2-fill" style="margin-right: 10px;"></i> *@
+                    <i class="bi bi-grip-vertical" style="margin-right: 10px;"></i>
+                    @modifiers.Name
+                </a>
+                <div class="categoryAction">
+                    <div class="d-flex">
+                        <button class="menubtn" data-bs-toggle="modal" data-bs-target="#editCategoryModal"
+                            data-id="@modifiers.Id" data-category-name=" @modifiers.Name"
+                            data-description="@modifiers.Description">
+                            <i class="bi bi-pen"></i>
+                        </button>
+
+                        <button class="menubtn" onclick="EditModifierModal()">
+                            <i class="bi bi-pen"></i>
+                        </button>
+
+                        <!-- Delete button with data-id attribute to pass CategoryId -->
+                        <button class="menubtn" data-bs-toggle="modal" data-bs-target="#delete" data-id="@modifiers.Id">
+                            <i class="bi bi-trash"></i>
+                        </button>
+                    </div>
+                </div>
+            </li>
+
+
+
+
+
+        }
+    }
+
+
+
+
+</ul>

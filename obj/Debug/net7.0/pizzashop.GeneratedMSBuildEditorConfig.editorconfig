@@ -36,20 +36,12 @@ build_metadata.AdditionalFiles.CssScope =
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcQWNjb3VudFxmb3Jnb3RwYXNzd29yZC5jc2h0bWw=
 build_metadata.AdditionalFiles.CssScope = 
 
-[D:/PIZZASHOP/pizzashop/Views/Account/ForgotPasswordConfirmation.cshtml]
-build_metadata.AdditionalFiles.TargetPath = Vmlld3NcQWNjb3VudFxGb3Jnb3RQYXNzd29yZENvbmZpcm1hdGlvbi5jc2h0bWw=
-build_metadata.AdditionalFiles.CssScope = 
-
 [D:/PIZZASHOP/pizzashop/Views/Account/Index.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcQWNjb3VudFxJbmRleC5jc2h0bWw=
 build_metadata.AdditionalFiles.CssScope = 
 
 [D:/PIZZASHOP/pizzashop/Views/Account/resetpassword.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcQWNjb3VudFxyZXNldHBhc3N3b3JkLmNzaHRtbA==
-build_metadata.AdditionalFiles.CssScope = 
-
-[D:/PIZZASHOP/pizzashop/Views/Account/ResetPasswordConfirmation.cshtml]
-build_metadata.AdditionalFiles.TargetPath = Vmlld3NcQWNjb3VudFxSZXNldFBhc3N3b3JkQ29uZmlybWF0aW9uLmNzaHRtbA==
 build_metadata.AdditionalFiles.CssScope = 
 
 [D:/PIZZASHOP/pizzashop/Views/Account/userlist.cshtml]
@@ -100,8 +92,24 @@ build_metadata.AdditionalFiles.CssScope =
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcSG9tZVxQcml2YWN5LmNzaHRtbA==
 build_metadata.AdditionalFiles.CssScope = 
 
+[D:/PIZZASHOP/pizzashop/Views/Modifiers/modifierlistbackup.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcTW9kaWZpZXJzXG1vZGlmaWVybGlzdGJhY2t1cC5jc2h0bWw=
+build_metadata.AdditionalFiles.CssScope = 
+
 [D:/PIZZASHOP/pizzashop/Views/Modifiers/Modifiers.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcTW9kaWZpZXJzXE1vZGlmaWVycy5jc2h0bWw=
+build_metadata.AdditionalFiles.CssScope = 
+
+[D:/PIZZASHOP/pizzashop/Views/Modifiers/_AddModifierModal.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcTW9kaWZpZXJzXF9BZGRNb2RpZmllck1vZGFsLmNzaHRtbA==
+build_metadata.AdditionalFiles.CssScope = 
+
+[D:/PIZZASHOP/pizzashop/Views/Modifiers/_EditModifierModal.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcTW9kaWZpZXJzXF9FZGl0TW9kaWZpZXJNb2RhbC5jc2h0bWw=
+build_metadata.AdditionalFiles.CssScope = 
+
+[D:/PIZZASHOP/pizzashop/Views/Modifiers/_ModifierSidebar.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcTW9kaWZpZXJzXF9Nb2RpZmllclNpZGViYXIuY3NodG1s
 build_metadata.AdditionalFiles.CssScope = 
 
 [D:/PIZZASHOP/pizzashop/Views/RoleandPermission/permission.cshtml]

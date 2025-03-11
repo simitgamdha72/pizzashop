@@ -1,7 +1,12 @@
 @model pizzashop.Models.ViewModels.LoginViewModel
 @{
     Layout = null; // No layout applied for this page
+    var errorMessage = TempData["error"] as string;
+    var logoutMessage = TempData["logout"] as string;
+    var ResetPasswordConfirmation = TempData["ResetPasswordConfirmation"] as string;
+
 }
+
 
 <!DOCTYPE html>
 <html lang="en">
@@ -21,10 +26,21 @@
     <script src="~/lib/jquery-validation/jquery.validate.min.js"></script>
     <script src="~/lib/jquery-validation-unobtrusive/jquery.validate.unobtrusive.min.js"></script>
 
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/css/toastr.min.css" rel="stylesheet" />
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/js/toastr.min.js"></script>
+
 
 </head>
 
 <body style="height: 100vh;font-family: Roboto;">
+
+    @* @if (!string.IsNullOrEmpty(errorMessage))
+    {
+        <div class="error-message">
+            @errorMessage
+            <button class="close-btn" onclick="this.parentElement.style.display='none';">&times;</button>
+        </div>
+    } *@
 
     <!-- fullscreen div -->
 
@@ -56,8 +72,7 @@
                         <div style="padding-bottom: 15px;" class="form-group">
 
                             <input type="email" asp-for="Email"
-                                class="login-credents form-control form-control-lg rounded-1" id="email" name="email"
-                                placeholder="email*" required>
+                                class="login-credents form-control form-control-lg rounded-1" placeholder="email*">
                             <span asp-validation-for="Email" class="text-danger"></span>
 
 
@@ -65,8 +80,7 @@
                         <div class="form-group">
 
                             <input type="password" asp-for="Password"
-                                class="login-credents form-control form-control-lg rounded-1" placeholder="password*"
-                                required>
+                                class="login-credents form-control form-control-lg rounded-1" placeholder="password*">
                             <span asp-validation-for="Password" class="text-danger"></span>
 
                         </div>
@@ -75,7 +89,7 @@
                             </div>
                             <div style="padding-right: 20%;">
 
-                                @* <button class="info" type="submit" href="@Url.Action("ForgotPassword", "Account")" style="border: none;background-color: inherit;font-size: 16px;cursor: pointer;display: inline-block;color:dodgerblue">forgot password?</button> *@
+
                                 <a href="@Url.Action("ForgotPassword", "Account")" class="text-decoration-none">forgot
                                     password?</a>
 
@@ -84,11 +98,12 @@
                         <div style="padding-top: 17px;">
                             <button class="loginpage-btn" type="submit">Login</button>
                         </div>
+
+
                     </form>
 
 
 
-                    <div asp-validation-summary="All" class="text-danger"></div>
 
 
                 </div>
@@ -96,15 +111,28 @@
         </div>
     </div>
 
+    @if (!string.IsNullOrEmpty(errorMessage))
+    {
+        <script>
+            toastr.error('@errorMessage');  // Display the error message using Toastr
+        </script>
+    }
+
+    @if (!string.IsNullOrEmpty(logoutMessage))
+    {
+        <script>
+            toastr.success('@logoutMessage');  // Display the error message using Toastr
+        </script>
+    }
+    @if (!string.IsNullOrEmpty(ResetPasswordConfirmation))
+    {
+        <script>
+            toastr.success('@ResetPasswordConfirmation');  // Display the error message using Toastr
+        </script>
+    }
+
 
 
 </body>
 
 </html>
-
-
-@section Scripts {
-    @{
-        await Html.RenderPartialAsync("_ValidationScriptsPartial");
-    }
-}

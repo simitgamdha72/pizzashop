@@ -30,60 +30,17 @@
             <div class="bg-light min-vh-100" style="width: 200px;display:flex;flex-direction: column;">
                 <div class="justify-content-between w-100 p-3" style="display: flex;align-items: center;">
                     <div class="fs-4 fw-semibold" style="color: #006CAC;">Modifiers Group</div>
-                    <button class="customBtnSecondary fs-4 py-0 px-2" data-bs-toggle="modal"
-                        data-bs-target="#addModifiersModal"><i class="bi bi-plus-lg"></i></button>
+                    @* <button class="customBtnSecondary fs-4 py-0 px-2" data-bs-toggle="modal"
+                        data-bs-target="#addModifiersModal"><i class="bi bi-plus-lg"></i></button> *@
+                    <button class="customBtnSecondary fs-4 py-0 px-2" id="loadModalAddModifierBtn"><i
+                            class="bi bi-plus-lg"></i></button>
                 </div>
-                <ul class="categorys flex-column mb-auto w-100" style="overflow-y: scroll; max-height: 400px;">
-
-
-
-                    @{
-                        foreach (var modifiers in Model.modifiersGroups)
-                        {
-                            <li class="">
-                                <a href="javascript:void(0);" data-category-id="@modifiers.Id" class="nav-link d-flex me-auto">
-                                    @* <i class="bi bi-grid-1x2-fill" style="margin-right: 10px;"></i> *@
-                                    <i class="bi bi-grip-vertical" style="margin-right: 10px;"></i>
-                                    @modifiers.Name
-                                </a>
-                                <div class="categoryAction">
-                                    <div class="d-flex">
-                                        <button class="menubtn" data-bs-toggle="modal" data-bs-target="#editCategoryModal"
-                                            data-id="@modifiers.Id" data-category-name=" @modifiers.Name"
-                                            data-description="@modifiers.Description">
-                                            <i class="bi bi-pen"></i>
-                                        </button>
-
-                                        <button class="menubtn" onclick="EditModifierModal()">
-                                            <i class="bi bi-pen"></i>
-                                        </button>
-
-                                        <!-- Delete button with data-id attribute to pass CategoryId -->
-                                        <button class="menubtn" data-bs-toggle="modal" data-bs-target="#delete"
-                                            data-id="@modifiers.Id">
-                                            <i class="bi bi-trash"></i>
-                                        </button>
-                                    </div>
-                                </div>
-                            </li>
-
-
-
-
-
-                        }
-                    }
-
-
-
-
-                </ul>
+                <div id="ModifierListPartialView"></div>
 
 
 
             </div>
         </div>
-
 
 
 
@@ -185,116 +142,84 @@
     </div>
 </div>
 
+<div id="modalContainer"></div>
 
 
-@* addModifier modal *@
-<div class="modal fade" style="margin-top: 13%;" id="addModifiersModal" tabindex="-1"
-    aria-labelledby="exampleModalLabel" aria-hidden="true">
-    <div class="modal-dialog">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h1 class="modal-title fs-5" id="exampleModalLabel">Add Modifier Group</h1>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-            </div>
-            <div class="modal-body">
-                <div class="form">
-                    <form asp-controller="Modifiers" asp-action="addModifier" method="post" class="form">
-                        <div class="form-floating">
-                            <input type="text" asp-for="Name" class="form-control" placeholder="Name" id="Name"
-                                style="margin-bottom: 20px;">
-                            <label for="Name">Name</label>
-                            <span asp-validation-for="Name"></span>
-                        </div>
-                        <div class="form-floating">
-                            <input type="text" asp-for="Description" class="form-control" id="Description"
-                                placeholder="Description">
-                            <label for="Description">Description</label>
-                        </div>
-
-                        <div style="padding-top: 20px;padding-bottom: 20px;margin-left: 5px;">
-                            <a href="#" class="text-decoration-none">+ Add Existing Modifiers</a>
-                        </div>
-                        <div class="modal-footer">
-
-                            <button type="submit" class="btn btn-primary">Save</button>
-                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
-                        </div>
-                    </form>
-
-                </div>
-            </div>
-
-        </div>
-    </div>
-</div>
 
 
-@* editmodifier modal *@
-<div class="modal fade" style="margin-top: 13%;" id="editCategoryModal" tabindex="-1"
-    aria-labelledby="editCategoryModallable" aria-hidden="true">
-    <div class="modal-dialog">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h1 class="modal-title fs-5" id="exampleModalLabel">Update Modifier Group</h1>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-            </div>
-            <div class="modal-body">
-                <div class="form">
-                    <form asp-controller="Category" asp-action="EditCategory" method="post">
-                        <!-- Hidden input to pass CategoryId -->
-                        <input type="hidden" id="CategoryId" name="Id" />
 
-                        <div class="mb-3 form-floating">
-                            @* <label for="CategoryName" class="form-label">Category Name</label> *@
-                            <input type="text" class="form-control" id="Name" name="Category1" placeholder="Name">
-                            <label for="Name">Name</label>
-                        </div>
-
-                        <div class="mb-3 form-floating">
-                            @* <label for="Description" class="form-label">Description</label> *@
-                            <input type="text" class="form-control" id="Description" name="Description"
-                                placeholder="Description">
-                            <label for="Description">Description</label>
-                        </div>
-                        <div style="padding-top: 20px;padding-bottom: 20px;margin-left: 5px;">
-                            <a href="#" class="text-decoration-none">+ Add Existing Modifiers</a>
-                        </div>
-
-                        <div class="modal-footer">
-                            <button type="submit" class="btn btn-primary">Save</button>
-                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
-                        </div>
-                    </form>
-                </div>
-            </div>
-        </div>
-    </div>
-</div>
 
 
 @section Scripts {
 
     <script>
-        // Ensure the DOM is fully loaded before executing the script
-        document.addEventListener('DOMContentLoaded', function () {
-            // Select all edit buttons
-            var editButtons = document.querySelectorAll('[data-bs-target="#editModifierModal"]');
+        $(document).ready(function () {
 
-            // Add click event to each edit button
-            editButtons.forEach(function (button) {
-                button.addEventListener('click', function () {
-                    // Get the data attributes of the clicked button
-                    var categoryId = this.getAttribute('data-id');
-                    var categoryName = this.getAttribute('data-category-name');
-                    var categoryDescription = this.getAttribute('data-description');
+            // 'Add New Item' button
+            $('#loadModalAddModifierBtn').on('click', function () {
+                $.ajax({
+                    url: '@Url.Action("addModifierModal", "Modifiers")',
+                    type: 'GET',
+                    success: function (response) {
+                        // partial view 
+                        $('#modalContainer').html(response);
 
-                    // Set the values in the modal
-                    document.getElementById('CategoryId').value = categoryId;
-                    document.getElementById('CategoryName').value = categoryName;
-                    document.getElementById('Description').value = categoryDescription;
+                        //show the modal after loading
+                        $('#addModifiersModal').modal('show');
+                    },
+                    error: function () {
+                        alert("An error occurred while loading the modal.");
+                    }
                 });
             });
+
+            loadMenuItems();
+
         });
+
+        function loadMenuItems() {
+            $.ajax({
+                url: '@Url.Action("GetModifiers", "Modifiers")',
+                type: 'GET',
+                success: function (result) {
+                    $('#ModifierListPartialView').html(result);
+                },
+                error: function (xhr, status, error) {
+                    console.log("Error: " + error);
+                }
+            });
+        }
+
+        function AddModifier() {
+            let formData = {};
+
+            $('#AddModifierModalForm').serializeArray().forEach(function (field) {
+                formData[field.name] = field.value;
+            });
+
+            console.log(formData);
+
+            $.ajax({
+                url: "/Modifiers/AddModifier",
+                type: 'POST',
+                data: formData,
+                dataType: "html",
+                success: function (response) {
+
+                    loadMenuItems();
+                },
+                error: function () {
+                    alert("An error occurred while loading the modal.");
+                }
+            });
+        }
+
+
+
+
     </script>
+
+
+
 
 }

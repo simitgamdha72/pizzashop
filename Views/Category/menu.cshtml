@@ -805,10 +805,6 @@
     </script> *@
     <script>
 
-
-
-
-
         function dynamicedit() {
 
             console.log("abc")
@@ -847,7 +843,7 @@
             console.log("aefbhaudg");
             $.ajax({
                 url: '/Category/GetMenuItemsTable',
-                                                    @* url: '@Url.Action("GetMenuItemsTable", "Category")',  *@
+                    @* url: '@Url.Action("GetMenuItemsTable", "Category")',  *@
                 type: 'GET',
                 data: { id: categoryId },
                 success: function (result) {
@@ -856,8 +852,8 @@
                 error: function (xhr, status, error) {
                     console.log("Error: " + error);
                 }
-                                                });
-                                            } 
+                                                                });
+                                                            } 
     </script>
 
     <script>
