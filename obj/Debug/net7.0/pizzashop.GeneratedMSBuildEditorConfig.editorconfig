@@ -28,10 +28,6 @@ build_metadata.AdditionalFiles.CssScope =
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcQWNjb3VudFxEYXNoYm9hcmQuY3NodG1s
 build_metadata.AdditionalFiles.CssScope = 
 
-[D:/PIZZASHOP/pizzashop/Views/Account/demo.cshtml]
-build_metadata.AdditionalFiles.TargetPath = Vmlld3NcQWNjb3VudFxkZW1vLmNzaHRtbA==
-build_metadata.AdditionalFiles.CssScope = 
-
 [D:/PIZZASHOP/pizzashop/Views/Account/edituser.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcQWNjb3VudFxlZGl0dXNlci5jc2h0bWw=
 build_metadata.AdditionalFiles.CssScope = 
@@ -46,14 +42,6 @@ build_metadata.AdditionalFiles.CssScope =
 
 [D:/PIZZASHOP/pizzashop/Views/Account/Index.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcQWNjb3VudFxJbmRleC5jc2h0bWw=
-build_metadata.AdditionalFiles.CssScope = 
-
-[D:/PIZZASHOP/pizzashop/Views/Account/menu-modifiers.cshtml]
-build_metadata.AdditionalFiles.TargetPath = Vmlld3NcQWNjb3VudFxtZW51LW1vZGlmaWVycy5jc2h0bWw=
-build_metadata.AdditionalFiles.CssScope = 
-
-[D:/PIZZASHOP/pizzashop/Views/Account/menu-modifiers2.cshtml]
-build_metadata.AdditionalFiles.TargetPath = Vmlld3NcQWNjb3VudFxtZW51LW1vZGlmaWVyczIuY3NodG1s
 build_metadata.AdditionalFiles.CssScope = 
 
 [D:/PIZZASHOP/pizzashop/Views/Account/resetpassword.cshtml]

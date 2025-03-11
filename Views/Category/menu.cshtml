@@ -558,16 +558,16 @@
 
 
     <script>
-        // When the delete button is clicked
+        // delete button 
         document.addEventListener('DOMContentLoaded', function () {
             var deleteButtons = document.querySelectorAll('.menubtn[data-bs-target="#delete"]');
 
             deleteButtons.forEach(function (button) {
                 button.addEventListener('click', function () {
-                    // Get the CategoryId from the data-id attribute of the button
+
                     var categoryId = this.getAttribute('data-id');
 
-                    // Set the value of the hidden input field in the modal
+
                     document.getElementById('categoryId').value = categoryId;
                 });
             });
@@ -575,20 +575,20 @@
     </script>
 
     <script>
-        // Ensure the DOM is fully loaded before executing the script
+
         document.addEventListener('DOMContentLoaded', function () {
-            // Select all edit buttons
+            // all-edit-buttons
             var editButtons = document.querySelectorAll('[data-bs-target="#editCategoryModal"]');
 
-            // Add click event to each edit button
+            // Add click to each edit button
             editButtons.forEach(function (button) {
                 button.addEventListener('click', function () {
-                    // Get the data attributes of the clicked button
+
                     var categoryId = this.getAttribute('data-id');
                     var categoryName = this.getAttribute('data-category-name');
                     var categoryDescription = this.getAttribute('data-description');
 
-                    // Set the values in the modal
+
                     document.getElementById('CategoryId').value = categoryId;
                     document.getElementById('CategoryName').value = categoryName;
                     document.getElementById('Description').value = categoryDescription;
@@ -628,16 +628,16 @@
     <script>
         $(document).ready(function () {
 
-            // When the 'Add New Item' button is clicked
+            // 'Add New Item' button
             $('#loadModalBtn').on('click', function () {
                 $.ajax({
-                    url: '@Url.Action("AddItemModal", "Category")', // Call the action in the Menu controller
+                    url: '@Url.Action("AddItemModal", "Category")',
                     type: 'GET',
                     success: function (response) {
-                        // Insert the partial view into the modalContainer
+                        // partial view 
                         $('#modalContainer').html(response);
 
-                        // Optionally, if you want to show the modal after loading
+                        //show the modal after loading
                         $('#addItemModal').modal('show');
                     },
                     error: function () {
@@ -675,16 +675,16 @@
 
     <script>
 
-        // When the 'Edit' button is clicked
+        //'Edit' button
         function edititem(id) {
 
 
             $.ajax({
-                url: '@Url.Action("EditItemModal", "Category")',  // Call the action in the Category controller
+                url: '@Url.Action("EditItemModal", "Category")',
                 type: 'GET',
-                data: { id: id },  // Pass the itemId as part of the GET request
+                data: { id: id },
                 success: function (response) {
-                    // Insert the partial view into the modalContainer
+                    // partial view 
                     $('#modalContainer').html(response);
 
                     // Show the modal after loading
@@ -725,29 +725,29 @@
     <script>
         $(document).ready(function () {
             console.log("hello1");
-            // 1. Automatically load the menu items for the first category when the page loads
-            var firstCategoryId = $('a[data-category-id]').first().data('category-id'); // Get the ID of the first category
-            loadMenuItems(firstCategoryId);  // Call the function to load the menu items for the first category
+            // load menu items for the first category when the page loads
+            var firstCategoryId = $('a[data-category-id]').first().data('category-id');
+            loadMenuItems(firstCategoryId);
             console.log(firstCategoryId);
             // 2. Event listener for clicking on category links
             $('a[data-category-id]').click(function () {
-                var categoryId = $(this).data('category-id'); // Get category ID from clicked link
+                var categoryId = $(this).data('category-id');
                 loadMenuItems(categoryId);  // Load menu items for the clicked category
             });
 
 
-            // Function to load menu items via AJAX
+            // Function
             function loadMenuItems(categoryId) {
                 console.log(categoryId);
                 $.ajax({
-                    url: '@Url.Action("GetMenuItemsTable", "Category")', // Your controller and action to fetch filtered items
+                    url: '@Url.Action("GetMenuItemsTable", "Category")',
                     type: 'GET',
-                    data: { id: categoryId },  // Pass the category ID
+                    data: { id: categoryId },
                     success: function (result) {
-                        $('#menuItemsContainer').html(result);  // Load the result (filtered menu items) into the container
+                        $('#menuItemsContainer').html(result);
                     },
                     error: function (xhr, status, error) {
-                        console.log("Error: " + error);  // Handle any errors
+                        console.log("Error: " + error);
                     }
                 });
             }
@@ -825,14 +825,14 @@
 
 
             $.ajax({
-                url: "/Category/edititem",  // Call the action in the Category controller
+                url: "/Category/edititem",
                 type: 'POST',
-                data: formData,  // Pass the serialized form data
+                data: formData,
                 dataType: "html",
                 success: function (response) {
 
 
-                    var categoryId = $('a[data-category-id]').first().data('category-id'); // Get the ID of the first category
+                    var categoryId = $('a[data-category-id]').first().data('category-id');
 
                     loadMenuItems2(categoryId);
                 },
@@ -847,27 +847,27 @@
             console.log("aefbhaudg");
             $.ajax({
                 url: '/Category/GetMenuItemsTable',
-                                            @* url: '@Url.Action("GetMenuItemsTable", "Category")', // Your controller and action to fetch filtered items *@
+                                                @* url: '@Url.Action("GetMenuItemsTable", "Category")',  *@
                 type: 'GET',
-                data: { id: categoryId },  // Pass the category ID
+                data: { id: categoryId },
                 success: function (result) {
-                    $('#menuItemsContainer').html(result);  // Load the result (filtered menu items) into the container
+                    $('#menuItemsContainer').html(result);
                 },
                 error: function (xhr, status, error) {
-                    console.log("Error: " + error);  // Handle any errors
+                    console.log("Error: " + error);
                 }
-                                        });
-                                    } 
+                                            });
+                                        } 
     </script>
 
     <script>
         function deletemodel(id) {
             $.ajax({
-                url: '@Url.Action("deleteitemmodel", "Category")',  // Call the action in the Category controller
+                url: '@Url.Action("deleteitemmodel", "Category")',
                 type: 'GET',
-                data: { id: id },  // Pass the itemId as part of the GET request
+                data: { id: id },
                 success: function (response) {
-                    // Insert the partial view into the modalContainer
+                    //partial view into the modalContainer
                     $('#modalContainer').html(response);
 
                     // Show the modal after loading
@@ -881,14 +881,14 @@
 
         function deletemodelitem(id) {
             $.ajax({
-                url: "/Category/deleteitem",  // Call the action in the Category controller
+                url: "/Category/deleteitem",
                 type: 'POST',
-                data: { id: id },  // Pass the serialized form data
+                data: { id: id },
                 dataType: "html",
                 success: function (response) {
 
-                    console.log(response);  // Optionally log the response
-                    var categoryId = $('a[data-category-id]').first().data('category-id'); // Get the ID of the first category
+                    console.log(response);
+                    var categoryId = $('a[data-category-id]').first().data('category-id');
 
                     loadMenuItems3(id);
                 },
@@ -901,14 +901,14 @@
         function loadMenuItems3(categoryId) {
             console.log(categoryId);
             $.ajax({
-                url: '@Url.Action("GetMenuItemsTable", "Category")', // Your controller and action to fetch filtered items
+                url: '@Url.Action("GetMenuItemsTable", "Category")',
                 type: 'GET',
-                data: { id: categoryId },  // Pass the category ID
+                data: { id: categoryId },
                 success: function (result) {
-                    $('#menuItemsContainer').html(result);  // Load the result (filtered menu items) into the container
+                    $('#menuItemsContainer').html(result);
                 },
                 error: function (xhr, status, error) {
-                    console.log("Error: " + error);  // Handle any errors
+                    console.log("Error: " + error);
                 }
             });
         } 

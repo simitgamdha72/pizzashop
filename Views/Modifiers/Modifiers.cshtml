@@ -54,9 +54,9 @@
                                             <i class="bi bi-pen"></i>
                                         </button>
 
-                                        @* <button class="menubtn" onclick="EditCategoryModal()">
+                                        <button class="menubtn" onclick="EditModifierModal()">
                                             <i class="bi bi-pen"></i>
-                                        </button> *@
+                                        </button>
 
                                         <!-- Delete button with data-id attribute to pass CategoryId -->
                                         <button class="menubtn" data-bs-toggle="modal" data-bs-target="#delete"
@@ -185,6 +185,9 @@
     </div>
 </div>
 
+
+
+@* addModifier modal *@
 <div class="modal fade" style="margin-top: 13%;" id="addModifiersModal" tabindex="-1"
     aria-labelledby="exampleModalLabel" aria-hidden="true">
     <div class="modal-dialog">
@@ -196,10 +199,17 @@
             <div class="modal-body">
                 <div class="form">
                     <form asp-controller="Modifiers" asp-action="addModifier" method="post" class="form">
-                        <input type="text" asp-for="Name" class="form-control" placeholder="Name"
-                            style="margin-bottom: 20px;">
-                        <span asp-validation-for="Name"></span>
-                        <input type="text" asp-for="Description" class="form-control" placeholder="Description">
+                        <div class="form-floating">
+                            <input type="text" asp-for="Name" class="form-control" placeholder="Name" id="Name"
+                                style="margin-bottom: 20px;">
+                            <label for="Name">Name</label>
+                            <span asp-validation-for="Name"></span>
+                        </div>
+                        <div class="form-floating">
+                            <input type="text" asp-for="Description" class="form-control" id="Description"
+                                placeholder="Description">
+                            <label for="Description">Description</label>
+                        </div>
 
                         <div style="padding-top: 20px;padding-bottom: 20px;margin-left: 5px;">
                             <a href="#" class="text-decoration-none">+ Add Existing Modifiers</a>
@@ -218,12 +228,14 @@
     </div>
 </div>
 
+
+@* editmodifier modal *@
 <div class="modal fade" style="margin-top: 13%;" id="editCategoryModal" tabindex="-1"
     aria-labelledby="editCategoryModallable" aria-hidden="true">
     <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-header">
-                <h1 class="modal-title fs-5" id="exampleModalLabel">Edit Category</h1>
+                <h1 class="modal-title fs-5" id="exampleModalLabel">Update Modifier Group</h1>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body">
@@ -232,16 +244,20 @@
                         <!-- Hidden input to pass CategoryId -->
                         <input type="hidden" id="CategoryId" name="Id" />
 
-                        <div class="mb-3">
-                            <label for="CategoryName" class="form-label">Category Name</label>
-                            <input type="text" class="form-control" id="CategoryName" name="Category1"
-                                placeholder="Name">
+                        <div class="mb-3 form-floating">
+                            @* <label for="CategoryName" class="form-label">Category Name</label> *@
+                            <input type="text" class="form-control" id="Name" name="Category1" placeholder="Name">
+                            <label for="Name">Name</label>
                         </div>
 
-                        <div class="mb-3">
-                            <label for="Description" class="form-label">Description</label>
+                        <div class="mb-3 form-floating">
+                            @* <label for="Description" class="form-label">Description</label> *@
                             <input type="text" class="form-control" id="Description" name="Description"
                                 placeholder="Description">
+                            <label for="Description">Description</label>
+                        </div>
+                        <div style="padding-top: 20px;padding-bottom: 20px;margin-left: 5px;">
+                            <a href="#" class="text-decoration-none">+ Add Existing Modifiers</a>
                         </div>
 
                         <div class="modal-footer">
@@ -254,3 +270,31 @@
         </div>
     </div>
 </div>
+
+
+@section Scripts {
+
+    <script>
+        // Ensure the DOM is fully loaded before executing the script
+        document.addEventListener('DOMContentLoaded', function () {
+            // Select all edit buttons
+            var editButtons = document.querySelectorAll('[data-bs-target="#editModifierModal"]');
+
+            // Add click event to each edit button
+            editButtons.forEach(function (button) {
+                button.addEventListener('click', function () {
+                    // Get the data attributes of the clicked button
+                    var categoryId = this.getAttribute('data-id');
+                    var categoryName = this.getAttribute('data-category-name');
+                    var categoryDescription = this.getAttribute('data-description');
+
+                    // Set the values in the modal
+                    document.getElementById('CategoryId').value = categoryId;
+                    document.getElementById('CategoryName').value = categoryName;
+                    document.getElementById('Description').value = categoryDescription;
+                });
+            });
+        });
+    </script>
+
+}
