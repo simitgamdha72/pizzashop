@@ -14,7 +14,7 @@
                 </a>
             </li>
             <li>
-                <a class="nav-link">
+                <a class="nav-link" href="@Url.Action("Modifiers","Modifiers")">
                     <i class="bi bi-ui-checks-grid me-2"></i>
                     Modifiers
                 </a>
@@ -40,7 +40,7 @@
                     @{
                         foreach (var Categories in Model.categories)
                         {
-                            <li class="active">
+                            <li class="">
 
                                 @* <a href="@Url.Action("menu","Category",new {id = @Categories.Id})"
                                     data-category-id="@Categories.Id" class="nav-link d-flex me-auto">
@@ -58,6 +58,11 @@
                                             data-description="@Categories.Description">
                                             <i class="bi bi-pen"></i>
                                         </button>
+
+                                        @* <button class="menubtn" onclick="EditCategoryModal(@Categories.Id)">
+                                            <i class="bi bi-pen"></i>
+                                        </button> *@
+
                                         <!-- Delete button with data-id attribute to pass CategoryId -->
                                         <button class="menubtn" data-bs-toggle="modal" data-bs-target="#delete"
                                             data-id="@Categories.Id">
@@ -157,6 +162,8 @@
         </div>
 
 
+
+
         <!-- Menu Items -->
         <div class="bg-white container-fluid py-3 px-3">
             <div style="display: flex; align-items:center;">
@@ -168,9 +175,16 @@
             </div>
             <div class="mb-2 mb-sm-3" style="display: flex; justify-content: end; align-items: center;">
                 <div class="d-flex">
-                    <form class="searchBar d-none d-sm-flex me-3">
+                    @* <form class="searchBar d-none d-sm-flex me-3">
                         <input class="form-control" type="text" placeholder="Search">
                         <i class="searchIcon bi bi-search"></i>
+                    </form> *@
+                    <form style="position: relative;margin-right: 10px;">
+                        <input type="search" id="searchInput" placeholder="  Search" aria-label="Search"
+                            class="form-control" style="width: 200px;height: 52px;margin-right: 2px; border: 2px solid #eee;
+                                border-radius: 4px;">
+
+                        <i class="bi bi-search" style="position: absolute;right: 10px;top: 15px;"></i>
                     </form>
                     <button class="customBtnSecondary px-md-3 me-3 fs-4" href="addNewUser.html"><i
                             class="bi bi-trash"></i></button>
@@ -509,7 +523,7 @@
                 </div>
                 <div class="modal-footer">
                     <form asp-controller="Category" asp-action="deleteitem" method="post">
-                        <input type="hidden" id="itemId" name="id" />
+                        <input type="text" id="itemId" name="id" />
                         <button type="submit" class="btn btn-primary">Yes</button>
                         <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">No</button>
                     </form>
@@ -675,6 +689,10 @@
 
                     // Show the modal after loading
                     $('#editItemModal').modal('show');
+
+
+
+
                 },
                 error: function () {
                     alert("An error occurred while loading the modal.");
@@ -682,10 +700,10 @@
             });
         }
 
+
     </script>
 
-
-    <script>
+    @* <script>
         // When the delete button is clicked
         document.addEventListener('DOMContentLoaded', function () {
             var deleteButtons = document.querySelectorAll('.menubtn[data-bs-target="#deleteitem"]');
@@ -699,7 +717,7 @@
                 });
             });
         });
-    </script>
+    </script> *@
 
 
 
@@ -792,12 +810,12 @@
 
 
         function dynamicedit() {
-            // Prevent the default form submit action
+
             console.log("abc")
 
 
-            @* e.preventDefault() *@
-                let formData = {};
+
+            let formData = {};
 
             $('#addEditCategoryModal').serializeArray().forEach(function (field) {
                 formData[field.name] = field.value;
@@ -805,7 +823,7 @@
 
             console.log(formData)
 
-            // Make the AJAX call
+
             $.ajax({
                 url: "/Category/edititem",  // Call the action in the Category controller
                 type: 'POST',
@@ -813,7 +831,7 @@
                 dataType: "html",
                 success: function (response) {
 
-                    console.log(response);  // Optionally log the response
+
                     var categoryId = $('a[data-category-id]').first().data('category-id'); // Get the ID of the first category
 
                     loadMenuItems2(categoryId);
@@ -825,6 +843,62 @@
         }
 
         function loadMenuItems2(categoryId) {
+            console.log(categoryId);
+            console.log("aefbhaudg");
+            $.ajax({
+                url: '/Category/GetMenuItemsTable',
+                                            @* url: '@Url.Action("GetMenuItemsTable", "Category")', // Your controller and action to fetch filtered items *@
+                type: 'GET',
+                data: { id: categoryId },  // Pass the category ID
+                success: function (result) {
+                    $('#menuItemsContainer').html(result);  // Load the result (filtered menu items) into the container
+                },
+                error: function (xhr, status, error) {
+                    console.log("Error: " + error);  // Handle any errors
+                }
+                                        });
+                                    } 
+    </script>
+
+    <script>
+        function deletemodel(id) {
+            $.ajax({
+                url: '@Url.Action("deleteitemmodel", "Category")',  // Call the action in the Category controller
+                type: 'GET',
+                data: { id: id },  // Pass the itemId as part of the GET request
+                success: function (response) {
+                    // Insert the partial view into the modalContainer
+                    $('#modalContainer').html(response);
+
+                    // Show the modal after loading
+                    $('#deleteitem').modal('show');
+                },
+                error: function () {
+                    alert("An error occurred while loading the modal.");
+                }
+            });
+        }
+
+        function deletemodelitem(id) {
+            $.ajax({
+                url: "/Category/deleteitem",  // Call the action in the Category controller
+                type: 'POST',
+                data: { id: id },  // Pass the serialized form data
+                dataType: "html",
+                success: function (response) {
+
+                    console.log(response);  // Optionally log the response
+                    var categoryId = $('a[data-category-id]').first().data('category-id'); // Get the ID of the first category
+
+                    loadMenuItems3(id);
+                },
+                error: function () {
+                    alert("An error occurred while loading the modal.");
+                }
+            });
+        }
+
+        function loadMenuItems3(categoryId) {
             console.log(categoryId);
             $.ajax({
                 url: '@Url.Action("GetMenuItemsTable", "Category")', // Your controller and action to fetch filtered items
@@ -840,7 +914,47 @@
         } 
     </script>
 
+    @* <script>
+        function EditCategoryModal(id) {
+            $.ajax({
+                url: '@Url.Action("EditCategoryModal", "Category")',  // Call the action in the Category controller
+                type: 'GET',
+                data: { id: id },  // Pass the itemId as part of the GET request
+                success: function (response) {
+                    // Insert the partial view into the modalContainer
+                    $('#modalContainer').html(response);
 
+                    // Show the modal after loading
+                    $('#editCategoryModal').modal('show');
+                },
+                error: function () {
+                    alert("An error occurred while loading the modal.123");
+                }
+            });
+        }
 
+        function EditCategoryModalSave() {
+            let formData = {};
+
+            $('#CategoryViewModel').serializeArray().forEach(function (field) {
+                formData[field.name] = field.value;
+            });
+
+            console.log(formData);
+            console.debug();
+            $.ajax({
+                url: '@Url.Action("EditCategory", "Category")', // Call the action in the Category controller
+                type: 'POST',
+                data: formData,  // Pass the serialized form data
+                dataType: "html",
+                success: function (response) {
+                    console.log(response);
+                },
+                error: function () {
+                    alert("An error occurred while loading the modal.");
+                }
+            });
+        }
+    </script> *@
 
 }

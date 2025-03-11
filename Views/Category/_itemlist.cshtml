@@ -54,7 +54,7 @@
 
 @model IEnumerable<pizzashop.Models.Models.MenuItem>
 <div class="table-responsive">
-    <table class="tableList table align-middle">
+    <table class="tableList table align-middle table">
         <thead>
             <tr>
                 <th scope="col">
@@ -112,12 +112,12 @@
                         </td>
                         <td>
                             <div>
-                                <button class="menubtn loadEditModalBtn" data-id="@menuitems.Id" onclick="edititem(@menuitems.Id)"><i
-                                        class="bi bi-pen"></i></button>
-                                <button class="menubtn" data-bs-toggle="modal" data-bs-target="#deleteitem" data-id="@menuitems.Id"><i
-                                                        class="bi bi-trash"></i></button>
-                                @* <button class="menubtn" onclick="deletemodel(@menuitems.Id)"><i
-                                        class="bi bi-trash"></i></button> *@
+                                <button class="menubtn loadEditModalBtn" data-id="@menuitems.Id"
+                                    onclick="edititem(@menuitems.Id)"><i class="bi bi-pen"></i></button>
+                                @* <button class="menubtn" data-bs-toggle="modal" data-bs-target="#deleteitem" data-id="@menuitems.Id"><i
+                                                        class="bi bi-trash"></i></button> *@
+                                <button class="menubtn" onclick="deletemodel(@menuitems.Id)"><i
+                                        class="bi bi-trash"></i></button>
                             </div>
                         </td>
                     </tr>

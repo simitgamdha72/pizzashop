@@ -1,0 +1,256 @@
+@model pizzashop.Models.ViewModels.ModifiersViewModel
+
+<div id="menu" class="container-fluid">
+
+    <div class="fs-2 fw-semibold mb-3" style="color: #006CAC;">Menu</div>
+
+    <!-- menuNavbar -->
+    <div class="menubar mb-2 mb-sm-3 rounded-1 bg-white">
+        <ul class="nav">
+            <li>
+                <a class="nav-link" href="@Url.Action("Menu", "Category")">
+                    <i class="bi bi-list-check me-2"></i>
+                    Items
+                </a>
+            </li>
+            <li class="active">
+                <a class="nav-link">
+                    <i class="bi bi-ui-checks-grid me-2"></i>
+                    Modifiers
+                </a>
+            </li>
+        </ul>
+    </div>
+
+    <div class="d-flex">
+
+
+        <!-- Modifiers Section -->
+        <div class="offcanvas-lg start-0" data-bs-scroll="true" tabindex="-1" id="offcanvascategory">
+            <div class="bg-light min-vh-100" style="width: 200px;display:flex;flex-direction: column;">
+                <div class="justify-content-between w-100 p-3" style="display: flex;align-items: center;">
+                    <div class="fs-4 fw-semibold" style="color: #006CAC;">Modifiers Group</div>
+                    <button class="customBtnSecondary fs-4 py-0 px-2" data-bs-toggle="modal"
+                        data-bs-target="#addModifiersModal"><i class="bi bi-plus-lg"></i></button>
+                </div>
+                <ul class="categorys flex-column mb-auto w-100" style="overflow-y: scroll; max-height: 400px;">
+
+
+
+                    @{
+                        foreach (var modifiers in Model.modifiersGroups)
+                        {
+                            <li class="">
+                                <a href="javascript:void(0);" data-category-id="@modifiers.Id" class="nav-link d-flex me-auto">
+                                    @* <i class="bi bi-grid-1x2-fill" style="margin-right: 10px;"></i> *@
+                                    <i class="bi bi-grip-vertical" style="margin-right: 10px;"></i>
+                                    @modifiers.Name
+                                </a>
+                                <div class="categoryAction">
+                                    <div class="d-flex">
+                                        <button class="menubtn" data-bs-toggle="modal" data-bs-target="#editCategoryModal"
+                                            data-id="@modifiers.Id" data-category-name=" @modifiers.Name"
+                                            data-description="@modifiers.Description">
+                                            <i class="bi bi-pen"></i>
+                                        </button>
+
+                                        @* <button class="menubtn" onclick="EditCategoryModal()">
+                                            <i class="bi bi-pen"></i>
+                                        </button> *@
+
+                                        <!-- Delete button with data-id attribute to pass CategoryId -->
+                                        <button class="menubtn" data-bs-toggle="modal" data-bs-target="#delete"
+                                            data-id="@modifiers.Id">
+                                            <i class="bi bi-trash"></i>
+                                        </button>
+                                    </div>
+                                </div>
+                            </li>
+
+
+
+
+
+                        }
+                    }
+
+
+
+
+                </ul>
+
+
+
+            </div>
+        </div>
+
+
+
+
+        <!-- Menu Modifiers -->
+        <div class="bg-white container-fluid py-3 px-3">
+            <div style="display: flex; align-items:center;">
+                <button class="d-lg-none fs-4 me-2 menubtn" style="color: #006CAC;" type="button"
+                    data-bs-toggle="offcanvas" data-bs-target="#offcanvascategory" aria-controls="offcanvascategory">
+                    <i class="bi bi-list-ul"></i>
+                </button>
+                <div class="fs-4 fw-semibold" style="color: #006CAC;">Modifiers</div>
+            </div>
+            <div class="mb-2 mb-sm-3" style="display: flex; justify-content: end; align-items: center;">
+                <div class="d-flex">
+                    @* <form class="searchBar d-none d-sm-flex me-3">
+                        <input class="form-control" type="text" placeholder="Search">
+                        <i class="searchIcon bi bi-search"></i>
+                    </form> *@
+                    <form style="position: relative;margin-right: 10px;">
+                        <input type="search" id="searchInput" placeholder="  Search" aria-label="Search"
+                            class="form-control" style="width: 200px;height: 52px;margin-right: 2px; border: 2px solid #eee;
+                                border-radius: 4px;">
+
+                        <i class="bi bi-search" style="position: absolute;right: 10px;top: 15px;"></i>
+                    </form>
+                    <button class="customBtnSecondary px-md-3 me-3 fs-4" href="addNewUser.html"><i
+                            class="bi bi-trash"></i></button>
+                    @* <button class="customBtnPrimary px-3 p-md-3" data-bs-toggle="modal"
+                        data-bs-target="#addItemModal"><i class="bi bi-plus-lg me-0 me-sm-2"></i><span
+                            class="d-none d-sm-block">New Item</span></button> *@
+                    <button class="customBtnPrimary px-3 p-md-3" id="loadModalBtn"><i
+                            class="bi bi-plus-lg me-0 me-sm-2"></i><span class="d-none d-sm-block">New
+                            Modifier</span></button>
+                    @* <button id="loadModalBtn" class="btn btn-primary">Add New Item</button> *@
+                </div>
+
+            </div>
+            <div class="d-block d-sm-none mb-3">
+                <form class="searchBar">
+                    <input class="form-control" type="text" placeholder="Search">
+                    <i class="searchIcon bi bi-search z-3"></i>
+                </form>
+            </div>
+
+            <div class="">
+                <div class="table-responsive">
+                    <table class="tableList table align-middle">
+                        <thead>
+                            <tr>
+                                <th scope="col">
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="checkbox" value="" id="selectAllCheckbox">
+                                    </div>
+                                </th>
+                                <th scope="col">Name</th>
+                                <th scope="col">Unit</th>
+                                <th scope="col">Rate</th>
+                                <th scope="col">Quantity</th>
+
+                                <th scope="col">Action</th>
+                            </tr>
+                        </thead>
+                        <tbody class="table-group-divider">
+
+
+
+
+                        </tbody>
+                    </table>
+                </div>
+                <div id="menuItemsContainer">
+                    <!-- The table will be loaded here -->
+                </div>
+
+                <div class="customPagination d-flex flex-column align-items-center mt-1">
+                    <div class="d-flex align-items-center w-100 justify-content-end mb-2">
+                        <div class="d-flex align-items-center me-auto me-sm-3">
+                            <div class="me-sm-2" style="min-width: 7rem;">Items per page:</div>
+                            <select class="form-select">
+                                <option value="5" selected>5</option>
+                                <option value="10">10</option>
+                                <option value="15">15</option>
+                            </select>
+                        </div>
+                        <div class="d-none d-sm-block me-sm-2">Showing 1-5 of 13</div>
+                        <div>
+                            <button id="prePageBtn" class="me-2">
+                                <i class="bi bi-chevron-left"></i>
+                            </button>
+                            <button id="nextPageBtn">
+                                <i class="bi bi-chevron-right"></i>
+                            </button>
+                        </div>
+                    </div>
+                    <div class="d-block d-sm-none">Showing 1-5 of 13</div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" style="margin-top: 13%;" id="addModifiersModal" tabindex="-1"
+    aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h1 class="modal-title fs-5" id="exampleModalLabel">Add Modifier Group</h1>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <div class="form">
+                    <form asp-controller="Modifiers" asp-action="addModifier" method="post" class="form">
+                        <input type="text" asp-for="Name" class="form-control" placeholder="Name"
+                            style="margin-bottom: 20px;">
+                        <span asp-validation-for="Name"></span>
+                        <input type="text" asp-for="Description" class="form-control" placeholder="Description">
+
+                        <div style="padding-top: 20px;padding-bottom: 20px;margin-left: 5px;">
+                            <a href="#" class="text-decoration-none">+ Add Existing Modifiers</a>
+                        </div>
+                        <div class="modal-footer">
+
+                            <button type="submit" class="btn btn-primary">Save</button>
+                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                        </div>
+                    </form>
+
+                </div>
+            </div>
+
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" style="margin-top: 13%;" id="editCategoryModal" tabindex="-1"
+    aria-labelledby="editCategoryModallable" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h1 class="modal-title fs-5" id="exampleModalLabel">Edit Category</h1>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <div class="form">
+                    <form asp-controller="Category" asp-action="EditCategory" method="post">
+                        <!-- Hidden input to pass CategoryId -->
+                        <input type="hidden" id="CategoryId" name="Id" />
+
+                        <div class="mb-3">
+                            <label for="CategoryName" class="form-label">Category Name</label>
+                            <input type="text" class="form-control" id="CategoryName" name="Category1"
+                                placeholder="Name">
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="Description" class="form-label">Description</label>
+                            <input type="text" class="form-control" id="Description" name="Description"
+                                placeholder="Description">
+                        </div>
+
+                        <div class="modal-footer">
+                            <button type="submit" class="btn btn-primary">Save</button>
+                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
