@@ -11,11 +11,13 @@ using Microsoft.EntityFrameworkCore;
 using pizzashop.Repository;
 using pizzashop.Repository.implementation;
 using pizzashop.Services;
+using Microsoft.AspNetCore.Mvc.Rendering;
 
 namespace pizzashop.Controllers;
 
 public class AccountController : Controller
 {
+
     public readonly EmailSender1 es;
     private readonly IConfiguration _configuration;
     private readonly IAccountService _accountService;
@@ -31,6 +33,7 @@ public class AccountController : Controller
         _cityservice = cityservice;
         es = ess1;
         _configuration = configuration;
+
     }
 
     [HttpGet]
@@ -109,9 +112,26 @@ public class AccountController : Controller
     public async Task<IActionResult> addnewuser()
     {
         var countries = await _countryservice.GetCountriesAsync();
-        ViewBag.Countries = countries;
-        return View();
+        // // ViewBag.Countries = countries;
+
+        var viewModel = new AddnewUserViewModel
+        {
+            Countries = countries
+        };
+
+        return View(viewModel);
+
+
     }
+
+    [HttpGet]
+    public async Task<JsonResult> GetCountries()
+    {
+
+        var countries = await _countryservice.GetCountriesAsync();
+        return Json(countries);
+    }
+
 
 
     [HttpGet]
@@ -132,33 +152,105 @@ public class AccountController : Controller
     [HttpPost]
     public async Task<IActionResult> addnewuser(AddnewUserViewModel model)
     {
-        var countries = await _countryservice.GetCountriesAsync();
+
+
+        // var countries = await _countryservice.GetCountriesAsync();
         if (ModelState.IsValid)
         {
             var valid = _accountService.CreateUser(model);
 
             if (valid == 1)
             {
-                ViewBag.Countries = countries;
+                // ViewBag.Countries = countries;
+                if (model.CountryId != 0)
+                {
+                    model.CountryId = 0;
+                }
                 TempData["alredyexist"] = "Email or UserName is Already exist";
-                return View();
+                return View(model);
             }
+
+
+            TempData["usersadded"] = "New User is Added";
 
             return RedirectToAction("UserList", "Account");
         }
 
-        ViewBag.Countries = countries;
+        if (model.CountryId != 0)
+        {
+            model.CountryId = 0;
+        }
+
+        // ViewBag.Countries = countries;
         return View(model);
     }
 
     [HttpGet]
     [Authorize]
-    public async Task<IActionResult> UserProfile()
+    public async Task<IActionResult> edituserAsync(int id)
     {
         var countries = await _countryservice.GetCountriesAsync();
-        ViewBag.Countries = countries;
+
+
+        var viewModel = _accountService.edituserget(id);
+
+        viewModel.Countries = countries;
+
+
+        if (viewModel == null)
+        {
+            return NotFound();
+        }
+
+        return View(viewModel);
+    }
+
+
+    [HttpPost]
+    public async Task<IActionResult> edituser(EditUserViewModel model)
+    {
+
+        if (!ModelState.IsValid)
+        {
+            if (model.CountryId != 0)
+            {
+                model.CountryId = 0;
+            }
+            return View(model);
+        }
+
+        var validator = _accountService.edituserpost(model);
+
+        if (validator == 1)
+        {
+            return NotFound();
+        }
+
+        if (validator == 2)
+        {
+            TempData["usernameexist"] = "This UserName is Already in Use";
+            return View(model);
+        }
+
+        TempData["edituser"] = "Users's details successfuly changed";
+
+        return RedirectToAction("userlist", "Account");
+    }
+
+
+
+
+    [HttpGet]
+    [Authorize]
+    public async Task<IActionResult> UserProfile()
+    {
+        // var countries = await _countryservice.GetCountriesAsync();
+        // ViewBag.Countries = countries;
         var cookie = Request.Cookies["cookieforid"];
-        Console.WriteLine(cookie);
+        if (cookie == null)
+        {
+            return NotFound();
+        }
         var viewModel = await _accountService.GetUserProfile(cookie);
         return View(viewModel);
     }
@@ -167,13 +259,40 @@ public class AccountController : Controller
     [HttpPost]
     public async Task<IActionResult> UserProfile(UserProfileViewModel model)
     {
+
         if (ModelState.IsValid)
         {
-            _accountService.UpdateUserProfile(model);
-            return RedirectToAction("UserProfile", "Account");
+            int validator = _accountService.UpdateUserProfile(model);
+
+            if (validator == 1)
+            {
+                TempData["userprofiledatachanged"] = "Profile is Updated";
+                return RedirectToAction("UserProfile", "Account");
+            }
+
+            if (validator == 0)
+            {
+                return NotFound();
+            }
+
+            if (validator == 2)
+            {
+                if (model.CountryId != 0)
+                {
+                    model.CountryId = 0;
+                }
+                TempData["usernameexist"] = "This UserName is Already in Use";
+                return View(model);
+            }
+
         }
-        var countries = await _countryservice.GetCountriesAsync();
-        ViewBag.Countries = countries;
+        // var countries = await _countryservice.GetCountriesAsync();
+        // ViewBag.Countries = countries;
+        if (model.CountryId != 0)
+        {
+            model.CountryId = 0;
+        }
+
         return View(model);
     }
 
@@ -230,17 +349,6 @@ public class AccountController : Controller
     }
 
 
-    [HttpGet]
-    public IActionResult ResetPasswordConfirmation()
-    {
-        return View();
-    }
-
-
-    public IActionResult ForgotPasswordConfirmation()
-    {
-        return View();
-    }
 
 
     [HttpPost]
@@ -269,16 +377,27 @@ public class AccountController : Controller
     {
 
         var cookie = Request.Cookies["cookieforid"];
-        var c = _accountService.changepassword(cookie, model);
-        if (c == 1)
+        var validator = _accountService.changepassword(cookie, model);
+        if (validator == 1)
         {
+            TempData["ResetPasswordConfirmation"] = "Password is Successfully Changed";
             Response.Cookies.Delete("AuthToken");
             Response.Cookies.Delete("cookie");
             return RedirectToAction("Index", "Account");
         }
+        if (validator == 0)
+        {
+            TempData["passwordNotMatch"] = "Password is Incorrect";
+            return RedirectToAction("changepassword", "Account");
+        }
+        if (validator == 2)
+        {
+            TempData["BothpasswordSame"] = "New Password is have to different from current Password";
+            return RedirectToAction("changepassword", "Account");
+        }
         else
         {
-            return RedirectToAction("changepassword", "Account");
+            return NotFound();
         }
     }
 
@@ -305,49 +424,30 @@ public class AccountController : Controller
     [HttpPost]
     public IActionResult DeleteUser(int id)
     {
-        _accountService.DeleteUser(id);
-        return RedirectToAction("UserList", "Account");
-    }
-
-
-    [HttpGet]
-    [Authorize]
-    public async Task<IActionResult> edituserAsync(int id)
-    {
-        var countries = await _countryservice.GetCountriesAsync();
-        ViewBag.Countries = countries;
-
-        var viewModel = _accountService.edituserget(id);
-
-        if (viewModel == null)
+        var cookie = Request.Cookies["cookieforid"];
+        if (cookie == null)
         {
             return NotFound();
         }
 
-        return View(viewModel);
+        int validator = _accountService.DeleteUser(id, cookie);
+
+        if (validator == 1)
+        {
+            TempData["deleteUser"] = "User Deleted Successfully";
+            return RedirectToAction("UserList", "Account");
+        }
+        if (validator == 2)
+        {
+            TempData["selfdelete"] = "You Can not Delete Your Self";
+            return RedirectToAction("UserList", "Account");
+        }
+        return NotFound();
+
+
     }
 
 
-    [HttpPost]
-    public async Task<IActionResult> edituser(EditUserViewModel model)
-    {
-
-        if (!ModelState.IsValid)
-        {
-            var countries = await _countryservice.GetCountriesAsync();
-            ViewBag.Countries = countries;
-            return View(model);
-        }
-
-        var e = _accountService.edituserpost(model);
-
-        if (e == 1)
-        {
-            return NotFound();
-        }
-
-        return RedirectToAction("userlist", "Account");
-    }
 
 
     [Authorize]

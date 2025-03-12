@@ -1,5 +1,13 @@
 ﻿@{
     var successMessage = TempData["success"] as string;
+    var editusersuccess = TempData["edituser"] as string;
+    var usersadded = TempData["usersadded"] as string;
+    var usernameexist = TempData["usernameexist"] as string;
+    var userprofiledatachanged = TempData["userprofiledatachanged"] as string;
+    var deleteUser = TempData["deleteUser"] as string;
+    var selfdelete = TempData["selfdelete"] as string;
+    var passwordNotMatch = TempData["passwordNotMatch"] as string;
+    var BothpasswordSame = TempData["BothpasswordSame"] as string;
 }
 
 <!doctype html>
@@ -297,6 +305,63 @@
             toastr.success('@successMessage');  // Show success message using Toastr
         </script>
     }
+
+    @if (!string.IsNullOrEmpty(editusersuccess))
+    {
+        <script>
+            toastr.success('@editusersuccess');  // Show success message using Toastr
+        </script>
+    }
+    @if (!string.IsNullOrEmpty(usersadded))
+    {
+        <script>
+            toastr.success('@usersadded');  // Show success message using Toastr
+        </script>
+    }
+
+    @if (!string.IsNullOrEmpty(usernameexist))
+    {
+        <script>
+            toastr.error('@usernameexist');  // Show success message using Toastr
+        </script>
+    }
+
+    @if (!string.IsNullOrEmpty(userprofiledatachanged))
+    {
+        <script>
+            toastr.success('@userprofiledatachanged');  // Show success message using Toastr
+        </script>
+    }
+    @if (!string.IsNullOrEmpty(deleteUser))
+    {
+        <script>
+            toastr.success('@deleteUser');  // Show success message using Toastr
+        </script>
+    }
+    @if (!string.IsNullOrEmpty(selfdelete))
+    {
+        <script>
+            toastr.error('@selfdelete');  // Show success message using Toastr
+        </script>
+    }
+    @if (!string.IsNullOrEmpty(passwordNotMatch))
+    {
+        <script>
+            toastr.error('@passwordNotMatch');  // Show success message using Toastr
+        </script>
+    }
+    @if (!string.IsNullOrEmpty(BothpasswordSame))
+    {
+        <script>
+            toastr.error('@BothpasswordSame');  // Show success message using Toastr
+        </script>
+    }
+
+
+
+
+
+
 
 
     @RenderSection("Scripts", false)

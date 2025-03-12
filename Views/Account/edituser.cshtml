@@ -36,13 +36,7 @@
                     <label for="floatingInputusername" style="margin-left: 10px;">User Name</label>
                     <span asp-validation-for="UserName" class="text-danger"></span>
                 </div>
-                @* <div class="form-floating col adduser-form-coloumn " style="margin-top: 15px;">
 
-                                    <select id="role" class="form-control">
-                                        <option value="">Chef</option>
-                                    </select>
-                                  
-                                </div> *@
                 <div class="form-floating col adduser-form-coloumn " style="margin-top: 15px;">
 
                     <select asp-for="RoleId" id="role" class="form-control">
@@ -105,17 +99,19 @@
             <div class="row container-fluid">
                 <div class="form-floating col adduser-form-coloumn2" style="margin-top: 15px;">
 
-                    @* <select id="country" class="form-control">
-                                        <option value="">United States</option>
-                                    </select> *@
-                    <select asp-for="CountryId" class="form-control" id="CountryId">
+
+                    @* <select asp-for="CountryId" class="form-control" id="CountryId">
                         <option value="">Select Country</option>
                         @foreach (var country in ViewBag.Countries as List<Country>)
                         {
                             <option value="@country.Id">@country.Country1</option>
-                            @* <option value="@Model.CountryId">@country.Country1</option> *@
+
 
                         }
+                    </select> *@
+
+                    <select asp-for="CountryId" class="form-control" id="CountryId">
+                        <option value="">Select State</option>
                     </select>
                     <span asp-validation-for="CountryId" class="text-danger"></span>
 
@@ -123,12 +119,10 @@
                 </div>
                 <div class="form-floating col adduser-form-coloumn2" style="margin-top: 15px;">
 
-                    @* <select id="state" class="form-control">
-                                        <option value="">Texas</option>
-                                    </select> *@
+
                     <select asp-for="StateId" class="form-control" id="StateId">
                         <option value="">Select State</option>
-                        @* <option value="" selected>@ViewBag.state</option> *@
+
                     </select>
                     <span asp-validation-for="StateId" class="text-danger"></span>
 
@@ -136,9 +130,7 @@
                 </div>
                 <div class="form-floating col adduser-form-coloumn2" style="margin-top: 15px;">
 
-                    @* <select id="city" class="form-control">
-                                        <option value="">Housten </option>
-                                    </select> *@
+
                     <select asp-for="CityId" class="form-control" id="CityId">
                         <option value="">Select City</option>
                     </select>
@@ -191,10 +183,30 @@
 
 @section Scripts {
 
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+
     <script>
 
         $(document).ready(function () {
-            console.log("helo")
+
+
+            $.ajax({
+                url: '@Url.Action("GetCountries", "Account")',
+                type: 'GET',
+                success: function (data) {
+                    let countryDropdown = $('#CountryId');
+                    $.each(data, function (i, country) {
+                        if (@Model.CountryId != null && i == @Model.CountryId -1) {
+                            countryDropdown.append('<option value="' + country.id + '" selected>' + country.country1 + '</option>');
+                        }
+                        else {
+                            countryDropdown.append('<option value="' + country.id + '">' + country.country1 + '</option>');
+                        }
+                    });
+                }
+            });
             // Trigger the state dropdown when country is selected
             $("#CountryId").change(function () {
                 console.log("hello");

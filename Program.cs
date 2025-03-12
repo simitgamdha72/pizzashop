@@ -42,6 +42,7 @@ builder.Services.AddScoped<icategory, category>();
 builder.Services.AddScoped<icategoryservice, categoryservice>();
 
 
+
 // Add TokenService to the DI container
 builder.Services.AddScoped<TokenService>();
 

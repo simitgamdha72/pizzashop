@@ -80,12 +80,17 @@
                     @* <select id="country" class="form-control">
                                         <option value="">United States</option>
                                     </select> *@
-                    <select asp-for="CountryId" class="form-control" id="CountryId">
+                    @* <select asp-for="CountryId" class="form-control" id="CountryId">
                         <option value="">Select Country</option>
                         @foreach (var country in ViewBag.Countries as List<Country>)
                         {
                             <option value="@country.Id">@country.Country1</option>
                         }
+                    </select>
+                    <span asp-validation-for="CountryId" class="text-danger"></span> *@
+
+                    <select asp-for="CountryId" class="form-control" id="CountryId">
+                        <option value="">Select Country</option>
                     </select>
                     <span asp-validation-for="CountryId" class="text-danger"></span>
 
@@ -156,10 +161,30 @@
 
 @section Scripts {
 
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+
     <script>
 
         $(document).ready(function () {
             console.log("helo")
+
+            $.ajax({
+                url: '@Url.Action("GetCountries", "Account")',
+                type: 'GET',
+                success: function (data) {
+                    let countryDropdown = $('#CountryId');
+                    $.each(data, function (i, country) {
+                        if (@Model.CountryId != null && i == @Model.CountryId -1) {
+                            countryDropdown.append('<option value="' + country.id + '" selected>' + country.country1 + '</option>');
+                        }
+                        else {
+                            countryDropdown.append('<option value="' + country.id + '">' + country.country1 + '</option>');
+                        }
+                    });
+                }
+            });
             // Trigger the state dropdown when country is selected
             $("#CountryId").change(function () {
                 console.log("hello");
