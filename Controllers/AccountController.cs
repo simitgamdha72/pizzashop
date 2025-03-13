@@ -403,7 +403,7 @@ public class AccountController : Controller
 
 
     [Authorize]
-    public async Task<IActionResult> userlist(int page = 1) // repo baki
+    public async Task<IActionResult> userlistBackup(int page = 1, string search = "", int pagesize = 5) // repo baki
     {
 
         var totalUsers = await _accountService.totaluser();
@@ -414,11 +414,57 @@ public class AccountController : Controller
         {
             Users = (List<User>)users,
             CurrentPage = page,
-            TotalPages = (int)Math.Ceiling((double)totalUsers / 5)
+            TotalPages = (int)Math.Ceiling((double)totalUsers / pagesize),
+            TotalUsers = totalUsers,
+            SearchTerm = search,
+            PageSize = pagesize
         };
 
         return View(model);
     }
+
+    [Authorize]
+    public async Task<IActionResult> userlist(int page = 1, string search = "", int? roleId = null, bool? status = null, int pageSize = 5)
+    {
+        // Get filtered users count for pagination
+        var totalUsers = await _accountService.GetTotalUsersFilteredAsync(search, roleId, status);
+
+        // Get filtered and paged users
+        var users = await _accountService.GetFilteredUsersPagedAsync(page, pageSize, search, roleId, status);
+
+        // Get all roles for dropdown
+        var roles = await _accountService.GetAllRolesAsync();
+
+        var model = new UserListViewModel
+        {
+            Users = (List<User>)users,
+            Role = (List<Role>)roles,
+            CurrentPage = page,
+            TotalPages = (int)Math.Ceiling((double)totalUsers / pageSize),
+            TotalUsers = totalUsers,
+            SearchTerm = search,
+            PageSize = pageSize,
+            RoleFilter = roleId,
+            StatusFilter = status
+        };
+
+        if (Request.Headers["X-Requested-With"] == "XMLHttpRequest")
+        {
+            // If it's an AJAX request, return only the partial view
+            return PartialView("_UserTable", model);
+        }
+
+        return View(model);
+    }
+
+
+
+
+
+
+
+
+
 
 
     [HttpPost]
@@ -492,5 +538,6 @@ public class AccountController : Controller
         );
         return new JwtSecurityTokenHandler().WriteToken(token);
     }
+
 }
 
