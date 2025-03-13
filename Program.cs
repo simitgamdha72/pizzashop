@@ -23,6 +23,7 @@ using pizzashop.Repositories;
 
 
 
+
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
@@ -40,6 +41,9 @@ builder.Services.AddScoped<istateservice, stateservice>();
 builder.Services.AddScoped<icityservice, cityservice>();
 builder.Services.AddScoped<icategory, category>();
 builder.Services.AddScoped<icategoryservice, categoryservice>();
+builder.Services.AddScoped<dropdownService>();
+
+
 
 
 

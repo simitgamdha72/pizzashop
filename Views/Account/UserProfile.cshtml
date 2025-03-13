@@ -1,4 +1,5 @@
 @model pizzashop.Models.ViewModels.UserProfileViewModel
+@inject pizzashop.Service.dropdownService dservice
 
 <div id="rolesPageContent" class="container-fluid px-3 py-4 p-md-5">
 
@@ -7,11 +8,11 @@
     <div class="secondaryContainer shadow p-0">
         <img class="object-fit-cover" src="~/images/profile_div_bg.jpg" width="100%" height="50px">
         <div class="d-flex w-100 px-2 px-md-4">
-            <div class="position-relative">
-                <img style="margin-top: -1.8rem; border-radius: 50%;"
-                    src="https://th.bing.com/th?id=OIP.sDGudWbPLYyfB9reTqQ6kgHaHa&w=250&h=250&c=8&rs=1&qlt=90&r=0&o=6&pid=3.1&rm=2"
-                    id="imagePreview" height="125px" width="125px">
-                <div class="" style="position: absolute;/* height: 306px; */top: 51px;right: -2px;">
+            <div class="position-relative" style="height: 100px;width:100px;top:-30px;right:10px;border-radius: 50%;">
+                <img src="/images/profiles/@Model.Image" alt="Profile Image" height="100px" width="100"
+                    style="border-radius: 50%;" />
+                <div class=""
+                    style="position: absolute;border-radius: 50%;width:30px;height:30px;display:flex;align-items: center;top:51px;background-color: white;right:-2px;justify-content: center;">
                     <input class=" d-none form-control" type="file" id="imageUpload" required>
                     <label class="profileImgUpload" for="imageUpload">
                         <i class="bi bi-camera"></i>
@@ -77,52 +78,34 @@
             <div class="row container-fluid">
                 <div class="form-floating col adduser-form-coloumn2" style="margin-top: 15px;">
 
-                    @* <select id="country" class="form-control">
-                                        <option value="">United States</option>
-                                    </select> *@
-                    @* <select asp-for="CountryId" class="form-control" id="CountryId">
-                        <option value="">Select Country</option>
-                        @foreach (var country in ViewBag.Countries as List<Country>)
-                        {
-                            <option value="@country.Id">@country.Country1</option>
-                        }
-                    </select>
-                    <span asp-validation-for="CountryId" class="text-danger"></span> *@
 
-                    <select asp-for="CountryId" class="form-control" id="CountryId">
-                        <option value="">Select Country</option>
+
+
+                    <select asp-for="CountryId" asp-items="dservice.GetCountries()" class="form-control">
+                        @* <option value="">Select State</option> *@
                     </select>
                     <span asp-validation-for="CountryId" class="text-danger"></span>
 
 
-
-
                 </div>
                 <div class="form-floating col adduser-form-coloumn2" style="margin-top: 15px;">
 
-                    @* <select id="state" class="form-control">
-                                        <option value="">Texas</option>
-                                    </select> *@
-                    <select asp-for="StateId" class="form-control" id="StateId">
-                        <option value="">Select State</option>
+
+                    <select asp-for="StateId" asp-items="dservice.GetState(@Model.CountryId)" class="form-control">
+                        @* <option value="">Select State</option> *@
+
                     </select>
                     <span asp-validation-for="StateId" class="text-danger"></span>
 
 
-
-
                 </div>
                 <div class="form-floating col adduser-form-coloumn2" style="margin-top: 15px;">
 
-                    @* <select id="city" class="form-control">
-                                        <option value="">Housten </option>
-                                    </select> *@
-                    <select asp-for="CityId" class="form-control" id="CityId">
-                        <option value="">Select City</option>
+
+                    <select asp-for="CityId" asp-items="dservice.GetCity(@Model.StateId)" class="form-control">
+                        @* <option value="">Select City</option> *@
                     </select>
                     <span asp-validation-for="CityId" class="text-danger"></span>
-
-
 
                 </div>
 
@@ -164,63 +147,54 @@
     @{
         await Html.RenderPartialAsync("_ValidationScriptsPartial");
     }
-
     <script>
 
         $(document).ready(function () {
-            console.log("helo")
 
-            $.ajax({
-                url: '@Url.Action("GetCountries", "Account")',
-                type: 'GET',
-                success: function (data) {
-                    let countryDropdown = $('#CountryId');
-                    $.each(data, function (i, country) {
-                        if (@Model.CountryId != null && i == @Model.CountryId -1) {
-                            countryDropdown.append('<option value="' + country.id + '" selected>' + country.country1 + '</option>');
-                        }
-                        else {
-                            countryDropdown.append('<option value="' + country.id + '">' + country.country1 + '</option>');
-                        }
-                    });
-                }
-            });
-            // Trigger the state dropdown when country is selected
-            $("#CountryId").change(function () {
-                console.log("hello");
+            var getStateUrl = '@Url.Action("GetStatesByCountry", "Account")';
+            var getCityUrl = '@Url.Action("GetCitiesByState", "Account")';
+
+            $('#CountryId').change(function () {
                 var countryId = $(this).val();
-                console.log(countryId);
+                $("#StateId").empty().append('<option value="">Select State</option>');
+                $("#CityId").empty().append('<option value="">Select City</option>');
+
                 if (countryId) {
-                    $.get("/Account/GetStatesByCountry?countryId=" + countryId, function (data) {
-                        $("#StateId").empty().append('<option value="">Select State</option>');
-
-                        $.each(data, function (index, state) {
-                            console.log(index, state);
-                            $("#StateId").append('<option value="' + state.value + '">' + state.text + '</option>');
-                        });
-                        $("#CityId").empty().append('<option value="">Select City</option>');
+                    $.ajax({
+                        url: getStateUrl,
+                        type: 'GET',
+                        data: { countryId: countryId },
+                        success: function (states) {
+                            states.forEach(function (state) {
+                                $('#StateId').append('<option value="' + parseInt(state.value) + '">' + state.text + '</option>');
+                            });
+                        }
                     });
-                } else {
-                    $("#StateId").empty().append('<option value="">Select State</option>');
-                    $("#CityId").empty().append('<option value="">Select City</option>');
                 }
             });
 
-            // Trigger the city dropdown when state is selected
-            $("#StateId").change(function () {
+            $('#StateId').change(function () {
                 var stateId = $(this).val();
+                $("#CityId").empty().append('<option value="">Select City</option>');
+
                 if (stateId) {
-                    $.get("/Account/GetCitiesByState?stateId=" + stateId, function (data) {
-                        $("#CityId").empty().append('<option value="">Select City</option>');
-                        $.each(data, function (index, city) {
-                            $("#CityId").append('<option value="' + city.value + '">' + city.text + '</option>');
-                        });
+                    $.ajax({
+                        url: getCityUrl,
+                        type: 'GET',
+                        data: { stateId: stateId },
+                        success: function (cities) {
+                            cities.forEach(function (city) {
+                                $('#CityId').append('<option value="' + parseInt(city.value) + '">' + city.text + '</option>');
+                            });
+                        }
                     });
-                } else {
-                    $("#CityId").empty().append('<option value="">Select City</option>');
                 }
             });
+
+
+
         });
     </script>
+
 
 }

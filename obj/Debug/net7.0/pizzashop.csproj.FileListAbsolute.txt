@@ -49,6 +49,7 @@ D:\PIZZASHOP\pizzashop\obj\Debug\net7.0\pizzashop.GeneratedMSBuildEditorConfig.e
 D:\PIZZASHOP\pizzashop\obj\Debug\net7.0\pizzashop.AssemblyInfoInputs.cache
 D:\PIZZASHOP\pizzashop\obj\Debug\net7.0\pizzashop.AssemblyInfo.cs
 D:\PIZZASHOP\pizzashop\obj\Debug\net7.0\pizzashop.csproj.CoreCompileInputs.cache
+D:\PIZZASHOP\pizzashop\obj\Debug\net7.0\pizzashop.MvcApplicationPartsAssemblyInfo.cs
 D:\PIZZASHOP\pizzashop\obj\Debug\net7.0\pizzashop.MvcApplicationPartsAssemblyInfo.cache
 D:\PIZZASHOP\pizzashop\obj\Debug\net7.0\pizzashop.RazorAssemblyInfo.cache
 D:\PIZZASHOP\pizzashop\obj\Debug\net7.0\pizzashop.RazorAssemblyInfo.cs

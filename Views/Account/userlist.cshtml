@@ -4,38 +4,40 @@
     <div class="userlist-searchbar"
         style="display: flex; width: 100%;height: 7%;justify-content: space-between;padding-top: 10px;align-items: center; flex-wrap: wrap; gap: 15px;">
         <h1 style="margin-left: 3%;color: #006cac;">Users</h1>
-        <div class="search-add" style="padding-right: 3%;display: flex; flex-wrap: wrap; gap: 10px;align-items: center;"">
+        <div class="search-add"
+            style="padding-right: 3%;display: flex; flex-wrap: wrap; gap: 10px;align-items: center;margin-left: 3%;">
             <div class=" filter-container d-flex me-2">
-            <select id="roleFilter" class="form-select me-2">
-                <option value="">All Roles</option>
-                @foreach (var role in Model.Role)
-                {
-                    <option value="@role.Id">@role.Role1</option>
-                }
-            </select>
-            <select id="statusFilter" class="form-select">
-                <option value="">All Status</option>
-                <option value="true">Active</option>
-                <option value="false">Inactive</option>
-            </select>
-        </div>
-        <div class="position-relative me-2">
-            <input type="text" id="searchInput" placeholder="Search" aria-label="Search" class="form-control"
-                value="@Model.SearchTerm" style="width: 200px;height: 52px;border: 2px solid #eee;border-radius: 4px;">
-            <i class="bi bi-search" style="position: absolute;right: 10px;top: 15px;"></i>
-        </div>
-        <button class="adduser-btn" onclick="window.location.href='@Url.Action("addnewuser", "Account")'">+Add
-            User</button>
-    </div>
-</div>
-<div class="content" style="display: flex;align-items: center;justify-content: center;padding-top: 40px;">
-    <div class="shadow" style="background-color: white;width: 95%;">
-        <div id="userTableContainer">
-            <!-- The partial view will be loaded here -->
-            @await Html.PartialAsync("_UserTable", Model)
+                <select id="roleFilter" class="form-select me-2" hidden>
+                    <option value="">All Roles</option>
+                    @foreach (var role in Model.Role)
+                    {
+                        <option value="@role.Id">@role.Role1</option>
+                    }
+                </select>
+                <select id="statusFilter" class="form-select" hidden>
+                    <option value="">All Status</option>
+                    <option value="true">Active</option>
+                    <option value="false">Inactive</option>
+                </select>
+            </div>
+            <div class="position-relative me-2">
+                <input type="text" id="searchInput" placeholder="Search" aria-label="Search" class="form-control"
+                    value="@Model.SearchTerm"
+                    style="width: 200px;height: 52px;border: 2px solid #eee;border-radius: 4px;">
+                <i class="bi bi-search" style="position: absolute;right: 10px;top: 15px;"></i>
+            </div>
+            <button class="adduser-btn" onclick="window.location.href='@Url.Action("addnewuser", "Account")'">+Add
+                User</button>
         </div>
     </div>
-</div>
+    <div class="content" style="display: flex;align-items: center;justify-content: center;padding-top: 40px;">
+        <div class="shadow" style="background-color: white;width: 95%;">
+            <div id="userTableContainer">
+                <!-- The partial view will be loaded here -->
+                @await Html.PartialAsync("_UserTable", Model)
+            </div>
+        </div>
+    </div>
 </div>
 
 @section Scripts {

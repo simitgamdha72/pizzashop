@@ -7,11 +7,10 @@ using System.Security.Claims;
 using Microsoft.IdentityModel.Tokens;
 using System.Text;
 using System.IdentityModel.Tokens.Jwt;
-using Microsoft.EntityFrameworkCore;
-using pizzashop.Repository;
-using pizzashop.Repository.implementation;
 using pizzashop.Services;
 using Microsoft.AspNetCore.Mvc.Rendering;
+using pizzashop.Service;
+using pizzashop.Helpers;
 
 namespace pizzashop.Controllers;
 
@@ -19,20 +18,21 @@ public class AccountController : Controller
 {
 
     public readonly EmailSender1 es;
+
+    private readonly IWebHostEnvironment _webHostEnvironment;
+
+    private readonly dropdownService _dropdownService;
     private readonly IConfiguration _configuration;
     private readonly IAccountService _accountService;
-    private readonly icountryservice _countryservice;
-    private readonly istateservice _stateservice;
-    private readonly icityservice _cityservice;
 
-    public AccountController(IAccountService accountService, icityservice cityservice, istateservice stateservice, icountryservice countryservice, EmailSender1 ess1, IConfiguration configuration)
+
+    public AccountController(IWebHostEnvironment webHostEnvironment, dropdownService dropdownService, IAccountService accountService, EmailSender1 ess1, IConfiguration configuration)
     {
         _accountService = accountService;
-        _countryservice = countryservice;
-        _stateservice = stateservice;
-        _cityservice = cityservice;
         es = ess1;
         _configuration = configuration;
+        _dropdownService = dropdownService;
+        _webHostEnvironment = webHostEnvironment;
 
     }
 
@@ -111,26 +111,16 @@ public class AccountController : Controller
     [Authorize]
     public async Task<IActionResult> addnewuser()
     {
-        var countries = await _countryservice.GetCountriesAsync();
-        // // ViewBag.Countries = countries;
 
-        var viewModel = new AddnewUserViewModel
-        {
-            Countries = countries
-        };
 
-        return View(viewModel);
+
+
+        return View();
 
 
     }
 
-    [HttpGet]
-    public async Task<JsonResult> GetCountries()
-    {
 
-        var countries = await _countryservice.GetCountriesAsync();
-        return Json(countries);
-    }
 
 
 
@@ -138,34 +128,46 @@ public class AccountController : Controller
     public async Task<JsonResult> GetStatesByCountry(int countryId)
     {
 
-        var states = await _stateservice.GetStatesByCountryIdAsync(countryId);
-        return Json(states.Select(s => new { value = s.Id, text = s.State1 }));
+        List<SelectListItem> states = _dropdownService.GetState(countryId);
+        return Json(states);
     }
 
     [HttpGet]
     public async Task<JsonResult> GetCitiesByState(int stateId)
     {
-        var cities = await _cityservice.GetCitiesByStateIdAsync(stateId);
-        return Json(cities.Select(c => new { value = c.Id, text = c.City1 }));
+        List<SelectListItem> cities = _dropdownService.GetCity(stateId);
+        return Json(cities);
     }
 
     [HttpPost]
     public async Task<IActionResult> addnewuser(AddnewUserViewModel model)
     {
 
+        string fileName = null;
+        if (model.ProfileImage != null && model.ProfileImage.Length > 0)
+        {
+            try
+            {
+                var imageHelper = new ImageHelper(_webHostEnvironment);
+                fileName = await imageHelper.SaveImageAsync(model.ProfileImage);
+            }
+            catch (ArgumentException ex)
+            {
+                ModelState.AddModelError("ProfileImage", ex.Message);
+                return View(model);
+            }
+        }
+
 
         // var countries = await _countryservice.GetCountriesAsync();
         if (ModelState.IsValid)
         {
-            var valid = _accountService.CreateUser(model);
+            var valid = _accountService.CreateUser(model, fileName);
 
             if (valid == 1)
             {
-                // ViewBag.Countries = countries;
-                if (model.CountryId != 0)
-                {
-                    model.CountryId = 0;
-                }
+
+
                 TempData["alredyexist"] = "Email or UserName is Already exist";
                 return View(model);
             }
@@ -176,10 +178,7 @@ public class AccountController : Controller
             return RedirectToAction("UserList", "Account");
         }
 
-        if (model.CountryId != 0)
-        {
-            model.CountryId = 0;
-        }
+
 
         // ViewBag.Countries = countries;
         return View(model);
@@ -189,12 +188,12 @@ public class AccountController : Controller
     [Authorize]
     public async Task<IActionResult> edituserAsync(int id)
     {
-        var countries = await _countryservice.GetCountriesAsync();
+        // var countries = await _countryservice.GetCountriesAsync();
 
 
         var viewModel = _accountService.edituserget(id);
 
-        viewModel.Countries = countries;
+        // viewModel.Countries = countries;
 
 
         if (viewModel == null)
@@ -210,16 +209,27 @@ public class AccountController : Controller
     public async Task<IActionResult> edituser(EditUserViewModel model)
     {
 
+        string fileName = null;
+        if (model.ProfileImage != null && model.ProfileImage.Length > 0)
+        {
+            try
+            {
+                var imageHelper = new ImageHelper(_webHostEnvironment);
+                fileName = await imageHelper.SaveImageAsync(model.ProfileImage);
+            }
+            catch (ArgumentException ex)
+            {
+                ModelState.AddModelError("ProfileImage", ex.Message);
+                return View(model);
+            }
+        }
+
         if (!ModelState.IsValid)
         {
-            if (model.CountryId != 0)
-            {
-                model.CountryId = 0;
-            }
             return View(model);
         }
 
-        var validator = _accountService.edituserpost(model);
+        var validator = _accountService.edituserpost(model, fileName);
 
         if (validator == 1)
         {
@@ -229,10 +239,6 @@ public class AccountController : Controller
         if (validator == 2)
         {
             TempData["usernameexist"] = "This UserName is Already in Use";
-            if (model.CountryId != 0)
-            {
-                model.CountryId = 0;
-            }
             return View(model);
         }
 
