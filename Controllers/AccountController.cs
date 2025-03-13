@@ -229,6 +229,10 @@ public class AccountController : Controller
         if (validator == 2)
         {
             TempData["usernameexist"] = "This UserName is Already in Use";
+            if (model.CountryId != 0)
+            {
+                model.CountryId = 0;
+            }
             return View(model);
         }
 
@@ -402,26 +406,6 @@ public class AccountController : Controller
     }
 
 
-    [Authorize]
-    public async Task<IActionResult> userlistBackup(int page = 1, string search = "", int pagesize = 5) // repo baki
-    {
-
-        var totalUsers = await _accountService.totaluser();
-
-        var users = await _accountService.userlist(page);
-
-        var model = new UserListViewModel
-        {
-            Users = (List<User>)users,
-            CurrentPage = page,
-            TotalPages = (int)Math.Ceiling((double)totalUsers / pagesize),
-            TotalUsers = totalUsers,
-            SearchTerm = search,
-            PageSize = pagesize
-        };
-
-        return View(model);
-    }
 
     [Authorize]
     public async Task<IActionResult> userlist(int page = 1, string search = "", int? roleId = null, bool? status = null, int pageSize = 5)
@@ -456,6 +440,8 @@ public class AccountController : Controller
 
         return View(model);
     }
+
+
 
 
 
