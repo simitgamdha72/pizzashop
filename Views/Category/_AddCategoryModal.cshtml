@@ -1,0 +1,37 @@
+@model pizzashop.Models.ViewModels.CategoryViewModel
+<!-- model of add catogory -->
+
+<div class="modal fade" style="margin-top: 13%;" id="addCategoryModal" tabindex="-1" aria-labelledby="exampleModalLabel"
+    aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h1 class="modal-title fs-5" id="exampleModalLabel">Add Category</h1>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <div class="form">
+                    <form asp-controller="Category" asp-action="addcategory" method="post" class="form">
+                        <div style="margin-bottom: 20px;">
+                            <input type="text" asp-for="Category" class="form-control" placeholder="Name">
+                            <span asp-validation-for="Category" class="text-danger"></span>
+                        </div>
+                        <input type="text" asp-for="Description" class="form-control" placeholder="Description">
+                        <span asp-validation-for="Description" class="text-danger"></span>
+                        <div class="modal-footer">
+
+                            <button type="submit" class="btn btn-primary">Save</button>
+                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                        </div>
+                    </form>
+
+                </div>
+            </div>
+
+        </div>
+    </div>
+</div>
+
+@{
+    await Html.RenderPartialAsync("_ValidationScriptsPartial");
+}

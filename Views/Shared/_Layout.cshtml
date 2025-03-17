@@ -8,6 +8,11 @@
     var selfdelete = TempData["selfdelete"] as string;
     var passwordNotMatch = TempData["passwordNotMatch"] as string;
     var BothpasswordSame = TempData["BothpasswordSame"] as string;
+    var CategoryExist = TempData["CategoryExist"] as string;
+    var CategoryAdded = TempData["CategoryAdded"] as string;
+    var nullCategory = TempData["nullCategory"] as string;
+    var CategoryIsDeleted = TempData["CategoryIsDeleted"] as string;
+    var CategoryEdit = TempData["CategoryEdit"] as string;
 }
 
 <!doctype html>
@@ -356,6 +361,43 @@
             toastr.error('@BothpasswordSame');  // Show success message using Toastr
         </script>
     }
+
+    @if (!string.IsNullOrEmpty(CategoryExist))
+    {
+        <script>
+            toastr.error('@CategoryExist');  // Show success message using Toastr
+        </script>
+    }
+
+    @if (!string.IsNullOrEmpty(CategoryAdded))
+    {
+        <script>
+            toastr.success('@CategoryAdded');  // Show success message using Toastr
+        </script>
+    }
+
+    @if (!string.IsNullOrEmpty(nullCategory))
+    {
+        <script>
+            toastr.error('@nullCategory');  // Show success message using Toastr
+        </script>
+    }
+    @if (!string.IsNullOrEmpty(CategoryIsDeleted))
+    {
+        <script>
+            toastr.success('@CategoryIsDeleted');  // Show success message using Toastr
+        </script>
+    }
+    @if (!string.IsNullOrEmpty(CategoryEdit))
+    {
+        <script>
+            toastr.success('@CategoryEdit');  // Show success message using Toastr
+        </script>
+    }
+
+
+
+
 
 
 

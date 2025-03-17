@@ -1,0 +1,64 @@
+@model IEnumerable<pizzashop.Models.Models.Category>
+
+<ul class="categorys flex-column mb-auto w-100" style="overflow-y: scroll; max-height: 400px;">
+
+
+
+    @{
+        foreach (var Categories in Model)
+        {
+            <li class="">
+                <a href="javascript:void(0);" data-category-id="@Categories.Id" class="nav-link d-flex me-auto">
+                    <i class="bi bi-grid-1x2-fill" style="margin-right: 10px;"></i>
+                    @Categories.Category1
+                </a>
+                <div class="categoryAction">
+                    <div class="d-flex">
+                        <button class="menubtn" onclick="EditCategoryModal(@Categories.Id)">
+                            <i class="bi bi-pen"></i>
+                        </button>
+                        <button class="menubtn" onclick="DeleteCategory(@Categories.Id)">
+                            <i class="bi bi-trash"></i>
+                        </button>
+                    </div>
+                </div>
+            </li>
+
+        }
+    }
+
+
+</ul>
+
+
+<script>
+    $(document).ready(function () {
+        console.log("hello1");
+        // load menu items for the first category when the page loads
+        var firstCategoryId = $('a[data-category-id]').first().data('category-id');
+        loadMenuItems(firstCategoryId);
+        console.log(firstCategoryId);
+        // clicking on category links
+        $('a[data-category-id]').click(function () {
+            var categoryId = $(this).data('category-id');
+            loadMenuItems(categoryId);  // Load menu items for the clicked category
+        });
+
+
+        // Function
+        function loadMenuItems(categoryId) {
+            console.log(categoryId);
+            $.ajax({
+                url: '@Url.Action("GetMenuItemsTable", "Category")',
+                type: 'GET',
+                data: { id: categoryId },
+                success: function (result) {
+                    $('#menuItemsContainer').html(result);
+                },
+                error: function (xhr, status, error) {
+                    console.log("Error: " + error);
+                }
+            });
+        }
+    });
+</script>

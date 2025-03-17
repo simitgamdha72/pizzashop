@@ -11,24 +11,26 @@
             </div>
             <div class="modal-body">
                 <div class="form">
-                    <form method="post" id="CategoryViewModel">
+                    <form id="CategoryEditModel">
                         <!-- Hidden input to pass CategoryId -->
-                        <input type="text" id="CategoryId" asp-for="Id" name="Id" value="@Model.Id" />
+                        <input type="hidden" id="CategoryId" asp-for="Id" name="Id" value="@Model.Id" />
 
                         <div class="mb-3">
                             <label for="CategoryName" class="form-label">Category Name</label>
-                            <input type="text" class="form-control" id="CategoryName" name="Category1"
+                            <input type="text" class="form-control" id="Category" name="Category"
                                 asp-for="Category" value="@Model.Category" placeholder="Name">
+                                 <span asp-validation-for="Category" class="text-danger"></span>
                         </div>
 
                         <div class="mb-3">
                             <label for="Description" class="form-label">Description</label>
                             <input type="text" class="form-control" id="Description" name="Description"
                                 value="@Model.Description" asp-for="Description" placeholder="Description">
+                                 <span asp-validation-for="Description" class="text-danger"></span>
                         </div>
 
                         <div class="modal-footer">
-                            <button type="submit" class="btn btn-primary"
+                            <button  class="btn btn-primary"
                                 onclick="EditCategoryModalSave()">Save</button>
                             <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
                         </div>
@@ -38,3 +40,29 @@
         </div>
     </div>
 </div>
+
+@{
+    await Html.RenderPartialAsync("_ValidationScriptsPartial");
+}
+
+
+<script>
+    $('#CategoryEditModel').on('submit', function (e) {
+
+   
+     e.preventDefault();
+     var form = $(this);
+     var url = form.attr('action');
+     var data = form.serialize();
+
+     $.ajax({
+         type: "POST",
+         url: "@(Url.Action("EditCategory", "Category"))",
+         data: data,
+         success: function (data) {
+             location.reload();
+         }
+     });
+         
+ });
+</script>

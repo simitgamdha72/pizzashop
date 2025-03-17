@@ -60,6 +60,18 @@ build_metadata.AdditionalFiles.CssScope =
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcQ2F0ZWdvcnlcbWVudS5jc2h0bWw=
 build_metadata.AdditionalFiles.CssScope = 
 
+[D:/PIZZASHOP/pizzashop/Views/Category/_AddCategoryModal.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcQ2F0ZWdvcnlcX0FkZENhdGVnb3J5TW9kYWwuY3NodG1s
+build_metadata.AdditionalFiles.CssScope = 
+
+[D:/PIZZASHOP/pizzashop/Views/Category/_CategoryList.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcQ2F0ZWdvcnlcX0NhdGVnb3J5TGlzdC5jc2h0bWw=
+build_metadata.AdditionalFiles.CssScope = 
+
+[D:/PIZZASHOP/pizzashop/Views/Category/_deletecategory.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcQ2F0ZWdvcnlcX2RlbGV0ZWNhdGVnb3J5LmNzaHRtbA==
+build_metadata.AdditionalFiles.CssScope = 
+
 [D:/PIZZASHOP/pizzashop/Views/Category/_deleteitem.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcQ2F0ZWdvcnlcX2RlbGV0ZWl0ZW0uY3NodG1s
 build_metadata.AdditionalFiles.CssScope = 
@@ -126,10 +138,6 @@ build_metadata.AdditionalFiles.CssScope =
 
 [D:/PIZZASHOP/pizzashop/Views/Shared/Error.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcU2hhcmVkXEVycm9yLmNzaHRtbA==
-build_metadata.AdditionalFiles.CssScope = 
-
-[D:/PIZZASHOP/pizzashop/Views/Shared/_CategoryList1.cshtml]
-build_metadata.AdditionalFiles.TargetPath = Vmlld3NcU2hhcmVkXF9DYXRlZ29yeUxpc3QxLmNzaHRtbA==
 build_metadata.AdditionalFiles.CssScope = 
 
 [D:/PIZZASHOP/pizzashop/Views/Shared/_ValidationScriptsPartial.cshtml]

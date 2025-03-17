@@ -28,58 +28,15 @@ namespace pizzashop.Controllers
 
 
         [Authorize]
-        public IActionResult menu(int id)
+        public IActionResult menu()
         {
-
-
-            var categories = _categoryService.GetCategories();
-
-            if (id == 0)
-            {
-                // Check if the categories collection is not empty
-                if (categories.Any())
-                {
-                    id = categories.First().Id;
-                    Console.WriteLine(id);
-                }
-                else
-                {
-
-                    Console.WriteLine("No categories available");
-
-                    id = -1;
-                }
-            }
-
-            // var menuitems = _context.MenuItems.Where(m => m.CategoryId == id && m.Isdeleted != true)
-            // .ToList();
-
-            var cat = new CategoryViewModel
-            {
-                categories = categories,
-                // menuItems = menuitems,
-
-            };
-
-
-
-            return View(cat);
-
-            // return View();
+            return View();
         }
 
-        //   [Authorize]
-        // public IActionResult menu()
-        // {
-        //     // var categories = _categoryService.GetCategories();
-        //     // var cat = new CategoryViewModel
-        //     // {
-        //     //     categories = categories
-        //     // };
-        //     // return View(cat);
-
-        //     return View();
-        // }
+        public IActionResult ShowAddCategoryModal()
+        {
+            return PartialView("_AddCategoryModal");
+        }
 
         [HttpPost]
         public IActionResult addcategory(CategoryViewModel model)
@@ -89,89 +46,81 @@ namespace pizzashop.Controllers
                 return View(model);
             }
 
-            _categoryService.AddCategory(model);
+            int validator = _categoryService.AddCategory(model);
 
+            if (validator == 1)
+            {
+                TempData["CategoryExist"] = "This Category is Allready Exist";
+                return RedirectToAction("menu", "Category");
+            }
+
+            TempData["CategoryAdded"] = "New Category is Added";
             return RedirectToAction("menu", "Category");
-
-
         }
 
+        public IActionResult DeleteCategoryModel(int id)
+        {
+            var showcategory = _categoryService.GetCategoryViewModelOnlyId(id);
 
-
-
+            return PartialView("_deletecategory", showcategory);
+        }
 
         [HttpPost]
         public IActionResult deletecategory(int id)
         {
             _categoryService.DeleteCategory(id);
 
+            TempData["CategoryIsDeleted"] = "Category Deleted Successfully";
+
             return RedirectToAction("menu", "Category");
+
         }
-
-
-
 
 
 
 
         public IActionResult EditCategoryModal(int id)
         {
-            Category category = _context.Categories.FirstOrDefault(c => c.Id == id);
-            var viewModel = new CategoryViewModel
-            {
-                Id = category.Id,
-                Category = category.Category1,
-                Description = category.Description,
-            };
+            var viewModel = _categoryService.GetCategoryViewModel(id);
             return PartialView("_modeleditcategory", viewModel);
         }
 
-
-
-
-        // [HttpPost]
-        // public IActionResult EditCategory(CategoryViewModel model)
-        // {
-
-        //     Category category = _context.Categories.FirstOrDefault(c => c.Id == model.Id);
-
-        //     var viewModel = new Category
-        //     {
-        //         Id = category.Id,
-        //         Category1 = model.Category,
-        //         Description = model.Description,
-
-        //     };
-
-        //     _context.Categories.Update(viewModel);
-
-        //     return RedirectToAction("menu", "Category");
-        // }
-
         [HttpPost]
-        public IActionResult EditCategory(int Id, string Category1, string? Description)
+        public IActionResult EditCategory(CategoryViewModel model)
         {
-            _categoryService.EditCategory(Id, Category1, Description);
 
-            return RedirectToAction("menu", "Category");
+            var validator = _categoryService.EditCategory(model);
+
+            if (validator == 1)
+            {
+                return Json(false);
+            }
+
+            if (validator == 2)
+            {
+                TempData["CategoryExist"] = "Category is alredy exist!";
+                return Json(false);
+            }
+
+            else
+            {
+                TempData["CategoryEdit"] = "Category is Updated";
+                return Json(true);
+            }
+
+
+
         }
 
 
 
-
-
-
-
-
-
-
-        // // ajaz
-        // [HttpGet]
-        // public IActionResult GetCategories()
-        // {
-        //     var categories = _categoryService.GetCategories();  // Fetch updated categories
-        //     return PartialView("_CategoryList", categories);  // Return partial view with categories data
-        // }
+        // ajaz
+        [HttpGet]
+        public IActionResult GetCategories()
+        {
+            var categories = _categoryService.GetCategories();  // Fetch updated categories
+            return PartialView("_CategoryList", categories);  // Return partial view with categories data
+        }
 
         public IActionResult AddItemModal()
         {
@@ -302,6 +251,8 @@ namespace pizzashop.Controllers
             return PartialView("_deleteitem", showitem);
 
         }
+
+
 
 
     }

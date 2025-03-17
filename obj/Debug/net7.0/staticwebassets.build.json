@@ -1,6 +1,6 @@
 {
   "Version": 1,
-  "Hash": "BCgwcaTwHtLY6zC48tu5YKCLIC4ZErZ/hrZBjBp8xJE=",
+  "Hash": "TMQB0570+CZksbtEUpdkuX1Y1are228G9adIbwXZl0Q=",
   "Source": "pizzashop",
   "BasePath": "_content/pizzashop",
   "Mode": "Default",
@@ -440,6 +440,23 @@
       "CopyToOutputDirectory": "Never",
       "CopyToPublishDirectory": "PreserveNewest",
       "OriginalItemSpec": "wwwroot\\images\\profiles\\1942e9d2-d7db-426a-8357-3d926b2d047e.jpg"
+    },
+    {
+      "Identity": "D:\\PIZZASHOP\\pizzashop\\wwwroot\\images\\profiles\\77cdb4ec-33dc-4f7c-b7a3-7b4722947f07.jpg",
+      "SourceId": "pizzashop",
+      "SourceType": "Discovered",
+      "ContentRoot": "D:\\PIZZASHOP\\pizzashop\\wwwroot\\",
+      "BasePath": "_content/pizzashop",
+      "RelativePath": "images/profiles/77cdb4ec-33dc-4f7c-b7a3-7b4722947f07.jpg",
+      "AssetKind": "All",
+      "AssetMode": "All",
+      "AssetRole": "Primary",
+      "RelatedAsset": "",
+      "AssetTraitName": "",
+      "AssetTraitValue": "",
+      "CopyToOutputDirectory": "Never",
+      "CopyToPublishDirectory": "PreserveNewest",
+      "OriginalItemSpec": "wwwroot\\images\\profiles\\77cdb4ec-33dc-4f7c-b7a3-7b4722947f07.jpg"
     },
     {
       "Identity": "D:\\PIZZASHOP\\pizzashop\\wwwroot\\images\\profiles\\9a1c8758-c42f-4844-b19d-c036b03035b0.jpg",
