@@ -22,7 +22,12 @@
                 </div>
                 <div class="modal-footer">
                     <!-- The form where the CategoryId will be passed -->
-                    <form id="deleteForm" method="post" asp-controller="Category" asp-action="deletecategory">
+                    @* <form id="deleteForm" method="post" asp-controller="Category" asp-action="deletecategory">
+                        <input type="hidden" id="categoryId" name="id" value="@Model.Id" />
+                        <button type="submit" class="btn btn-primary">Yes</button>
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">No</button>
+                    </form> *@
+                    <form id="deleteForm">
                         <input type="hidden" id="categoryId" name="id" value="@Model.Id" />
                         <button type="submit" class="btn btn-primary">Yes</button>
                         <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">No</button>
@@ -32,3 +37,37 @@
         </div>
     </div>
 </div>
+
+<script>
+    $('#deleteForm').on('submit', function (e) {
+
+
+        e.preventDefault();
+        var form = $(this);
+        var url = form.attr('action');
+        var data = form.serialize();
+
+        $.ajax({
+            type: "POST",
+            url: "@(Url.Action("deletecategory", "Category"))",
+            data: data,
+            success: function (data) {
+                loadCategories();
+                $('#DeleteCategoryModel').modal('hide');
+            }
+        });
+
+    });
+    function loadCategories() {
+        $.ajax({
+            url: '@Url.Action("GetCategories", "Category")', // Use the correct controller and action name
+            type: 'GET',
+            success: function (response) {
+                $('#categoryListContainer').html(response); // Inject the partial view into the container
+            },
+            error: function () {
+                alert('Error loading categories');
+            }
+        });
+    }
+</script>

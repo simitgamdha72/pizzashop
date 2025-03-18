@@ -1,58 +1,11 @@
-@* @model IEnumerable<pizzashop.Models.Models.MenuItem>
-
-<div class="table-responsive">
-    <table class="tableList table align-middle">
-        <thead>
-            <tr>
-                <th scope="col">Name</th>
-                <th scope="col">ItemType</th>
-                <th scope="col">Rate</th>
-                <th scope="col">Quantity</th>
-                <th scope="col">Available</th>
-                <th scope="col">Action</th>
-            </tr>
-        </thead>
-        <tbody class="table-group-divider">
-            @foreach (var menuitem in Model)
-            {
-                <tr>
-                    <td>@menuitem.Name</td>
-                    <td>
-                        @if (menuitem.ItemType == 1)
-                        {
-                            <img src="~/images/icons/veg-icon.svg" height="20px">
-                        }
-                        @if (menuitem.ItemType == 2)
-                        {
-                            <img src="~/images/icons/non-veg-icon.svg" height="20px">
-                        }
-                        @if (menuitem.ItemType == 3)
-                        {
-                            <img src="~/images/icons/vegan-icon.svg" height="20px">
-                        }
-                    </td>
-                    <td>@menuitem.Rate</td>
-                    <td>@menuitem.Quantity</td>
-                    <td>
-                        <div class="form-check form-switch toggleSwitch">
-                            <input class="form-check-input" type="checkbox" role="switch" id="flexSwitchCheckChecked"
-                                @(menuitem.Available ? "checked" : "")>
-                        </div>
-                    </td>
-                    <td>
-                        <button class="menubtn loadEditModalBtn" data-id="@menuitem.Id"><i class="bi bi-pen"></i></button>
-                        <button class="menubtn" data-bs-toggle="modal" data-bs-target="#deleteitem"
-                            data-id="@menuitem.Id"><i class="bi bi-trash"></i></button>
-                    </td>
-                </tr>
-            }
-        </tbody>
-    </table>
-</div> *@
-
-
-
 @model IEnumerable<pizzashop.Models.Models.MenuItem>
+@{
+    var ItemExist = TempData["ItemExist"] as string;
+    var ItemEdit = TempData["ItemEdit"] as string;
+    var deleteItem = TempData["deleteItem"] as string;
+
+
+}
 <div class="table-responsive">
     <table class="tableList table align-middle table">
         <thead>
@@ -78,12 +31,22 @@
                     <tr>
                         <td>
                             <div class="form-check">
-                                <input class="form-check-input checkboxes" type="checkbox" value="" id="flexCheckDefault">
+                                <input class="form-check-input checkboxes" type="checkbox" value="" id="flexCheckDefault"
+                                    data-id="@menuitems.Id">
                             </div>
                         </td>
                         <td>
                             <div class="listImgField">
-                                <img class="listImg" src="~/images/dining-menu.png">
+                                @if (menuitems.MyImage != null)
+                                {
+                                    <img class="listImg" src="~/images/profiles/@menuitems.MyImage" style="border-radius: 50%;">
+                                }
+                                @if (menuitems.MyImage == null)
+                                {
+                                    <img class="listImg" src="~/images/dining-menu.png">
+                                }
+
+
                                 @menuitems.Name
                             </div>
                         </td>
@@ -130,3 +93,35 @@
         </tbody>
     </table>
 </div>
+
+
+@if (!string.IsNullOrEmpty(ItemExist))
+{
+    <script>
+        toastr.error('@ItemExist');  // Show success message using Toastr
+    </script>
+}
+@if (!string.IsNullOrEmpty(ItemEdit))
+{
+    <script>
+        toastr.success('@ItemEdit');  // Show success message using Toastr
+    </script>
+}
+@if (!string.IsNullOrEmpty(deleteItem))
+{
+    <script>
+        toastr.success('@deleteItem');  // Show success message using Toastr
+    </script>
+}
+
+
+
+
+<script>
+    document.getElementById('selectAllCheckbox').addEventListener('change', function () {
+        let checkboxes = document.querySelectorAll('.checkboxes');
+        checkboxes.forEach(function (checkbox) {
+            checkbox.checked = this.checked;
+        }, this);
+    });
+</script>

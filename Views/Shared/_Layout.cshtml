@@ -8,11 +8,11 @@
     var selfdelete = TempData["selfdelete"] as string;
     var passwordNotMatch = TempData["passwordNotMatch"] as string;
     var BothpasswordSame = TempData["BothpasswordSame"] as string;
-    var CategoryExist = TempData["CategoryExist"] as string;
     var CategoryAdded = TempData["CategoryAdded"] as string;
-    var nullCategory = TempData["nullCategory"] as string;
-    var CategoryIsDeleted = TempData["CategoryIsDeleted"] as string;
-    var CategoryEdit = TempData["CategoryEdit"] as string;
+    var ItemExist = TempData["ItemExist"] as string;
+    var ItemisAdded = TempData["ItemisAdded"] as string;
+    var SomethingIsMissing = TempData["SomethingIsMissing"] as string;
+
 }
 
 <!doctype html>
@@ -310,7 +310,6 @@
             toastr.success('@successMessage');  // Show success message using Toastr
         </script>
     }
-
     @if (!string.IsNullOrEmpty(editusersuccess))
     {
         <script>
@@ -323,14 +322,12 @@
             toastr.success('@usersadded');  // Show success message using Toastr
         </script>
     }
-
     @if (!string.IsNullOrEmpty(usernameexist))
     {
         <script>
             toastr.error('@usernameexist');  // Show success message using Toastr
         </script>
     }
-
     @if (!string.IsNullOrEmpty(userprofiledatachanged))
     {
         <script>
@@ -361,39 +358,33 @@
             toastr.error('@BothpasswordSame');  // Show success message using Toastr
         </script>
     }
-
-    @if (!string.IsNullOrEmpty(CategoryExist))
-    {
-        <script>
-            toastr.error('@CategoryExist');  // Show success message using Toastr
-        </script>
-    }
-
     @if (!string.IsNullOrEmpty(CategoryAdded))
     {
         <script>
             toastr.success('@CategoryAdded');  // Show success message using Toastr
         </script>
     }
+    @if (!string.IsNullOrEmpty(ItemisAdded))
+    {
+        <script>
+            toastr.success('@ItemisAdded');  // Show success message using Toastr
+        </script>
+    }
+    @if (!string.IsNullOrEmpty(ItemExist))
+    {
+        <script>
+            toastr.error('@ItemExist');  // Show success message using Toastr
+        </script>
+    }
+    @if (!string.IsNullOrEmpty(SomethingIsMissing))
+    {
+        <script>
+            toastr.error('@SomethingIsMissing');  // Show success message using Toastr
+        </script>
+    }
 
-    @if (!string.IsNullOrEmpty(nullCategory))
-    {
-        <script>
-            toastr.error('@nullCategory');  // Show success message using Toastr
-        </script>
-    }
-    @if (!string.IsNullOrEmpty(CategoryIsDeleted))
-    {
-        <script>
-            toastr.success('@CategoryIsDeleted');  // Show success message using Toastr
-        </script>
-    }
-    @if (!string.IsNullOrEmpty(CategoryEdit))
-    {
-        <script>
-            toastr.success('@CategoryEdit');  // Show success message using Toastr
-        </script>
-    }
+
+
 
 
 

@@ -109,6 +109,14 @@
       "PackagePath": "staticwebassets\\images\\profiles\\1942e9d2-d7db-426a-8357-3d926b2d047e.jpg"
     },
     {
+      "Id": "D:\\PIZZASHOP\\pizzashop\\wwwroot\\images\\profiles\\34ce65cf-79ce-4bba-b2ea-93925e41dc29.jpg",
+      "PackagePath": "staticwebassets\\images\\profiles\\34ce65cf-79ce-4bba-b2ea-93925e41dc29.jpg"
+    },
+    {
+      "Id": "D:\\PIZZASHOP\\pizzashop\\wwwroot\\images\\profiles\\6944eeb8-2889-48e7-96f6-c4b5d38e5b16.jpg",
+      "PackagePath": "staticwebassets\\images\\profiles\\6944eeb8-2889-48e7-96f6-c4b5d38e5b16.jpg"
+    },
+    {
       "Id": "D:\\PIZZASHOP\\pizzashop\\wwwroot\\images\\profiles\\77cdb4ec-33dc-4f7c-b7a3-7b4722947f07.jpg",
       "PackagePath": "staticwebassets\\images\\profiles\\77cdb4ec-33dc-4f7c-b7a3-7b4722947f07.jpg"
     },
@@ -123,6 +131,10 @@
     {
       "Id": "D:\\PIZZASHOP\\pizzashop\\wwwroot\\images\\profiles\\bbf90a2a-f121-4523-866c-b57e8841eef1.jpg",
       "PackagePath": "staticwebassets\\images\\profiles\\bbf90a2a-f121-4523-866c-b57e8841eef1.jpg"
+    },
+    {
+      "Id": "D:\\PIZZASHOP\\pizzashop\\wwwroot\\images\\profiles\\fca1e656-e500-4376-9971-ab2055009d4f.jpg",
+      "PackagePath": "staticwebassets\\images\\profiles\\fca1e656-e500-4376-9971-ab2055009d4f.jpg"
     },
     {
       "Id": "D:\\PIZZASHOP\\pizzashop\\wwwroot\\images\\qr-code.png",
@@ -143,6 +155,10 @@
     {
       "Id": "D:\\PIZZASHOP\\pizzashop\\wwwroot\\js\\bootstrap.bundle.min.js",
       "PackagePath": "staticwebassets\\js\\bootstrap.bundle.min.js"
+    },
+    {
+      "Id": "D:\\PIZZASHOP\\pizzashop\\wwwroot\\js\\jquery.MultiFile.js",
+      "PackagePath": "staticwebassets\\js\\jquery.MultiFile.js"
     },
     {
       "Id": "D:\\PIZZASHOP\\pizzashop\\wwwroot\\js\\script.js",

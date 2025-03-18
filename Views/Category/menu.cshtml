@@ -34,13 +34,7 @@
                             class="bi bi-plus-lg"></i></button>
                 </div>
 
-
                 <div id="categoryListContainer"></div>
-
-
-
-
-
 
             </div>
         </div>
@@ -59,10 +53,6 @@
             </div>
             <div class="mb-2 mb-sm-3" style="display: flex; justify-content: end; align-items: center;">
                 <div class="d-flex">
-                    @* <form class="searchBar d-none d-sm-flex me-3">
-                        <input class="form-control" type="text" placeholder="Search">
-                        <i class="searchIcon bi bi-search"></i>
-                    </form> *@
                     <form style="position: relative;margin-right: 10px;">
                         <input type="search" id="searchInput" placeholder="  Search" aria-label="Search"
                             class="form-control" style="width: 200px;height: 52px;margin-right: 2px; border: 2px solid #eee;
@@ -70,15 +60,11 @@
 
                         <i class="bi bi-search" style="position: absolute;right: 10px;top: 15px;"></i>
                     </form>
-                    <button class="customBtnSecondary px-md-3 me-3 fs-4" href="addNewUser.html"><i
-                            class="bi bi-trash"></i></button>
-                    @* <button class="customBtnPrimary px-3 p-md-3" data-bs-toggle="modal"
-                        data-bs-target="#addItemModal"><i class="bi bi-plus-lg me-0 me-sm-2"></i><span
-                            class="d-none d-sm-block">New Item</span></button> *@
+                    <button class="customBtnSecondary px-md-3 me-3 fs-4" data-bs-toggle="modal"
+                        data-bs-target="#MassDataDeleteModal"><i class=" bi bi-trash"></i></button>
                     <button class="customBtnPrimary px-3 p-md-3" id="loadModalBtn"><i
                             class="bi bi-plus-lg me-0 me-sm-2"></i><span class="d-none d-sm-block">New
                             Item</span></button>
-                    @* <button id="loadModalBtn" class="btn btn-primary">Add New Item</button> *@
                 </div>
 
             </div>
@@ -90,82 +76,6 @@
             </div>
 
             <div class="">
-                @* <div class="table-responsive">
-                    <table class="tableList table align-middle">
-                        <thead>
-                            <tr>
-                                <th scope="col">
-                                    <div class="form-check">
-                                        <input class="form-check-input" type="checkbox" value="" id="selectAllCheckbox">
-                                    </div>
-                                </th>
-                                <th scope="col">Name</th>
-                                <th scope="col">ItemType</th>
-                                <th scope="col">Rate</th>
-                                <th scope="col">Quantity</th>
-                                <th scope="col">Available</th>
-                                <th scope="col">Action</th>
-                            </tr>
-                        </thead>
-                        <tbody class="table-group-divider">
-
-                            @{
-                                foreach (var menuitems in Model.menuItems)
-                                {
-                                    <tr>
-                                        <td>
-                                            <div class="form-check">
-                                                <input class="form-check-input checkboxes" type="checkbox" value=""
-                                                    id="flexCheckDefault">
-                                            </div>
-                                        </td>
-                                        <td>
-                                            <div class="listImgField">
-                                                <img class="listImg" src="~/images/dining-menu.png">
-                                                @menuitems.Name
-                                            </div>
-                                        </td>
-                                        <td>
-                                            @if (menuitems.ItemType == 1)
-                                            {
-                                                <img src="~/images/icons/veg-icon.svg" height="20px">
-                                            }
-                                            @if (menuitems.ItemType == 2)
-                                            {
-                                                <img src="~/images/icons/non-veg-icon.svg" height="20px">
-                                            }
-                                            @if (menuitems.ItemType == 3)
-                                            {
-                                                <img src="~/images/icons/vegan-icon.svg" height=" 20px">
-                                            }
-
-                                        </td>
-                                        <td>@menuitems.Rate</td>
-                                        <td>@menuitems.Quantity</td>
-                                        <td>
-                                            <div class="form-check form-switch toggleSwitch">
-                                                <input class="form-check-input" type="checkbox" role="switch"
-                                                    id="flexSwitchCheckChecked" @(menuitems.Available ? "checked" : "")>
-                                            </div>
-                                        </td>
-                                        <td>
-                                            <div>
-                                                <button class="menubtn loadEditModalBtn" data-id="@menuitems.Id"><i
-                                                        class="bi bi-pen"></i></button>
-                                                <button class="menubtn" data-bs-toggle="modal" data-bs-target="#deleteitem" data-id="@menuitems.Id"><i
-                                                        class="bi bi-trash"></i></button>
-                                            </div>
-                                        </td>
-                                    </tr>
-                                }
-                            }
-
-
-
-
-                        </tbody>
-                    </table>
-                </div> *@
                 <div id="menuItemsContainer">
                     <!-- The table will be loaded here -->
                 </div>
@@ -200,160 +110,9 @@
 
 <div id="modalContainer"></div>
 
-
-@* <!-- Add new item modal start -->
-<div class="modal fade" id="addItemModal" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1"
-    aria-hidden="true">
-    <div class="modal-dialog modal-xl modal-dialog-centered">
-        <div class="modal-content">
-            <div class="modal-header border-bottom-0">
-                <h1 class="modal-title fs-5" id="staticBackdropLabel" style="color: #727b83;">Add New Menu Item</h1>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-            </div>
-
-            <div class="modal-body p-0 p-md-2">
-                <div class="container-fluid">
-                    <div class="row">
-                        <div class="col-12 col-lg-8">
-                            <div class="row row-cols-1 row-cols-lg-2 g-2 mb-2">
-                                <div class="col">
-                                    <div class="form-floating">
-                                        <select class="form-select" id="category">
-                                            <option value="1" selected>Sandwich</option>
-                                            <option value="2">Pasta</option>
-                                            <option value="3">Salads</option>
-                                        </select>
-                                        <label for="category">Categories*</label>
-                                    </div>
-                                </div>
-                                <div class="col">
-                                    <div class="form-floating">
-                                        <input type="text" class="form-control" id="name" placeholder="Name">
-                                        <label for="name">Name*</label>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="row row-cols-2 row-cols-lg-3 row-cols-xl-4 g-2 mb-2">
-                                <div class="col">
-                                    <div class="form-floating">
-                                        <select class="form-select" id="type">
-                                            <option selected>Select a type</option>
-                                            <option value="1">Veg</option>
-                                            <option value="2">Non-veg</option>
-                                            <option value="3">Vegan</option>
-                                        </select>
-                                        <label for="type">Item Type*</label>
-                                    </div>
-                                </div>
-                                <div class="col">
-                                    <div class="form-floating">
-                                        <input type="text" class="form-control" id="rate" placeholder="Rate" value="0">
-                                        <label for="rate">Rate*</label>
-                                    </div>
-                                </div>
-                                <div class="col">
-                                    <div class="form-floating">
-                                        <input type="text" class="form-control" id="quantity" placeholder="Quantity"
-                                            value="0">
-                                        <label for="quantity">Quantity*</label>
-                                    </div>
-                                </div>
-                                <div class="col">
-                                    <div class="form-floating">
-                                        <select class="form-select" id="unit">
-                                            <option selected>Select a unit</option>
-                                            <option value="1">Liter</option>
-                                            <option value="2">Kg</option>
-                                            <option value="3">Piece</option>
-                                        </select>
-                                        <label for="unit">Unit*</label>
-                                    </div>
-                                </div>
-                                <div class="col">
-                                    <div class="d-flex align-items-center h-100">
-                                        <div class="form-check form-switch toggleSwitch me-2">
-                                            <input class="form-check-input border-0" style="padding: 1rem 1.8rem;"
-                                                type="checkbox" role="switch" id="flexSwitchCheckChecked">
-                                        </div>
-                                        Available
-                                    </div>
-                                </div>
-                                <div class="col">
-                                    <div class="d-flex align-items-center h-100">
-                                        <div class="form-check form-switch toggleSwitch me-2">
-                                            <input class="form-check-input border-0" style="padding: 1rem 1.8rem;"
-                                                type="checkbox" role="switch" id="flexSwitchCheckChecked">
-                                        </div>
-                                        DefaultTax
-                                    </div>
-                                </div>
-                                <div class="col">
-                                    <div class="form-floating">
-                                        <input type="text" class="form-control" id="tax" placeholder="Tax Percentage"
-                                            value="0">
-                                        <label for="tax">Tax Percentage</label>
-                                    </div>
-                                </div>
-                                <div class="col">
-                                    <div class="form-floating">
-                                        <input type="text" class="form-control" id="shortCode" placeholder="Short Code"
-                                            value="0">
-                                        <label for="shortCode">Short Code</label>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="row row-cols-1 g-2">
-                                <div class="col">
-                                    <div class="form-floating">
-                                        <textarea class="form-control" placeholder="Description" id="description"
-                                            style="height: 100px"></textarea>
-                                        <label for="description">Description</label>
-                                    </div>
-                                </div>
-                                <div class="col">
-                                    <input class=" d-none form-control" type="file" id="imageUpload" required>
-                                    <label class="uploadFile" for="imageUpload">
-                                        <div class="d-flex justify-content-center align-items-center">
-                                            <img class="d-none" src="#" alt="Image Preview" id="imagePreview"
-                                                height="75px" width="75px">
-                                            <div class="d-flex align-items-center justify-content-center">
-                                                <i class="bi bi-cloud-arrow-up-fill fs-4 me-2"></i>
-                                                <div class="">Drag and Drop or Browse files</div>
-                                            </div>
-                                        </div>
-                                        <div id="fileName" class="ms-3"></div>
-                                    </label>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="cols-12 col-lg-4 mt-2 mt-lg-0">
-                            <div class="border-1 rounded-2 w-100 h-100 p-3" style="background-color: #fdf6e8;">
-                                <select class="form-select" id="category">
-                                    <option selected>Select Modifier Group(s)</option>
-                                    <option value="1">s1</option>
-                                    <option value="2">s3</option>
-                                </select>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <div class="modal-footer border-top-0 d-flex justify-content-end align-items-center">
-                <button type="button" class="btn btn-primary">Save</button>
-                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">No</button>
-            </div>
-        </div>
-    </div>
-</div>
-<!-- Add new item modal end --> *@
-
-
-
-
-<!-- Delete Item -->
-<div class="modal fade" style="margin-top: 13%;" id="deleteitem" tabindex="-1" aria-labelledby="deleteitem"
-    aria-hidden="true">
+<!-- Modal for Confirmation -->
+<div class="modal fade" id="MassDataDeleteModal" tabindex="-1" aria-labelledby="deleteLabel" aria-hidden="true"
+    style="margin-top: 13%;">
     <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-header">
@@ -361,8 +120,7 @@
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body"
-                style="display: flex;flex-direction: column; align-items: center;justify-content: center;">
-
+                style="display: flex; flex-direction: column; align-items: center; justify-content: center;">
                 <div style="color: #ffc409;">
                     <svg xmlns="http://www.w3.org/2000/svg" width="40" height="40" fill="currentColor"
                         class="bi bi-exclamation-triangle-fill" viewBox="0 0 16 16">
@@ -371,20 +129,19 @@
                     </svg>
                 </div>
                 <div>
-                    <p>are you sure you want to delete Item?</p>
-                </div>
-                <div class="modal-footer">
-                    <form asp-controller="Category" asp-action="deleteitem" method="post">
-                        <input type="text" id="itemId" name="id" />
-                        <button type="submit" class="btn btn-primary">Yes</button>
-                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">No</button>
-                    </form>
+                    <p>Are you sure you want to delete the selected items?</p>
                 </div>
             </div>
-
+            <div class="modal-footer">
+                <button type="button" class="btn btn-primary" onclick="MassDelete()"
+                    data-bs-dismiss="modal">Yes</button>
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">No</button>
+            </div>
         </div>
     </div>
 </div>
+
+
 
 @{
     await Html.RenderPartialAsync("_ValidationScriptsPartial");
@@ -394,23 +151,7 @@
 
 @section Scripts {
 
-
-
-
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-    @* <script src="https://code.jquery.com/jquery-1.12.4.min.js"></script> *@
-
-
-
-    <script>
-        document.getElementById('selectAllCheckbox').addEventListener('change', function () {
-            let checkboxes = document.querySelectorAll('.checkboxes');
-            checkboxes.forEach(function (checkbox) {
-                checkbox.checked = this.checked;
-            }, this);
-        });
-    </script>
-
 
     <script>
         $(document).ready(function () {
@@ -485,58 +226,7 @@
 
 
     </script>
-    <script>
 
-        function dynamicedit() {
-
-            console.log("abc")
-
-
-
-            let formData = {};
-
-            $('#addEditCategoryModal').serializeArray().forEach(function (field) {
-                formData[field.name] = field.value;
-            });
-
-            console.log(formData)
-
-
-            $.ajax({
-                url: "/Category/edititem",
-                type: 'POST',
-                data: formData,
-                dataType: "html",
-                success: function (response) {
-
-
-                    var categoryId = $('a[data-category-id]').first().data('category-id');
-
-                    loadMenuItems2(categoryId);
-                },
-                error: function () {
-                    alert("An error occurred while loading the modal.");
-                }
-            });
-        }
-
-        function loadMenuItems2(categoryId) {
-            console.log(categoryId);
-            console.log("aefbhaudg");
-            $.ajax({
-                url: '/Category/GetMenuItemsTable',
-                                                                                                                                                                                @* url: '@Url.Action("GetMenuItemsTable", "Category")',  *@
-                type: 'GET',
-                data: { id: categoryId },
-                success: function (result) {
-                    $('#menuItemsContainer').html(result);
-                },
-                error: function (xhr, status, error) {
-                    console.log("Error: " + error);
-                }
-                                                                                                                                         });
-                                                                                                                                     } 
-    </script>
 
     <script>
         function deletemodel(id) {
@@ -556,40 +246,6 @@
                 }
             });
         }
-
-        function deletemodelitem(id) {
-            $.ajax({
-                url: "/Category/deleteitem",
-                type: 'POST',
-                data: { id: id },
-                dataType: "html",
-                success: function (response) {
-
-                    console.log(response);
-                    var categoryId = $('a[data-category-id]').first().data('category-id');
-
-                    loadMenuItems3(id);
-                },
-                error: function () {
-                    alert("An error occurred while loading the modal.");
-                }
-            });
-        }
-
-        function loadMenuItems3(categoryId) {
-            console.log(categoryId);
-            $.ajax({
-                url: '@Url.Action("GetMenuItemsTable", "Category")',
-                type: 'GET',
-                data: { id: categoryId },
-                success: function (result) {
-                    $('#menuItemsContainer').html(result);
-                },
-                error: function (xhr, status, error) {
-                    console.log("Error: " + error);
-                }
-            });
-        } 
     </script>
 
     <script>
@@ -651,6 +307,66 @@
                     alert("An error occurred while loading the modal.");
                 }
             });
+        }
+    </script>
+
+
+    <script>
+        function loadMenuItems2(categoryId) {
+            console.log(categoryId);
+            $.ajax({
+                url: '@Url.Action("GetMenuItemsTable", "Category")',
+                type: 'GET',
+                data: { id: categoryId },
+                success: function (result) {
+                    $('#menuItemsContainer').html(result);
+
+                },
+                error: function (xhr, status, error) {
+                    console.log("Error: " + error);
+                }
+            });
+        } 
+    </script>
+
+
+    <script>
+
+        function MassDelete() {
+            var ids = getCheckedItemIds();
+            ids.forEach(function (value) {
+                console.log(value);
+                deleteall(value);
+
+
+            });
+
+            function getCheckedItemIds() {
+                var checkedIds = [];
+                var checkboxes = document.querySelectorAll('.checkboxes:checked'); // Select checked checkboxes
+
+                checkboxes.forEach(function (checkbox) {
+                    var itemId = checkbox.getAttribute('data-id');
+                    checkedIds.push(itemId); // Add the ID to the array
+                });
+
+                return checkedIds; // Return array of checked IDs
+            }
+
+
+            function deleteall(id) {
+                $.ajax({
+                    type: "POST",
+                    url: "@(Url.Action("deleteitem", "Category"))",
+                    data: { id: id },
+                    success: function (data) {
+                        var firstCategoryId = $('a[data-category-id]').first().data('category-id');
+                        loadMenuItems2(firstCategoryId);
+                        $('#MassDataDeleteModal').modal('hide');
+                    }
+
+                });
+            }
         }
     </script>
 

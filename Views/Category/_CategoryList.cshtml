@@ -1,4 +1,9 @@
 @model IEnumerable<pizzashop.Models.Models.Category>
+@{
+    var CategoryEdit = TempData["CategoryEdit"] as string;
+    var CategoryExist = TempData["CategoryExist"] as string;
+    var CategoryIsDeleted = TempData["CategoryIsDeleted"] as string;
+}
 
 <ul class="categorys flex-column mb-auto w-100" style="overflow-y: scroll; max-height: 400px;">
 
@@ -30,7 +35,24 @@
 
 </ul>
 
-
+@if (!string.IsNullOrEmpty(CategoryEdit))
+{
+    <script>
+        toastr.success('@CategoryEdit');  // Show success message using Toastr
+    </script>
+}
+@if (!string.IsNullOrEmpty(CategoryExist))
+{
+    <script>
+        toastr.error('@CategoryExist');  // Show success message using Toastr
+    </script>
+}
+@if (!string.IsNullOrEmpty(CategoryIsDeleted))
+{
+    <script>
+        toastr.success('@CategoryIsDeleted');  // Show success message using Toastr
+    </script>
+}
 <script>
     $(document).ready(function () {
         console.log("hello1");

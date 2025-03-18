@@ -24,8 +24,8 @@
                 </div>
                 <div class="modal-footer">
                     @* <form asp-controller="Category" asp-action="deleteitem" method="post"> *@
-                    <form method="post">
-                        <input type="text" id="itemId" name="id" value="@Model.Id" />
+                    <form method="post" id="deleteItemForm">
+                        <input type="hidden" id="itemId" name="id" value="@Model.Id" />
                         <button type="submit" class="btn btn-primary" onclick="deletemodelitem(@Model.Id)">Yes</button>
                         <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">No</button>
                     </form>
@@ -35,3 +35,30 @@
         </div>
     </div>
 </div>
+
+
+<script>
+
+    $('#deleteItemForm').on('submit', function (e) {
+
+        e.preventDefault();
+        var form = $(this);
+        var url = form.attr('action');
+        var data = form.serialize();
+
+        console.log(data);
+
+        $.ajax({
+            type: "POST",
+            url: "@(Url.Action("deleteitem", "Category"))",
+            data: data,
+            success: function (data) {
+                loadMenuItems2(@Model.CategoryId);
+                $('#deleteitem').modal('hide');
+
+                @* location.reload(); *@
+         }
+        });
+
+    });
+</script>
