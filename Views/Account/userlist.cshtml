@@ -33,7 +33,7 @@
     <div class="content" style="display: flex;align-items: center;justify-content: center;padding-top: 40px;">
         <div class="shadow" style="background-color: white;width: 95%;">
             <div id="userTableContainer">
-                <!-- The partial view will be loaded here -->
+                <!--partial view-->
                 @await Html.PartialAsync("_UserTable", Model)
             </div>
         </div>
@@ -42,15 +42,12 @@
 
 @section Scripts {
     <script>
-
-        // Global variables to store current filter state
         let currentPage = @Model.CurrentPage;
         let pageSize = @Model.PageSize;
         let searchTerm = "@Model.SearchTerm";
         let roleFilter = @(Model.RoleFilter.HasValue? Model.RoleFilter.Value.ToString() : "null");
         let statusFilter = @(Model.StatusFilter.HasValue ? (Model.StatusFilter.Value ? "true" : "false") : "null");
 
-        // Function to load user table with filters
         function loadUserTable() {
             $.ajax({
                 url: '@Url.Action("userlist", "Account")',
@@ -68,16 +65,13 @@
 
                     $('#pageSizeSelect').val(pageSize);
 
-                    // Reattach event handlers after updating content
                     attachEventHandlers();
 
-                    // Update browser URL to support bookmarking and browser back button
                     updateUrl();
                 }
             });
         }
 
-        // Function to update URL with query parameters
         function updateUrl() {
             let url = new URL(window.location.href);
             url.searchParams.set('page', currentPage);
@@ -96,9 +90,7 @@
             window.history.replaceState({}, '', url);
         }
 
-        // Function to attach event handlers
         function attachEventHandlers() {
-            // Delete modal handler
             var deleteModal = document.getElementById('deleteModal');
             deleteModal.addEventListener('show.bs.modal', function (event) {
                 var button = event.relatedTarget;
@@ -107,7 +99,6 @@
                 userIdInput.value = userId;
             });
 
-            // Pagination handlers
             $('#prevPageBtn').click(function () {
                 if (currentPage > 1) {
                     currentPage--;
@@ -120,16 +111,15 @@
                 loadUserTable();
             });
 
-            // Page size change handler
             $('#pageSizeSelect').change(function () {
                 pageSize = $(this).val();
-                currentPage = 1; // Reset to first page when changing page size
+                currentPage = 1;
                 loadUserTable();
             });
         }
 
         $(document).ready(function () {
-            // Set initial selected values for filters
+
             if (roleFilter !== null) {
                 $('#roleFilter').val(roleFilter);
             }
@@ -138,34 +128,29 @@
                 $('#statusFilter').val(statusFilter.toString());
             }
 
-            // Set initial page size
             $('#pageSizeSelect').val(pageSize);
 
-            // Attach initial event handlers
             attachEventHandlers();
 
-            // Search input handler with debounce
             let searchTimeout;
             $('#searchInput').on('input', function () {
                 clearTimeout(searchTimeout);
                 searchTimeout = setTimeout(function () {
                     searchTerm = $('#searchInput').val();
-                    currentPage = 1; // Reset to first page when searching
+                    currentPage = 1;
                     loadUserTable();
-                }, 500); // 500ms delay to reduce server load
+                }, 500);
             });
 
-            // Role filter handler
             $('#roleFilter').change(function () {
                 roleFilter = $(this).val() || null;
-                currentPage = 1; // Reset to first page when filtering
+                currentPage = 1;
                 loadUserTable();
             });
 
-            // Status filter handler
             $('#statusFilter').change(function () {
                 statusFilter = $(this).val() || null;
-                currentPage = 1; // Reset to first page when filtering
+                currentPage = 1;
                 loadUserTable();
             });
         });

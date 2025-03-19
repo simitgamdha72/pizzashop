@@ -13,7 +13,6 @@
             <div class="modal-body">
                 <div class="form">
                     <form id="CategoryEditModel">
-                        <!-- Hidden input to pass CategoryId -->
                         <input type="hidden" id="CategoryId" asp-for="Id" name="Id" value="@Model.Id" />
 
                         <div class="mb-3">
@@ -51,8 +50,6 @@
 
 <script>
     $('#CategoryEditModel').on('submit', function (e) {
-
-   
      e.preventDefault();
      var form = $(this);
      var url = form.attr('action');
@@ -71,10 +68,10 @@
  });
   function loadCategories() {
                 $.ajax({
-                    url: '@Url.Action("GetCategories", "Category")', // Use the correct controller and action name
+                    url: '@Url.Action("GetCategories", "Category")', 
                     type: 'GET',
                     success: function (response) {
-                        $('#categoryListContainer').html(response); // Inject the partial view into the container
+                        $('#categoryListContainer').html(response); 
                     },
                     error: function () {
                         alert('Error loading categories');

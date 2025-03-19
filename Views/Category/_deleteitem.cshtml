@@ -23,7 +23,6 @@
                     <p>are you sure you want to delete Item?</p>
                 </div>
                 <div class="modal-footer">
-                    @* <form asp-controller="Category" asp-action="deleteitem" method="post"> *@
                     <form method="post" id="deleteItemForm">
                         <input type="hidden" id="itemId" name="id" value="@Model.Id" />
                         <button type="submit" class="btn btn-primary" onclick="deletemodelitem(@Model.Id)">Yes</button>
@@ -38,7 +37,6 @@
 
 
 <script>
-
     $('#deleteItemForm').on('submit', function (e) {
 
         e.preventDefault();
@@ -55,7 +53,6 @@
             success: function (data) {
                 loadMenuItems2(@Model.CategoryId);
                 $('#deleteitem').modal('hide');
-
                 @* location.reload(); *@
          }
         });

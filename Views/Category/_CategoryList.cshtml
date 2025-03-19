@@ -7,8 +7,6 @@
 
 <ul class="categorys flex-column mb-auto w-100" style="overflow-y: scroll; max-height: 400px;">
 
-
-
     @{
         foreach (var Categories in Model)
         {
@@ -28,10 +26,8 @@
                     </div>
                 </div>
             </li>
-
         }
     }
-
 
 </ul>
 
@@ -53,7 +49,7 @@
         toastr.success('@CategoryIsDeleted');  // Show success message using Toastr
     </script>
 }
-<script>
+@* <script>
     $(document).ready(function () {
         console.log("hello1");
         // load menu items for the first category when the page loads
@@ -63,7 +59,7 @@
         // clicking on category links
         $('a[data-category-id]').click(function () {
             var categoryId = $(this).data('category-id');
-            loadMenuItems(categoryId);  // Load menu items for the clicked category
+            loadMenuItems2(categoryId);  // Load menu items for the clicked category
         });
 
 
@@ -83,4 +79,4 @@
             });
         }
     });
-</script>
+</script> *@

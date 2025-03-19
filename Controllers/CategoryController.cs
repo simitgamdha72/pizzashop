@@ -1,31 +1,23 @@
-using System.Linq;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using pizzashop.Helpers;
-using pizzashop.Models.Models;
 using pizzashop.Models.ViewModels;
-using pizzashop.Repositories;
 using pizzashop.Services;
 
 namespace pizzashop.Controllers
 {
     public class CategoryController : Controller
     {
-
-        private readonly PizzashopContext _context;
-
         private readonly IWebHostEnvironment _webHostEnvironment;
         private readonly icategoryservice _categoryService;
+        private readonly iunitservice _unitService;
+        private readonly imenuitemservice _menuitemService;
 
-
-
-        public CategoryController(IWebHostEnvironment webHostEnvironment, icategoryservice categoryService, PizzashopContext context)
+        public CategoryController(IWebHostEnvironment webHostEnvironment, icategoryservice categoryService, iunitservice unitService, imenuitemservice menuitemService)
         {
             _categoryService = categoryService;
-            _context = context;
             _webHostEnvironment = webHostEnvironment;
-
-
+            _unitService = unitService;
+            _menuitemService = menuitemService;
         }
 
 
@@ -76,11 +68,7 @@ namespace pizzashop.Controllers
 
             // return RedirectToAction("menu", "Category");
             return Json(true);
-
         }
-
-
-
 
         public IActionResult EditCategoryModal(int id)
         {
@@ -115,224 +103,129 @@ namespace pizzashop.Controllers
                 TempData["CategoryEdit"] = "Category is Updated";
                 return Json(true);
             }
-
-
-
         }
 
-
-
-        // ajaz
         [HttpGet]
         public IActionResult GetCategories()
         {
-            var categories = _categoryService.GetCategories();  // Fetch updated categories
-            return PartialView("_CategoryList", categories);  // Return partial view with categories data
+            var categories = _categoryService.GetCategories();
+
+            return PartialView("_CategoryList", categories);
         }
-
-
-
-
 
         public IActionResult AddItemModal()
         {
-            ViewBag.category = _context.Categories.Where(u => u.Isdeleted != true)
-            .ToList();
-            ViewBag.unit = _context.Units.ToList();
-            return PartialView("_modeladditem");  // This returns the _modeladditem partial view
+            ViewBag.category = _categoryService.GetCategories();
+            ViewBag.unit = _unitService.GetUnits();
+
+            return PartialView("_modeladditem");
         }
 
-        public IActionResult EditItemModal(int id)
-        {
-            ViewBag.category = _context.Categories.Where(u => u.Isdeleted != true)
-            .ToList();
-            ViewBag.unit = _context.Units.ToList();
-            var item = _context.MenuItems.FirstOrDefault(x => x.Id == id);
-
-            var showitem = new ItemViewModel
-            {
-                Id = item.Id,
-                Name = item.Name,
-                CategoryId = item.CategoryId,
-                ItemType = item.ItemType,
-                Rate = item.Rate,
-                Quantity = item.Quantity,
-                Available = item.Available,
-                DefaultTax = item.DefaultTax,
-                Taxpercentage = item.Taxpercentage ?? 0,
-                ShortCode = item.ShortCode ?? 0,
-                UnitId = item.UnitId,
-                Description = item.Description,
-
-
-            };
-
-            return PartialView("_modeledititem", showitem);
-
-        }
-
+        [HttpPost]
         public async Task<IActionResult> additem(ItemViewModel model)
         {
-
             if (!ModelState.IsValid)
             {
                 TempData["SomethingIsMissing"] = "Something Went Wrong";
                 return RedirectToAction("menu", "Category");
             }
 
-            string fileName = null;
-            if (model.MyImage != null && model.MyImage.Length > 0)
-            {
-                try
-                {
-                    var imageHelper = new ImageHelper(_webHostEnvironment);
-                    fileName = await imageHelper.SaveImageAsync(model.MyImage);
-                }
-                catch (ArgumentException ex)
-                {
-                    ModelState.AddModelError("MyImage", ex.Message);
-                    return View(model);
-                }
-            }
+            var validator = _menuitemService.AddItem(model);
 
-            var itemname = _context.MenuItems.FirstOrDefault(i => i.Name == model.Name);
-            if (itemname != null)
+            if (validator == 0)
             {
                 TempData["ItemExist"] = "Item is Alreday Exist";
                 return RedirectToAction("menu", "Category");
             }
 
-            var item = new MenuItem
-            {
-                Name = model.Name,
-                CategoryId = model.CategoryId,
-                ItemType = model.ItemType,
-                Rate = model.Rate,
-                Quantity = model.Quantity,
-                Available = model.Available,
-                DefaultTax = model.DefaultTax,
-                Taxpercentage = model.Taxpercentage,
-                ShortCode = model.ShortCode,
-                UnitId = model.UnitId,
-                Description = model.Description,
-                MyImage = fileName,
-
-            };
-
-            _context.MenuItems.Add(item);
-
-            _context.SaveChanges();
-
             TempData["ItemisAdded"] = "Item added Successfully";
-
             return RedirectToAction("menu", "Category");
+        }
+
+        public IActionResult EditItemModal(int id)
+        {
+            if (id == null)
+            {
+                TempData["SomethingIsMissing"] = "Something Went Wrong";
+                return RedirectToAction("menu", "Category");
+            }
+
+            ViewBag.category = _categoryService.GetCategories();
+            ViewBag.unit = _unitService.GetUnits();
+
+            var model = _menuitemService.EditItemModalShow(id);
+            return PartialView("_modeledititem", model);
         }
 
         [HttpPost]
         public async Task<IActionResult> edititem(ItemViewModel model)
         {
-
             if (!ModelState.IsValid)
             {
                 TempData["SomethingIsMissing"] = "Something Went Wrong";
                 return RedirectToAction("menu", "Category");
             }
-            string fileName = null;
-            if (model.MyImage != null && model.MyImage.Length > 0)
+
+            var validator = _menuitemService.EditItem(model);
+
+            if (validator == 0)
             {
-                try
-                {
-                    var imageHelper = new ImageHelper(_webHostEnvironment);
-                    fileName = await imageHelper.SaveImageAsync(model.MyImage);
-                }
-                catch (ArgumentException ex)
-                {
-                    ModelState.AddModelError("MyImage", ex.Message);
-                    return View(model);
-                }
+                TempData["ItemExist"] = "Item is Alreday Exist";
+                return Json(false);
             }
 
-            MenuItem item = _context.MenuItems.FirstOrDefault(x => x.Id == model.Id);
-            var validateitem = _context.MenuItems.FirstOrDefault(x => x.Name == model.Name);
-
-            if (validateitem != null)
-            {
-                if (item.Id != validateitem.Id)
-                {
-                    TempData["ItemExist"] = "Item is Alreday Exist";
-                    return Json(false);
-
-                }
-            }
-
-
-
-            item.Name = model.Name;
-            item.CategoryId = model.CategoryId;
-            item.ItemType = model.ItemType;
-            item.Rate = model.Rate;
-            item.Quantity = model.Quantity;
-            item.Available = model.Available;
-            item.DefaultTax = model.DefaultTax;
-            item.Taxpercentage = model.Taxpercentage;
-            item.ShortCode = model.ShortCode;
-            item.UnitId = model.UnitId;
-            item.Description = model.Description;
-            item.MyImage = fileName;
-
-
-            _context.MenuItems.Update(item);
-            _context.SaveChanges();
-            // return RedirectToAction("menu", "Category");
-            // return PartialView("_dummy");
-            TempData["ItemEdit"] = "Category is Updated";
+            TempData["ItemEdit"] = "Item is Updated";
             return Json(true);
-
         }
 
         [HttpPost]
         public IActionResult deleteitem(int id)
         {
-            MenuItem item = _context.MenuItems.FirstOrDefault(x => x.Id == id);
-            item.Isdeleted = true;
-            _context.MenuItems.Update(item);
-            _context.SaveChanges();
-            // return RedirectToAction("menu", "Category");
+            if (id == null)
+            {
+                TempData["SomethingIsMissing"] = "Something Went Wrong";
+                return Json(false);
+            }
+
+            var validator = _menuitemService.DeleteItem(id);
+
+            if (validator == 0)
+            {
+                TempData["SomethingIsMissing"] = "Something Went Wrong";
+                return Json(false);
+            }
+
             TempData["deleteItem"] = "Item Deleted Successfully";
             return Json(true);
         }
 
-
-
-        public IActionResult GetMenuItemsTable(int? id)
+        public IActionResult GetMenuItemsTable(int? id, int page = 1, int pageSize = 5, string searchTerm = "")
         {
-            // Fetch your menu items from the database
-            var menuItems = _context.MenuItems.Where(m => m.Isdeleted != true && m.CategoryId == id).ToList();
+            var category = _categoryService.GetCategories().First();
 
-            // Return the Partial View with the menu items
-            return PartialView("_itemlist", menuItems);
+            var viewModel = _menuitemService.GetPaginatedMenuItems(id, page, pageSize, searchTerm, category.Id);
+
+            return PartialView("_itemlist", viewModel);
         }
 
-
-
+        [HttpGet]
+        public IActionResult SearchItems(int? categoryId, string searchTerm, int page = 1, int pageSize = 5)
+        {
+            return GetMenuItemsTable(categoryId, page, pageSize, searchTerm);
+        }
 
         public IActionResult deleteitemmodel(int id)
         {
+            var model = _menuitemService.DeleteItemModalShow(id);
 
-            var item = _context.MenuItems.FirstOrDefault(x => x.Id == id);
-
-            var showitem = new ItemViewModel
+            if (model == null)
             {
-                Id = item.Id,
-                CategoryId = item.CategoryId,
-            };
+                TempData["SomethingIsMissing"] = "Something Went Wrong";
+                return RedirectToAction("menu", "Category");
+            }
 
-            return PartialView("_deleteitem", showitem);
-
+            return PartialView("_deleteitem", model);
         }
-
-
-
 
     }
 }

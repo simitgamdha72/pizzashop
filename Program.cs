@@ -14,6 +14,7 @@ using pizzashop.Utility;
 using pizzashop.Service;
 using pizzashop.Services;
 using pizzashop.Repositories;
+using pizzashop.Service.implementation;
 
 
 
@@ -41,6 +42,14 @@ builder.Services.AddScoped<istateservice, stateservice>();
 builder.Services.AddScoped<icityservice, cityservice>();
 builder.Services.AddScoped<icategory, category>();
 builder.Services.AddScoped<icategoryservice, categoryservice>();
+builder.Services.AddScoped<iunit, unit>();
+builder.Services.AddScoped<iunitservice, unitservice>();
+builder.Services.AddScoped<imenuitem, menuitem>();
+builder.Services.AddScoped<imenuitemservice, menuitemservice>();
+builder.Services.AddScoped<irole, role>();
+builder.Services.AddScoped<ipermission, permission>();
+builder.Services.AddScoped<irolewisepermission, rolewisepermission>();
+builder.Services.AddScoped<iroleandpermissionservice, roleandpermissionservice>();
 builder.Services.AddScoped<dropdownService>();
 
 

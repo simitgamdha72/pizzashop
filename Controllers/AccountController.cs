@@ -416,13 +416,10 @@ public class AccountController : Controller
     [Authorize]
     public async Task<IActionResult> userlist(int page = 1, string search = "", int? roleId = null, bool? status = null, int pageSize = 5)
     {
-        // Get filtered users count for pagination
         var totalUsers = await _accountService.GetTotalUsersFilteredAsync(search, roleId, status);
 
-        // Get filtered and paged users
         var users = await _accountService.GetFilteredUsersPagedAsync(page, pageSize, search, roleId, status);
 
-        // Get all roles for dropdown
         var roles = await _accountService.GetAllRolesAsync();
 
         var model = new UserListViewModel
@@ -440,24 +437,11 @@ public class AccountController : Controller
 
         if (Request.Headers["X-Requested-With"] == "XMLHttpRequest")
         {
-            // If it's an AJAX request, return only the partial view
             return PartialView("_UserTable", model);
         }
 
         return View(model);
     }
-
-
-
-
-
-
-
-
-
-
-
-
 
     [HttpPost]
     public IActionResult DeleteUser(int id)

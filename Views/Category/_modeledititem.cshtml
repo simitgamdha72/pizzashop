@@ -134,7 +134,6 @@
                                         </div>
                                     </div>
 
-    <!-- Item Image Upload Section -->
                                     <div
                                         style="margin-top: 10px;border: 1px dotted black; width: 97%;height: 90px;margin-left: 0.8%;display: flex;justify-content: center;align-items: center;">
                                         <div>
@@ -149,7 +148,7 @@
                                                 </svg>
                                             </div>
                                             <div style="text-align: center; margin-top: 5px;">
-                                                <input asp-for="MyImage" type="file" id="MyImage" multiple="multiple" class="multi"
+                                                <input asp-for="MyImage" type="file" id="MyImage"  multiple="multiple"
                                                     accept=".jpg,.jpeg" class="form-control" style="display: none;">
                                                 <span asp-validation-for="MyImage" class="text-danger"></span>
                                                 <label for="MyImage" class="btn btn-outline-primary"
@@ -199,7 +198,6 @@
     await Html.RenderPartialAsync("_ValidationScriptsPartial");
 }
 
-<script src="/path/to/plugin/jquery.MultiFile.min.js"></script>
 
 <script>
 
@@ -234,31 +232,29 @@
         }
     });
 
- $('#EditItemModalForm').on('submit', function (e) {
+</script>
+<script>
+$('#EditItemModalForm').on('submit', function (e) {
+    e.preventDefault();
+    var isvalid = $('#EditItemModalForm').valid();
+    if(isvalid){
+        var form = $(this);
+        var url = form.attr('action');
+             @* var data = form.serialize(); *@
 
-     e.preventDefault();
-     var isvalid = $('#EditItemModalForm').valid();
-     if(isvalid){
-     var form = $(this);
-     var url = form.attr('action');
-     var data = form.serialize();
-
-     console.log(data);
-
-     $.ajax({
-         type: "POST",
-         url: "@(Url.Action("edititem", "Category"))",
-         data: data,
-         success: function (data) {
-            loadMenuItems2(@Model.CategoryId);
-           $('#editItemModal').modal('hide');
+        var formData = new FormData(form[0]);
         
-             @* location.reload(); *@
-         }
-     });
-     }
-         
- });
-
-
+        $.ajax({
+            type: "POST",
+            url: "@(Url.Action("edititem", "Category"))",
+            data: formData,
+            processData: false,  // Prevent jQuery from processing the data
+            contentType: false,  // Prevent jQuery from setting content type
+            success: function (data) {
+                loadMenuItems2(@Model.CategoryId);
+                $('#editItemModal').modal('hide');
+            }
+        });
+    }
+});
 </script>

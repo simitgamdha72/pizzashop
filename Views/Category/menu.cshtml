@@ -24,7 +24,6 @@
 
     <div class="d-flex">
 
-
         <!-- Categories Section -->
         <div class="offcanvas-lg start-0" data-bs-scroll="true" tabindex="-1" id="offcanvascategory">
             <div class="bg-light min-vh-100" style="width: 260px;display:flex;flex-direction: column;">
@@ -38,9 +37,6 @@
 
             </div>
         </div>
-
-
-
 
         <!-- Menu Items -->
         <div class="bg-white container-fluid py-3 px-3">
@@ -79,32 +75,10 @@
                 <div id="menuItemsContainer">
                     <!-- The table will be loaded here -->
                 </div>
-
-                <div class="customPagination d-flex flex-column align-items-center mt-1">
-                    <div class="d-flex align-items-center w-100 justify-content-end mb-2">
-                        <div class="d-flex align-items-center me-auto me-sm-3">
-                            <div class="me-sm-2" style="min-width: 7rem;">Items per page:</div>
-                            <select class="form-select">
-                                <option value="5" selected>5</option>
-                                <option value="10">10</option>
-                                <option value="15">15</option>
-                            </select>
-                        </div>
-                        <div class="d-none d-sm-block me-sm-2">Showing 1-5 of 13</div>
-                        <div>
-                            <button id="prePageBtn" class="me-2">
-                                <i class="bi bi-chevron-left"></i>
-                            </button>
-                            <button id="nextPageBtn">
-                                <i class="bi bi-chevron-right"></i>
-                            </button>
-                        </div>
-                    </div>
-                    <div class="d-block d-sm-none">Showing 1-5 of 13</div>
-                </div>
             </div>
         </div>
     </div>
+</div>
 </div>
 
 
@@ -154,76 +128,22 @@
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 
     <script>
-        $(document).ready(function () {
-            // Load the categories on page load
-            loadCategories();
-
-            function loadCategories() {
-                $.ajax({
-                    url: '@Url.Action("GetCategories", "Category")', // Use the correct controller and action name
-                    type: 'GET',
-                    success: function (response) {
-                        $('#categoryListContainer').html(response); // Inject the partial view into the container
-                    },
-                    error: function () {
-                        alert('Error loading categories');
-                    }
-                });
-            }
-        });
-    </script>
-
-    <script>
-        $(document).ready(function () {
-
-            // 'Add New Item' button
-            $('#loadModalBtn').on('click', function () {
-                $.ajax({
-                    url: '@Url.Action("AddItemModal", "Category")',
-                    type: 'GET',
-                    success: function (response) {
-                        // partial view 
-                        $('#modalContainer').html(response);
-
-                        //show the modal after loading
-                        $('#addItemModal').modal('show');
-                    },
-                    error: function () {
-                        alert("An error occurred while loading the modal.");
-                    }
-                });
-            });
-        });
-    </script>
-
-
-    <script>
-
         //'Edit' button
         function edititem(id) {
-
-
             $.ajax({
                 url: '@Url.Action("EditItemModal", "Category")',
                 type: 'GET',
                 data: { id: id },
                 success: function (response) {
-                    // partial view 
                     $('#modalContainer').html(response);
 
-                    // Show the modal after loading
                     $('#editItemModal').modal('show');
-
-
-
-
                 },
                 error: function () {
                     alert("An error occurred while loading the modal.");
                 }
             });
         }
-
 
     </script>
 
@@ -235,10 +155,8 @@
                 type: 'GET',
                 data: { id: id },
                 success: function (response) {
-                    //partial view into the modalContainer
                     $('#modalContainer').html(response);
 
-                    // Show the modal after loading
                     $('#deleteitem').modal('show');
                 },
                 error: function () {
@@ -249,18 +167,14 @@
     </script>
 
     <script>
-
-
         function EditCategoryModal(id) {
             $.ajax({
-                url: '@Url.Action("EditCategoryModal", "Category")',  // Call the action in the Category controller
+                url: '@Url.Action("EditCategoryModal", "Category")',
                 type: 'GET',
-                data: { id: id },  // Pass the itemId as part of the GET request
+                data: { id: id },
                 success: function (response) {
-                    // Insert the partial view into the modalContainer
                     $('#modalContainer').html(response);
 
-                    // Show the modal after loading
                     $('#editCategoryModal').modal('show');
                 },
                 error: function () {
@@ -277,10 +191,8 @@
                 type: 'GET',
                 data: { id: id },
                 success: function (response) {
-                    //partial view into the modalContainer
                     $('#modalContainer').html(response);
 
-                    // Show the modal after loading
                     $('#DeleteCategoryModel').modal('show');
                 },
                 error: function () {
@@ -297,10 +209,8 @@
                 url: "/Category/ShowAddCategoryModal",
                 type: 'GET',
                 success: function (response) {
-                    //partial view into the modalContainer
                     $('#modalContainer').html(response);
 
-                    // Show the modal after loading
                     $('#addCategoryModal').modal('show');
                 },
                 error: function () {
@@ -310,26 +220,6 @@
         }
     </script>
 
-
-    <script>
-        function loadMenuItems2(categoryId) {
-            console.log(categoryId);
-            $.ajax({
-                url: '@Url.Action("GetMenuItemsTable", "Category")',
-                type: 'GET',
-                data: { id: categoryId },
-                success: function (result) {
-                    $('#menuItemsContainer').html(result);
-
-                },
-                error: function (xhr, status, error) {
-                    console.log("Error: " + error);
-                }
-            });
-        } 
-    </script>
-
-
     <script>
 
         function MassDelete() {
@@ -337,22 +227,18 @@
             ids.forEach(function (value) {
                 console.log(value);
                 deleteall(value);
-
-
             });
 
             function getCheckedItemIds() {
                 var checkedIds = [];
-                var checkboxes = document.querySelectorAll('.checkboxes:checked'); // Select checked checkboxes
+                var checkboxes = document.querySelectorAll('.checkboxes:checked');
 
                 checkboxes.forEach(function (checkbox) {
                     var itemId = checkbox.getAttribute('data-id');
-                    checkedIds.push(itemId); // Add the ID to the array
+                    checkedIds.push(itemId);
                 });
-
-                return checkedIds; // Return array of checked IDs
+                return checkedIds;
             }
-
 
             function deleteall(id) {
                 $.ajax({
@@ -364,10 +250,125 @@
                         loadMenuItems2(firstCategoryId);
                         $('#MassDataDeleteModal').modal('hide');
                     }
-
                 });
             }
         }
+    </script>
+
+    <script>
+
+        $(document).ready(function () {
+
+            // Load the categories on page load
+            loadCategories();
+
+            function loadCategories() {
+                $.ajax({
+                    url: '@Url.Action("GetCategories", "Category")',
+                    type: 'GET',
+                    success: function (response) {
+                        $('#categoryListContainer').html(response);
+                    },
+                    error: function () {
+                        alert('Error loading categories');
+                    }
+                });
+            }
+
+            // 'Add New Item' button
+            $('#loadModalBtn').on('click', function () {
+                $.ajax({
+                    url: '@Url.Action("AddItemModal", "Category")',
+                    type: 'GET',
+                    success: function (response) {
+                        $('#modalContainer').html(response);
+
+                        $('#addItemModal').modal('show');
+                    },
+                    error: function () {
+                        alert("An error occurred while loading the modal.");
+                    }
+                });
+            });
+
+            let currentState = {
+                categoryId: null,
+                searchTerm: '',
+                currentPage: 1,
+                pageSize: 5
+            };
+
+            $(document).on('click', 'a[data-category-id]', function (e) {
+                e.preventDefault();
+                const categoryId = $(this).data('category-id');
+                currentState.categoryId = categoryId;
+                currentState.currentPage = 1;
+                loadMenuItems();
+            });
+
+            $('#searchInput').on('keyup', function () {
+                const searchTerm = $(this).val().trim();
+                currentState.searchTerm = searchTerm;
+                currentState.currentPage = 1;
+
+                //prevent too many requests
+                clearTimeout($(this).data('timeout'));
+                $(this).data('timeout', setTimeout(function () {
+                    loadMenuItems();
+                }, 500));
+            });
+
+            $(document).on('change', '#pageSizeSelect', function () {
+                currentState.pageSize = parseInt($(this).val());
+                currentState.currentPage = 1;
+                loadMenuItems();
+            });
+
+            $(document).on('click', '#prevPageBtn:not([disabled])', function () {
+                currentState.currentPage--;
+                loadMenuItems();
+            });
+
+            $(document).on('click', '#nextPageBtn:not([disabled])', function () {
+                currentState.currentPage++;
+                loadMenuItems();
+            });
+
+            function loadMenuItems() {
+                $.ajax({
+                    url: '/Category/SearchItems',
+                    type: 'GET',
+                    data: {
+                        categoryId: currentState.categoryId,
+                        searchTerm: currentState.searchTerm,
+                        page: currentState.currentPage,
+                        pageSize: currentState.pageSize
+                    },
+                    success: function (result) {
+                        $('#menuItemsContainer').html(result);
+
+                        $('#pageSizeSelect').val(currentState.pageSize);
+                    },
+                    error: function (xhr, status, error) {
+                        console.log("Error: " + error);
+                    }
+                });
+            }
+
+            window.loadMenuItems2 = function (categoryId) {
+                currentState.categoryId = categoryId;
+                currentState.currentPage = 1;
+                currentState.searchTerm = '';
+                $('#searchInput').val('');
+                loadMenuItems();
+            };
+
+            try {
+                loadMenuItems();
+            } catch (e) {
+                console.error("Error parsing URL parameters", e);
+            }
+        });
     </script>
 
 }

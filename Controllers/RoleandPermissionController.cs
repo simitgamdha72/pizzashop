@@ -1,4 +1,3 @@
-using System.Diagnostics;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using pizzashop.Models.Models;
@@ -10,11 +9,14 @@ public class RoleandPermissionController : Controller
 {
 
     private readonly PizzashopContext _context;
+    private readonly iroleandpermissionservice _roleandpermissionservice;
 
 
-    public RoleandPermissionController(PizzashopContext context)
+    public RoleandPermissionController(PizzashopContext context, iroleandpermissionservice roleandpermissionservice)
     {
         _context = context;
+        _roleandpermissionservice = roleandpermissionservice;
+
     }
 
     [HttpGet]
@@ -24,73 +26,47 @@ public class RoleandPermissionController : Controller
     }
 
     [HttpGet]
-    public async Task<IActionResult> permission(int id)
+    public IActionResult permission(int id)
     {
-        var role = await _context.Roles.Include(r => r.Roleswisepermissions)
-                                        .ThenInclude(rp => rp.Permission)
-                                        .FirstOrDefaultAsync(r => r.Id == id);
+        var model = _roleandpermissionservice.GetPermission(id);
 
-        if (role == null)
-        {
-            return NotFound();
-        }
-
-        var permissions = await _context.Permissions.ToListAsync();
-
-        // Mapping the permissions to your view model for easier handling in the view
-        var viewModel = new RolePermissionsViewModel
-        {
-            RoleId = role.Id,
-            RoleName = role.Role1,
-            Permissions = permissions.Select(p => new PermissionViewModel
-            {
-                PermissionId = p.Id,
-                PermissionName = p.Permission1,
-                CanView = role.Roleswisepermissions.Any(rp => rp.PermissionId == p.Id && rp.CanView),
-                CanAddEdit = role.Roleswisepermissions.Any(rp => rp.PermissionId == p.Id && rp.CanAddEdit),
-                CanDelete = role.Roleswisepermissions.Any(rp => rp.PermissionId == p.Id && rp.CanDelete)
-            }).ToList()
-        };
-
-        return View(viewModel);
+        return View(model);
     }
 
     [HttpPost]
     [ValidateAntiForgeryToken]
-    public async Task<IActionResult> SavePermissions(RolePermissionsViewModel model)
+    public IActionResult SavePermissions(RolePermissionsViewModel model)
     {
-        // if (ModelState.IsValid)
+        // foreach (var perm in model.Permissions)
         // {
-        foreach (var perm in model.Permissions)
-        {
-            var rolewisePermission = await _context.Roleswisepermissions
-                .FirstOrDefaultAsync(rp => rp.RoleId == model.RoleId && rp.PermissionId == perm.PermissionId);
+        //     var rolewisePermission = await _context.Roleswisepermissions
+        //         .FirstOrDefaultAsync(rp => rp.RoleId == model.RoleId && rp.PermissionId == perm.PermissionId);
 
-            if (rolewisePermission == null)
-            {
-                // Add new permission if not found
-                _context.Roleswisepermissions.Add(new Roleswisepermission
-                {
-                    RoleId = model.RoleId,
-                    PermissionId = perm.PermissionId,
-                    CanView = perm.CanView,
-                    CanAddEdit = perm.CanAddEdit,
-                    CanDelete = perm.CanDelete
-                });
-            }
-            else
-            {
-                // Update existing permissions
-                rolewisePermission.CanView = perm.CanView;
-                rolewisePermission.CanAddEdit = perm.CanAddEdit;
-                rolewisePermission.CanDelete = perm.CanDelete;
-            }
-        }
+        //     if (rolewisePermission == null)
+        //     {
+        //         // Add new permission if not found
+        //         _context.Roleswisepermissions.Add(new Roleswisepermission
+        //         {
+        //             RoleId = model.RoleId,
+        //             PermissionId = perm.PermissionId,
+        //             CanView = perm.CanView,
+        //             CanAddEdit = perm.CanAddEdit,
+        //             CanDelete = perm.CanDelete
+        //         });
+        //     }
+        //     else
+        //     {
+        //         // Update existing permissions
+        //         rolewisePermission.CanView = perm.CanView;
+        //         rolewisePermission.CanAddEdit = perm.CanAddEdit;
+        //         rolewisePermission.CanDelete = perm.CanDelete;
+        //     }
+        // }
 
-        await _context.SaveChangesAsync();
+        // await _context.SaveChangesAsync();
+
+        _roleandpermissionservice.SavePermissions(model);
         return RedirectToAction("Userlist", "Account"); // Or redirect wherever appropriate
-                                                        // }
-
 
     }
 
