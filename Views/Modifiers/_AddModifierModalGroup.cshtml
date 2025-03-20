@@ -1,0 +1,68 @@
+@model pizzashop.Models.ViewModels.ModifiersViewModel
+
+@* addModifier modal *@
+<div class="modal fade" style="margin-top: 13%;" id="addModifiersModalGroup" tabindex="-1"
+    aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h1 class="modal-title fs-5" id="exampleModalLabel">Add Modifier Group</h1>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <div class="form">
+                    <form id="AddModifierGroupModalForm" class="form">
+                        <div class="form-floating" style="margin-bottom: 20px;">
+                            <input type="text" asp-for="Name" class="form-control" placeholder="Name" id="Name"
+                                name="Name">
+                            <label for="Name">Name</label>
+                            <span asp-validation-for="Name" class="text-danger"></span>
+                        </div>
+                        <div class="form-floating">
+                            <input type="text" asp-for="Description" class="form-control" id="Description"
+                                name="Description" placeholder="Description">
+                            <label for="Description">Description</label>
+                            <span asp-validation-for="Description" class="text-danger"></span>
+                        </div>
+
+                        <div style="padding-top: 20px;padding-bottom: 20px;margin-left: 5px;">
+                            <a href="#" class="text-decoration-none">+ Add Existing Modifiers</a>
+                        </div>
+                        <div class="modal-footer">
+
+                            <button type="submit" class="btn btn-primary">Save</button>
+                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+
+        </div>
+    </div>
+</div>
+
+@{
+    await Html.RenderPartialAsync("_ValidationScriptsPartial");
+}
+
+<script>
+    $('#AddModifierGroupModalForm').on('submit', function (e) {
+        var isvalid = $('#AddModifierGroupModalForm').valid();
+        if (isvalid) {
+            e.preventDefault();
+            var form = $(this);
+            var url = form.attr('action');
+            var data = form.serialize();
+
+            $.ajax({
+                type: "POST",
+                url: '@(Url.Action("AddModifierGroup", "Modifiers"))',
+                data: data,
+                success: function (data) {
+                    loadModifiers();
+                    $('#addModifiersModalGroup').modal('hide');
+                }
+            });
+        }
+    });
+</script>

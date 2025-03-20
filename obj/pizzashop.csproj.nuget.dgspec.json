@@ -1,7 +1,7 @@
 {
   "format": 1,
   "restore": {
-    "D:\\PIZZASHOP\\pizzashop\\pizzashop.csproj": {}
+    "D:\\PIZZASHOP\\PIZZASHOP\\pizzashop.csproj": {}
   },
   "projects": {
     "D:\\PIZZASHOP\\pizzashop.Models\\pizzashop.Models.csproj": {
@@ -285,14 +285,14 @@
         }
       }
     },
-    "D:\\PIZZASHOP\\pizzashop\\pizzashop.csproj": {
+    "D:\\PIZZASHOP\\PIZZASHOP\\pizzashop.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "D:\\PIZZASHOP\\pizzashop\\pizzashop.csproj",
+        "projectUniqueName": "D:\\PIZZASHOP\\PIZZASHOP\\pizzashop.csproj",
         "projectName": "pizzashop",
-        "projectPath": "D:\\PIZZASHOP\\pizzashop\\pizzashop.csproj",
+        "projectPath": "D:\\PIZZASHOP\\PIZZASHOP\\pizzashop.csproj",
         "packagesPath": "C:\\Users\\pctr59\\.nuget\\packages\\",
-        "outputPath": "D:\\PIZZASHOP\\pizzashop\\obj\\",
+        "outputPath": "D:\\PIZZASHOP\\PIZZASHOP\\obj\\",
         "projectStyle": "PackageReference",
         "configFilePaths": [
           "C:\\Users\\pctr59\\AppData\\Roaming\\NuGet\\NuGet.Config"

@@ -1,46 +1,67 @@
 @model pizzashop.Models.ViewModels.ModifiersViewModel
+@{
+    var ModifiersGroupExist = TempData["ModifiersGroupExist"] as string;
+    var ModifiersGroupEdit = TempData["ModifiersGroupEdit"] as string;
+    var ModifiersGroupAdd = TempData["ModifiersGroupAdd"] as string;
+    var ModifiersGroupIsDeleted = TempData["ModifiersGroupIsDeleted"] as string;
+
+}
 
 <ul class="categorys flex-column mb-auto w-100" style="overflow-y: scroll; max-height: 400px;">
-
-
-
     @{
         foreach (var modifiers in Model.modifiersGroups)
         {
             <li class="">
-                <a href="javascript:void(0);" data-category-id="@modifiers.Id" class="nav-link d-flex me-auto">
-                    @* <i class="bi bi-grid-1x2-fill" style="margin-right: 10px;"></i> *@
-                    <i class="bi bi-grip-vertical" style="margin-right: 10px;"></i>
+                @* <a href="javascript:void(0);" data-ModifiersGroup-id="@modifiers.Id" class="nav-link d-flex me-auto"> *@
+                <a href="javascript:void(0);" data-mg-id="@modifiers.Id" class="nav-link d-flex me-auto">
+                    <i class="bi bi-grid-fill" style="margin-right: 10px;"></i>
                     @modifiers.Name
                 </a>
                 <div class="categoryAction">
                     <div class="d-flex">
-                        <button class="menubtn" data-bs-toggle="modal" data-bs-target="#editCategoryModal"
-                            data-id="@modifiers.Id" data-category-name=" @modifiers.Name"
-                            data-description="@modifiers.Description">
+                        <button class="menubtn" onclick="EditModifierGroupModal(@modifiers.Id)">
                             <i class="bi bi-pen"></i>
                         </button>
-
-                        <button class="menubtn" onclick="EditModifierModal()">
-                            <i class="bi bi-pen"></i>
-                        </button>
-
-                        <!-- Delete button with data-id attribute to pass CategoryId -->
-                        <button class="menubtn" data-bs-toggle="modal" data-bs-target="#delete" data-id="@modifiers.Id">
+                        <button class="menubtn" onclick="DeleteModifierGroupModal(@modifiers.Id)">
                             <i class="bi bi-trash"></i>
                         </button>
                     </div>
                 </div>
             </li>
-
-
-
-
-
         }
     }
-
-
-
-
 </ul>
+
+@if (!string.IsNullOrEmpty(ModifiersGroupEdit))
+{
+    <script>
+        toastr.success('@ModifiersGroupEdit');  // Show success message using Toastr
+    </script>
+}
+@if (!string.IsNullOrEmpty(ModifiersGroupExist))
+{
+    <script>
+        toastr.error('@ModifiersGroupExist');  // Show success message using Toastr
+    </script>
+}
+@if (!string.IsNullOrEmpty(ModifiersGroupAdd))
+{
+    <script>
+        toastr.success('@ModifiersGroupAdd');  // Show success message using Toastr
+    </script>
+}
+@if (!string.IsNullOrEmpty(ModifiersGroupIsDeleted))
+{
+    <script>
+        toastr.success('@ModifiersGroupIsDeleted');  // Show success message using Toastr
+    </script>
+}
+
+<script>
+    var firstModifiersGroupId = $('a[data-mg-id]').first().data('mg-id');
+    if (firstModifiersGroupId) {
+        loadMenuModifiers(firstModifiersGroupId);
+    } else {
+        console.log('No modifier group ID found.');
+    }
+</script>
