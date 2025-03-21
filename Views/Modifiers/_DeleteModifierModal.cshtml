@@ -1,8 +1,7 @@
-@model pizzashop.Models.ViewModels.ItemViewModel
+@model pizzashop.Models.ViewModels.MenuModifiersViewModel
 
-<!-- Delete Item -->
-<div class="modal fade" style="margin-top: 13%;" id="deleteitem" tabindex="-1" aria-labelledby="deleteitem"
-    aria-hidden="true">
+<div class="modal fade" style="margin-top: 13%;" tabindex="-1" aria-labelledby="exampleModalLabel"
+    id="DeleteModifierModal" aria-hidden="true">
     <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-header">
@@ -11,7 +10,6 @@
             </div>
             <div class="modal-body"
                 style="display: flex;flex-direction: column; align-items: center;justify-content: center;">
-
                 <div style="color: #ffc409;">
                     <svg xmlns="http://www.w3.org/2000/svg" width="40" height="40" fill="currentColor"
                         class="bi bi-exclamation-triangle-fill" viewBox="0 0 16 16">
@@ -20,25 +18,22 @@
                     </svg>
                 </div>
                 <div>
-                    <p>are you sure you want to delete Item?</p>
+                    <p>Are you sure you want to delete this Modifier?</p>
                 </div>
                 <div class="modal-footer">
-                    <form method="post" id="deleteItemForm">
-                        <input type="hidden" id="itemId" name="id" value="@Model.Id" />
+                    <form id="deleteModifierForm">
+                        <input type="hidden" id="modifierId" name="id" value="@Model.Id" />
                         <button type="submit" class="btn btn-primary">Yes</button>
                         <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">No</button>
                     </form>
                 </div>
             </div>
-
         </div>
     </div>
 </div>
 
-
 <script>
-    $('#deleteItemForm').on('submit', function (e) {
-
+    $('#deleteModifierForm').on('submit', function (e) {
         e.preventDefault();
         var form = $(this);
         var url = form.attr('action');
@@ -46,13 +41,12 @@
 
         $.ajax({
             type: "POST",
-            url: "@(Url.Action("deleteitem", "Category"))",
+            url: "@(Url.Action("DeleteModifiers", "Modifiers"))",
             data: data,
             success: function (data) {
-                loadMenuItems2(@Model.CategoryId);
-                $('#deleteitem').modal('hide');
-                @* location.reload(); *@
-         }
+                loadMenuModifiers(@Model.ModifierGroupId);
+                $('#DeleteModifierModal').modal('hide');
+            }
         });
 
     });

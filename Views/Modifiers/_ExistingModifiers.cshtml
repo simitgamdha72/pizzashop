@@ -1,7 +1,7 @@
-@model pizzashop.Models.ViewModels.ModifiersViewModel
+@* @model pizzashop.Models.ViewModels.ModifiersViewModel
 
 <div class="mb-1 mt-3">
-    @* <label class="form-label">Modifiers</label> *@
+
     <div class="modifier-container">
         @{
             foreach (var modifiers in Model.menuModifiers)
@@ -10,4 +10,73 @@
             }
         }
     </div>
+</div> *@
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+@model pizzashop.Models.ViewModels.ModifiersViewModel
+
+<div class="mb-1 mt-3">
+    <div class="modifier-container">
+        @{
+            foreach (var modifiers in Model.menuModifiers)
+            {
+                <div class="modifier" data-id="@modifiers.Id">
+                    @modifiers.Name
+                    <span class="remove-modifier" data-id="@modifiers.Id">&times;</span>
+                </div>
+            }
+        }
+    </div>
 </div>
+
+<style>
+    .modifier {
+        display: inline-block;
+        background-color: #e9ecef;
+        padding: 5px 10px;
+        margin: 5px;
+        border-radius: 15px;
+    }
+
+    .remove-modifier {
+        cursor: pointer;
+        margin-left: 5px;
+        font-weight: bold;
+    }
+
+    .remove-modifier:hover {
+        color: red;
+    }
+</style>
+
+<script>
+    // Replace the current click handler in _ExistingModifiers.cshtml
+    $(document).ready(function () {
+        // Handle removing a modifier
+        $(document).on('click', '.remove-modifier', function () {
+            // Just remove from the DOM, but don't send to server yet
+            $(this).parent().remove();
+
+            // Add the ID to a list of modifiers to be removed when saving
+            const modifierId = $(this).data('id');
+            if (!window.modifiersToRemove) {
+                window.modifiersToRemove = [];
+            }
+            window.modifiersToRemove.push(modifierId);
+        });
+    });
+</script>

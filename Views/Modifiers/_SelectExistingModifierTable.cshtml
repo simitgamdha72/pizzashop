@@ -1,0 +1,182 @@
+@* @model pizzashop.Models.ViewModels.PaginatedExistingModifiersViewModel
+<div class="table-responsive">
+    <table class="tableList table align-middle table">
+        <thead>
+            <tr>
+                <th scope="col">
+                    <div class="form-check">
+                        <input class="form-check-input" type="checkbox" value="" id="selectAllCheckbox">
+                    </div>
+                </th>
+                <th scope="col">Name</th>
+                <th scope="col">Unit</th>
+                <th scope="col">Rate</th>
+                <th scope="col">Quantity</th>
+                
+            </tr>
+        </thead>
+        <tbody class="table-group-divider">
+
+            @{
+                foreach (var menuitems in Model.Modifiers)
+                {
+                    <tr>
+                        <td>
+                            <div class="form-check">
+                                <input class="form-check-input checkboxes" type="checkbox" value="" id="flexCheckDefault"
+                                    data-id="@menuitems.Id">
+                            </div>
+                        </td>
+                        <td>
+                            <div class="listImgField">
+                                @menuitems.Name
+                            </div>
+                        </td>
+                        <td>@menuitems.UnitId</td>
+                        <td>@menuitems.Rate</td>
+                        <td>@menuitems.Quantity</td>
+                       
+                    </tr>
+                }
+            }
+        </tbody>
+    </table>
+</div>
+
+<!-- Pagination -->
+<div class="customPagination d-flex flex-column align-items-center mt-1">
+    <div class="d-flex align-items-center w-100 justify-content-end mb-2">
+        <div class="d-flex align-items-center me-auto me-sm-3">
+            <div class="me-sm-2" style="min-width: 7rem;">Items per page:</div>
+            <select id="pageSizeSelecttable" class="form-select">
+                <option value="5">5</option>
+                <option value="10">10</option>
+                <option value="15">15</option>
+            </select>
+        </div>
+        <div class="d-none d-sm-block me-sm-2">
+            Showing @((Model.CurrentPage - 1) * Model.PageSize + 1)-@(Math.Min(Model.CurrentPage * Model.PageSize,
+            Model.TotalItems)) of @Model.TotalItems
+        </div>
+        <div>
+            <button id="prevPageBtn" class="me-2" @(Model.CurrentPage == 1 ? "disabled" : "")>
+                <i class="bi bi-chevron-left"></i>
+            </button>
+            <button id="nextPageBtn" @(Model.CurrentPage == Model.TotalPages ? "disabled" : "")>
+                <i class="bi bi-chevron-right"></i>
+            </button>
+        </div>
+    </div>
+    <div class="d-block d-sm-none">
+        Showing @((Model.CurrentPage - 1) * Model.PageSize + 1)-@(Math.Min(Model.CurrentPage * Model.PageSize,
+                Model.TotalItems)) of @Model.TotalItems
+    </div>
+</div>
+
+
+<script>
+    document.getElementById('selectAllCheckbox').addEventListener('change', function () {
+        let checkboxes = document.querySelectorAll('.checkboxes');
+        checkboxes.forEach(function (checkbox) {
+            checkbox.checked = this.checked;
+        }, this);
+    });
+
+</script>
+
+<script>
+    if (typeof currentStateExistingModifier === "undefined") {
+    const currentStateExistingModifier = {
+        searchTerm: "@Html.Raw(Model.SearchTerm ?? "")",
+        currentPage: @Model.CurrentPage,
+        pageSize: @Model.PageSize
+    }; 
+}
+</script> *@
+
+
+
+
+@model pizzashop.Models.ViewModels.PaginatedExistingModifiersViewModel
+<div class="table-responsive">
+    <table class="tableList table align-middle table">
+        <thead>
+            <tr>
+                <th scope="col">
+                    <div class="form-check">
+                        <input class="form-check-input" type="checkbox" value="" id="selectAllCheckbox">
+                    </div>
+                </th>
+                <th scope="col">Name</th>
+                <th scope="col">Unit</th>
+                <th scope="col">Rate</th>
+                <th scope="col">Quantity</th>
+            </tr>
+        </thead>
+        <tbody class="table-group-divider">
+            @{
+                foreach (var menuitems in Model.Modifiers)
+                {
+                    <tr>
+                        <td>
+                            <div class="form-check">
+                                <input class="form-check-input checkboxes" type="checkbox" value="" id="flexCheckDefault"
+                                    data-id="@menuitems.Id">
+                            </div>
+                        </td>
+                        <td>
+                            <div class="listImgField">
+                                @menuitems.Name
+                            </div>
+                        </td>
+                        <td>@menuitems.UnitId</td>
+                        <td>@menuitems.Rate</td>
+                        <td>@menuitems.Quantity</td>
+                    </tr>
+                }
+            }
+        </tbody>
+    </table>
+</div>
+
+<!-- Pagination -->
+<div class="customPagination d-flex flex-column align-items-center mt-1">
+    <div class="d-flex align-items-center w-100 justify-content-end mb-2">
+        <div class="d-flex align-items-center me-auto me-sm-3">
+            <div class="me-sm-2" style="min-width: 7rem;">Items per page:</div>
+            <select id="pageSizeSelecttable" class="form-select">
+                <option value="5">5</option>
+                <option value="10">10</option>
+                <option value="15">15</option>
+            </select>
+        </div>
+        <div class="d-none d-sm-block me-sm-2">
+            Showing @((Model.CurrentPage - 1) * Model.PageSize + 1)-@(Math.Min(Model.CurrentPage * Model.PageSize,
+            Model.TotalItems)) of @Model.TotalItems
+        </div>
+        <div>
+            <button id="prevPageBtn" class="me-2" @(Model.CurrentPage == 1 ? "disabled" : "")>
+                <i class="bi bi-chevron-left"></i>
+            </button>
+            <button id="nextPageBtn" @(Model.CurrentPage == Model.TotalPages ? "disabled" : "")>
+                <i class="bi bi-chevron-right"></i>
+            </button>
+        </div>
+    </div>
+    <div class="d-block d-sm-none">
+        Showing @((Model.CurrentPage - 1) * Model.PageSize + 1)-@(Math.Min(Model.CurrentPage * Model.PageSize,
+                Model.TotalItems)) of @Model.TotalItems
+    </div>
+</div>
+
+<script>
+    $(document).ready(function() {
+        // Handle select all checkbox
+        $('#selectAllCheckbox').on('change', function () {
+            let checkboxes = document.querySelectorAll('.checkboxes');
+            checkboxes.forEach(function (checkbox) {
+                checkbox.checked = this.checked;
+            }, this);
+        });
+    });
+</script>

@@ -143,11 +143,13 @@
     </script>
 
     <script>
+            if (typeof currentState === "undefined") {
     const currentState = {
         categoryId: @Html.Raw(Model.CategoryId.HasValue ? Model.CategoryId.Value.ToString() : "null"),
         searchTerm: "@Html.Raw(Model.SearchTerm ?? "")",
         currentPage: @Model.CurrentPage,
         pageSize: @Model.PageSize
     };
+    }
 </script>
 

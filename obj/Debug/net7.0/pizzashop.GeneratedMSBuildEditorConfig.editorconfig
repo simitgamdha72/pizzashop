@@ -116,8 +116,16 @@ build_metadata.AdditionalFiles.CssScope =
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcTW9kaWZpZXJzXF9EZWxldGVNb2RpZmllckdyb3VwTW9kYWwuY3NodG1s
 build_metadata.AdditionalFiles.CssScope = 
 
+[D:/PIZZASHOP/PIZZASHOP/Views/Modifiers/_DeleteModifierModal.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcTW9kaWZpZXJzXF9EZWxldGVNb2RpZmllck1vZGFsLmNzaHRtbA==
+build_metadata.AdditionalFiles.CssScope = 
+
 [D:/PIZZASHOP/PIZZASHOP/Views/Modifiers/_EditModifierGroupModal.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcTW9kaWZpZXJzXF9FZGl0TW9kaWZpZXJHcm91cE1vZGFsLmNzaHRtbA==
+build_metadata.AdditionalFiles.CssScope = 
+
+[D:/PIZZASHOP/PIZZASHOP/Views/Modifiers/_EditModifierModal.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcTW9kaWZpZXJzXF9FZGl0TW9kaWZpZXJNb2RhbC5jc2h0bWw=
 build_metadata.AdditionalFiles.CssScope = 
 
 [D:/PIZZASHOP/PIZZASHOP/Views/Modifiers/_ExistingModifiers.cshtml]
@@ -130,6 +138,14 @@ build_metadata.AdditionalFiles.CssScope =
 
 [D:/PIZZASHOP/PIZZASHOP/Views/Modifiers/_ModifiersList.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcTW9kaWZpZXJzXF9Nb2RpZmllcnNMaXN0LmNzaHRtbA==
+build_metadata.AdditionalFiles.CssScope = 
+
+[D:/PIZZASHOP/PIZZASHOP/Views/Modifiers/_SelectExistingModifiersModal.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcTW9kaWZpZXJzXF9TZWxlY3RFeGlzdGluZ01vZGlmaWVyc01vZGFsLmNzaHRtbA==
+build_metadata.AdditionalFiles.CssScope = 
+
+[D:/PIZZASHOP/PIZZASHOP/Views/Modifiers/_SelectExistingModifierTable.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcTW9kaWZpZXJzXF9TZWxlY3RFeGlzdGluZ01vZGlmaWVyVGFibGUuY3NodG1s
 build_metadata.AdditionalFiles.CssScope = 
 
 [D:/PIZZASHOP/PIZZASHOP/Views/RoleandPermission/permission.cshtml]

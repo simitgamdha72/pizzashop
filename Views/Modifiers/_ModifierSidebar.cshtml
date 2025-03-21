@@ -3,7 +3,7 @@
     var ModifiersGroupExist = TempData["ModifiersGroupExist"] as string;
     var ModifiersGroupEdit = TempData["ModifiersGroupEdit"] as string;
     var ModifiersGroupAdd = TempData["ModifiersGroupAdd"] as string;
-    var ModifiersGroupIsDeleted = TempData["ModifiersGroupIsDeleted"] as string;
+
 
 }
 
@@ -50,18 +50,12 @@
         toastr.success('@ModifiersGroupAdd');  // Show success message using Toastr
     </script>
 }
-@if (!string.IsNullOrEmpty(ModifiersGroupIsDeleted))
-{
-    <script>
-        toastr.success('@ModifiersGroupIsDeleted');  // Show success message using Toastr
-    </script>
-}
 
 <script>
-    var firstModifiersGroupId = $('a[data-mg-id]').first().data('mg-id');
+    @* var firstModifiersGroupId = $('a[data-mg-id]').first().data('mg-id');
     if (firstModifiersGroupId) {
         loadMenuModifiers(firstModifiersGroupId);
     } else {
         console.log('No modifier group ID found.');
-    }
+    } *@
 </script>

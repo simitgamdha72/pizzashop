@@ -1,7 +1,7 @@
 @model pizzashop.Models.ViewModels.MenuModifiersViewModel
 
-<!-- Add new Modifier modal start -->
-<div class="modal fade" id="AddModifierModal" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1"
+<!-- Edit Modifier modal start -->
+<div class="modal fade" id="EditModifiersModal" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1"
     aria-hidden="true">
     <div class="modal-dialog modal-xl modal-dialog-centered">
         <div class="modal-content">
@@ -9,9 +9,9 @@
                 <h1 class="modal-title fs-5" id="staticBackdropLabel" style="color: #727b83;">Add New Menu Item</h1>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
-            <form id="AddModifierForm">
+            <form id="EditModifierForm">
                 <div class="modal-body p-0 p-md-2">
-
+                        <input type="hidden" asp-for="Id" value="@Model.Id" name="Id" id="Id">
                     <div class="container-fluid">
                         <div class="row">
                             <div class="col-12 col-lg-12">
@@ -34,7 +34,7 @@
                                     </div>
                                     <div class="col">
                                         <div class="form-floating">
-                                            <input type="text" asp-for="Name" class="form-control" id="name"
+                                            <input type="text" asp-for="Name" class="form-control" id="name" value="@Model.Name"
                                                 placeholder="Name">
                                             <span asp-validation-for="Name" class="text-danger"></span>
                                             <label for="name">Name*</label>
@@ -44,7 +44,7 @@
                                 <div class="row row-cols-2 row-cols-lg-3 row-cols-xl-4 g-2 mb-2">
                                     <div class="col">
                                         <div class="form-floating">
-                                            <input type="text" asp-for="Rate" class="form-control" id="rate" value=""
+                                            <input type="text" asp-for="Rate" class="form-control" id="rate" value="@Model.Rate"
                                                 placeholder="Rate">
                                             <span asp-validation-for="Rate" class="text-danger"></span>
                                             <label for="rate">Rate*</label>
@@ -52,8 +52,8 @@
                                     </div>
                                     <div class="col">
                                         <div class="form-floating">
-                                            <input type="text" asp-for="Quantity" class="form-control" id="quantity"
-                                                value="" placeholder="Quantity">
+                                            <input type="text" asp-for="Quantity" class="form-control" id="quantity" value="@Model.Quantity"
+                                                 placeholder="Quantity">
                                             <span asp-validation-for="Quantity" class="text-danger"></span>
                                             <label for="quantity">Quantity*</label>
                                         </div>
@@ -99,14 +99,14 @@
         </div>
     </div>
 </div>
-<!-- Add new Modifier modal end -->
+<!-- Edit Modifier modal end -->
 @{
     await Html.RenderPartialAsync("_ValidationScriptsPartial");
 }
 
 <script>
-    $('#AddModifierForm').on('submit', function (e) {
-        var isvalid = $('#AddModifierForm').valid();
+    $('#EditModifierForm').on('submit', function (e) {
+        var isvalid = $('#EditModifierForm').valid();
         if (isvalid) {
             e.preventDefault();
             var form = $(this);
@@ -115,15 +115,21 @@
 
             $.ajax({
                 type: "POST",
-                url: '@(Url.Action("AddModifier", "Modifiers"))',
+                url: '@(Url.Action("EditModifier", "Modifiers"))',
                 data: data,
                 success: function (data) {
-                    loadMenuModifiers();
-                    $('#AddModifierModal').modal('hide');
+                    loadMenuModifiers(@Model.ModifierGroupId);
+                    $('#EditModifiersModal').modal('hide');
                 }
             });
         }
     });
-
-
 </script>
+
+
+
+
+
+
+
+
