@@ -1,0 +1,369 @@
+@model pizzashop.Models.ViewModels.SectionViewModal
+
+<div id="menu" class="container-fluid">
+
+    <div class="fs-2 fw-semibold mb-3" style="color: #006CAC;">Sections/Tables</div>
+
+    <div class="d-flex">
+
+
+        <!-- Section -->
+        <div class="offcanvas-lg start-0" data-bs-scroll="true" tabindex="-1" id="offcanvascategory">
+            <div class="bg-light min-vh-100" style="width: 260px;display:flex;flex-direction: column;">
+                <div class="justify-content-between w-100 p-3" style="display: flex;align-items: center;">
+                    <div class="fs-4 fw-semibold" style="color: #006CAC;">Sections</div>
+                    <button class="customBtnSecondary fs-4 py-0 px-2" id="loadModalAddSectionBtn"><i
+                            class="bi bi-plus-lg"></i></button>
+                </div>
+                <div id="SectionListPartialView"></div>
+            </div>
+        </div>
+
+
+        <div class="bg-white container-fluid py-3 px-3">
+            <div style="display: flex; align-items:center;">
+                <button class="d-lg-none fs-4 me-2 menubtn" style="color: #006CAC;" type="button"
+                    data-bs-toggle="offcanvas" data-bs-target="#offcanvascategory" aria-controls="offcanvascategory">
+                    <i class="bi bi-list-ul"></i>
+                </button>
+                <div class="fs-4 fw-semibold" style="color: #006CAC;">Tables</div>
+            </div>
+            <div class="mb-2 mb-sm-3" style="display: flex; justify-content: end; align-items: center;">
+                <div class="d-flex">
+                    <form style="position: relative;margin-right: 10px;">
+                        <input type="search" id="searchInput" placeholder="  Search" aria-label="Search"
+                            class="form-control" style="width: 200px;height: 52px;margin-right: 2px; border: 2px solid #eee;
+                                border-radius: 4px;">
+
+                        <i class="bi bi-search" style="position: absolute;right: 10px;top: 15px;"></i>
+                    </form>
+                    <button class="customBtnSecondary px-md-3 me-3 fs-4" data-bs-toggle="modal"
+                        data-bs-target="#MassDataDeleteModal"><i class=" bi bi-trash"></i></button>
+                    <button class="customBtnPrimary px-3 p-md-3" id="loadModalAddTableBtn"><i
+                            class="bi bi-plus-lg me-0 me-sm-2"></i><span class="d-none d-sm-block">New
+                            Table</span></button>
+                </div>
+
+            </div>
+
+            <div class="">
+                <div id="TablesContainer">
+                    <!-- The table will be loaded here -->
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div id="modalContainer"></div>
+
+<!-- Modal for Confirmation -->
+<div class="modal fade" id="MassDataDeleteModal" tabindex="-1" aria-labelledby="deleteLabel" aria-hidden="true"
+    style="margin-top: 13%;">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 class="modal-title fs-5" id="exampleModalLabel">Delete Confirmation</h3>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body"
+                style="display: flex; flex-direction: column; align-items: center; justify-content: center;">
+                <div style="color: #ffc409;">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="40" height="40" fill="currentColor"
+                        class="bi bi-exclamation-triangle-fill" viewBox="0 0 16 16">
+                        <path
+                            d="M8.982 1.566a1.13 1.13 0 0 0-1.96 0L.165 13.233c-.457.778.091 1.767.98 1.767h13.713c.889 0 1.438-.99.98-1.767zM8 5c.535 0 .954.462.9.995l-.35 3.507a.552.552 0 0 1-1.1 0L7.1 5.995A.905.905 0 0 1 8 5m.002 6a1 1 0 1 1 0 2 1 1 0 0 1 0-2" />
+                    </svg>
+                </div>
+                <div>
+                    <p>Are you sure you want to delete the selected Tables?</p>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-primary" onclick="MassDelete()"
+                    data-bs-dismiss="modal">Yes</button>
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">No</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+
+
+
+@{
+    await Html.RenderPartialAsync("_ValidationScriptsPartial");
+}
+
+@section Scripts {
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+    <script>
+
+        $(document).ready(function () {
+
+            loadSection();
+            @* loadTables(); *@
+
+                // 'Add New Section' button
+                $('#loadModalAddSectionBtn').on('click', function () {
+                    $.ajax({
+                        url: '@Url.Action("AddSectionModal", "TableSection")',
+                        type: 'GET',
+                        success: function (response) {
+                            // partial view 
+                            $('#modalContainer').html(response);
+
+                            //show the modal after loading
+                            $('#addSectionModal').modal('show');
+                        },
+                        error: function () {
+                            alert("An error occurred while loading the modal.");
+                        }
+                    });
+                });
+
+
+
+            // 'Add New Table' button
+
+
+
+            let currentStateTable = {
+                SectionId: null,
+                searchTerm: '',
+                currentPage: 1,
+                pageSize: 5
+            };
+
+
+
+
+            $(document).on('click', 'a[data-section-id]', function (e) {
+                e.preventDefault();
+                var SectionId = $(this).attr('data-section-id');
+                currentStateTable.SectionId = SectionId;
+                currentStateTable.currentPage = 1;
+                loadTables2();
+                @* loadTables(SectionId); *@
+                              });
+
+
+
+            $('#loadModalAddTableBtn').on('click', function () {
+                $.ajax({
+                    url: '@Url.Action("addTableModal", "TableSection")',
+                    type: 'GET',
+                    data: { id: currentStateTable.SectionId },
+                    success: function (response) {
+                        // partial view 
+                        $('#modalContainer').html(response);
+
+                        //show the modal after loading
+                        $('#AddTableModal').modal('show');
+                    },
+                    error: function () {
+                        alert("An error occurred while loading the modal.");
+                    }
+                });
+            });
+
+            $('#searchInput').on('keyup', function () {
+                const searchTerm = $(this).val().trim();
+                currentStateTable.searchTerm = searchTerm;
+                currentStateTable.currentPage = 1;
+
+                //prevent too many requests
+                clearTimeout($(this).data('timeout'));
+                $(this).data('timeout', setTimeout(function () {
+                    loadTables2();
+                }, 500));
+            });
+
+            $(document).on('change', '#pageSizeSelect', function () {
+                currentStateTable.pageSize = parseInt($(this).val());
+                currentStateTable.currentPage = 1;
+                loadTables2();
+            });
+
+            $(document).on('click', '#prevPageBtn:not([disabled])', function () {
+                currentStateTable.currentPage--;
+                loadTables2();
+            });
+
+            $(document).on('click', '#nextPageBtn:not([disabled])', function () {
+                currentStateTable.currentPage++;
+                loadTables2();
+            });
+
+            function loadTables2() {
+                $.ajax({
+                    url: '/TableSection/SearchItems',
+                    type: 'GET',
+                    data: {
+                        SectionId: currentStateTable.SectionId,
+                        searchTerm: currentStateTable.searchTerm,
+                        page: currentStateTable.currentPage,
+                        pageSize: currentStateTable.pageSize
+                    },
+                    success: function (result) {
+                        $('#TablesContainer').html(result);
+
+                        $('#pageSizeSelect').val(currentStateTable.pageSize);
+                    },
+                    error: function (xhr, status, error) {
+                        console.log("Error: " + error);
+                    }
+                });
+            }
+
+            window.loadTables = function (SectionId) {
+                currentStateTable.SectionId = SectionId;
+                currentStateTable.currentPage = 1;
+                currentStateTable.searchTerm = '';
+                $('#searchInput').val('');
+                loadTables2();
+            };
+
+
+            try {
+                loadTables2();
+            } catch (e) {
+                console.error("Error parsing URL parameters", e);
+            }
+
+
+
+
+        });
+
+        @* window.loadTables = function (id) {
+            $.ajax({
+                url: '@Url.Action("GetTables", "TableSection")',
+                type: 'GET',
+                data: { id: id },
+                success: function (result) {
+                    $('#TablesContainer').html(result);
+                },
+                error: function (xhr, status, error) {
+                    console.log("Error: " + error);
+                }
+            });
+        }; *@
+
+            window.loadSection = function () {
+                $.ajax({
+                    url: '@Url.Action("GetSection", "TableSection")',
+                    type: 'GET',
+                    success: function (result) {
+                        $('#SectionListPartialView').html(result);
+                    },
+                    error: function (xhr, status, error) {
+                        console.log("Error: " + error);
+                    }
+                });
+            };
+
+        function EditSectionModal(id) {
+            $.ajax({
+                url: '@Url.Action("EditSectionModal", "TableSection")',
+                type: 'GET',
+                data: { id: id },
+                success: function (response) {
+                    $('#modalContainer').html(response);
+
+                    $('#EditSectionModal').modal('show');
+                },
+                error: function () {
+                    alert("An error occurred while loading the modal.123");
+                }
+            });
+        }
+
+        function DeleteSectionModal(id) {
+            $.ajax({
+                url: "/TableSection/DeleteSectionModal",
+                type: 'GET',
+                data: { id: id },
+                success: function (response) {
+                    $('#modalContainer').html(response);
+
+                    $('#DeleteSectionModal').modal('show');
+                },
+                error: function () {
+                    alert("An error occurred while loading the modal.");
+                }
+            });
+        }
+
+        function EditTableModal(id) {
+            $.ajax({
+                url: '@Url.Action("EditTableModal", "TableSection")',
+                type: 'GET',
+                data: { id: id },
+                success: function (response) {
+                    $('#modalContainer').html(response);
+
+                    $('#EditTableModal').modal('show');
+                },
+                error: function () {
+                    alert("An error occurred while loading the modal.");
+                }
+            });
+        }
+
+        function DeleteTableModal(id) {
+            $.ajax({
+                url: "/TableSection/DeleteTableModal",
+                type: 'GET',
+                data: { id: id },
+                success: function (response) {
+                    $('#modalContainer').html(response);
+
+                    $('#DeleteTableModal').modal('show');
+                },
+                error: function () {
+                    alert("An error occurred while loading the modal.");
+                }
+            });
+        }
+
+        function MassDelete() {
+            var ids = getCheckedTablesIds();
+            ids.forEach(function (value) {
+                console.log(value);
+                deleteall(value);
+            });
+
+            function getCheckedTablesIds() {
+                var checkedIds = [];
+                var checkboxes = document.querySelectorAll('.checkboxes:checked');
+
+                checkboxes.forEach(function (checkbox) {
+                    var TableId = checkbox.getAttribute('data-id');
+                    checkedIds.push(TableId);
+                });
+                return checkedIds;
+            }
+
+            function deleteall(id) {
+                $.ajax({
+                    type: "POST",
+                    url: "@(Url.Action("DeleteTable", "TableSection"))",
+                    data: { id: id },
+                    success: function (data) {
+                        loadTables();
+                        $('#MassDataDeleteModal').modal('hide');
+                    }
+                });
+            }
+        }
+
+
+    </script>
+
+
+
+}

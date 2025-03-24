@@ -1,0 +1,59 @@
+@model pizzashop.Models.ViewModels.SectionViewModal
+@{
+    var SectionExist = TempData["SectionExist"] as string;
+    var SectionEdit = TempData["SectionEdit"] as string;
+    var SectionAdd = TempData["SectionAdd"] as string;
+    var SectionIsDeleted = TempData["SectionIsDeleted"] as string;
+
+
+}
+
+<ul class="categorys flex-column mb-auto w-100" style="overflow-y: scroll; max-height: 400px;">
+    @{
+        foreach (var sections in Model.section)
+        {
+            <li class="">
+                @* <a href="javascript:void(0);" data-ModifiersGroup-id="@modifiers.Id" class="nav-link d-flex me-auto"> *@
+                <a href="javascript:void(0);" data-section-id="@sections.Id" class="nav-link d-flex me-auto">
+                    <i class="bi bi-grid-fill" style="margin-right: 10px;"></i>
+                    @sections.Name
+                </a>
+                <div class="categoryAction">
+                    <div class="d-flex">
+                        <button class="menubtn" onclick="EditSectionModal(@sections.Id)">
+                            <i class="bi bi-pen"></i>
+                        </button>
+                        <button class="menubtn" onclick="DeleteSectionModal(@sections.Id)">
+                            <i class="bi bi-trash"></i>
+                        </button>
+                    </div>
+                </div>
+            </li>
+        }
+    }
+</ul>
+
+@if (!string.IsNullOrEmpty(SectionEdit))
+{
+    <script>
+        toastr.success('@SectionEdit');  // Show success message using Toastr
+    </script>
+}
+@if (!string.IsNullOrEmpty(SectionExist))
+{
+    <script>
+        toastr.error('@SectionExist');  // Show success message using Toastr
+    </script>
+}
+@if (!string.IsNullOrEmpty(SectionAdd))
+{
+    <script>
+        toastr.success('@SectionAdd');  // Show success message using Toastr
+    </script>
+}
+@if (!string.IsNullOrEmpty(SectionIsDeleted))
+{
+    <script>
+        toastr.success('@SectionIsDeleted');  // Show success message using Toastr
+    </script>
+}

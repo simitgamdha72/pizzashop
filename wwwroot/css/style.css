@@ -419,3 +419,10 @@
   font-weight: bold;
   color: red;
 }
+
+.table-status {
+  display: inline-flex;
+  padding: 0.2rem 1.5rem;
+  color: white;
+  border-radius: 30px;
+}

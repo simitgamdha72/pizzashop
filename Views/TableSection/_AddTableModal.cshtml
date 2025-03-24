@@ -1,0 +1,113 @@
+@model pizzashop.Models.ViewModels.TableViewModel
+
+<!-- Add new Modifier modal start -->
+<div class="modal fade" id="AddTableModal" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1"
+    aria-hidden="true">
+    <div class="modal-dialog modal-md modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header border-bottom-0">
+                <h1 class="modal-title fs-5" id="staticBackdropLabel" style="color: #727b83;">Add Table</h1>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <form id="AddTableForm">
+                <div class="modal-body p-0 p-md-2">
+
+                    <div class="container-fluid">
+                        <div class="row">
+                            <div class="col-12 col-lg-12">
+                                <div class="row row-cols-1 row-cols-lg-2 g-2 mb-2">
+                                    <div class="col">
+                                        <div class="form-floating">
+                                            <input type="text" asp-for="Name" class="form-control" id="name"
+                                                placeholder="Name">
+                                            <span asp-validation-for="Name" class="text-danger"></span>
+                                            <label for="name">Name*</label>
+                                        </div>
+                                    </div>
+                                    <div class="col">
+                                        <div class="form-floating">
+                                            <input type="hidden" asp-for="SectionId" value="@Model.SectionId">
+                                            <select asp-for="SectionId" class="form-select" id="sectionid" disabled>
+
+                                                @{
+                                                    foreach (var sections in Model.sections)
+                                                    {
+                                                        <option value="@sections.Id">@sections.Name</option>
+                                                    }
+                                                }
+
+                                            </select>
+                                            <span asp-validation-for="SectionId" class="text-danger"></span>
+                                            <label for="category">Section*</label>
+                                        </div>
+                                    </div>
+
+                                </div>
+                                <div class="row row-cols-1 row-cols-lg-2 g-2 mb-2">
+                                    <div class="col">
+                                        <div class="form-floating">
+                                            <input type="text" asp-for="Capacity" class="form-control" id="Capacity"
+                                                value="" placeholder="Rate">
+                                            <span asp-validation-for="Capacity" class="text-danger"></span>
+                                            <label for="rate">Capacity*</label>
+                                        </div>
+
+                                    </div>
+                                    <div class="col">
+                                        <div class="form-floating">
+                                            <input type="hidden" asp-for="Status" value="true">
+                                            <select asp-for="Status" class="form-select" id="Status" disabled>
+
+                                                <option value="true" selected>Available</option>
+                                                @* <option value="false">Occupied</option> *@
+
+                                            </select>
+                                            <span asp-validation-for="Status" class="text-danger"></span>
+                                            <label for="unit">Status</label>
+                                        </div>
+                                    </div>
+
+                                </div>
+
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+
+                <div class="modal-footer border-top-0 d-flex justify-content-end align-items-center">
+                    <button type="submit" class="btn btn-primary">Save</button>
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">No</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+<!-- Add new Modifier modal end -->
+@{
+    await Html.RenderPartialAsync("_ValidationScriptsPartial");
+}
+
+<script>
+    $('#AddTableForm').on('submit', function (e) {
+        var isvalid = $('#AddTableForm').valid();
+        if (isvalid) {
+            e.preventDefault();
+            var form = $(this);
+            var url = form.attr('action');
+            var data = form.serialize();
+
+            $.ajax({
+                type: "POST",
+                url: '@(Url.Action("AddTable", "TableSection"))',
+                data: data,
+                success: function (data) {
+                    loadTables(@Model.SectionId);
+                    $('#AddTableModal').modal('hide');
+                }
+            });
+        }
+    });
+
+
+</script>
