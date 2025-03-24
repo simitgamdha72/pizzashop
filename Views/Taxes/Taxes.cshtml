@@ -1,0 +1,105 @@
+@model pizzashop.Models.ViewModels.SectionViewModal
+
+<div style="width: 100%;background-color: #f3f3f3;margin-top: 20px;">
+    <div class="userlist-searchbar" id="menu"
+        style="display: flex; width: 100%;height: 7%;justify-content: space-between;padding-top: 10px;align-items: center; flex-wrap: wrap; gap: 15px;">
+        <div class="fs-2 fw-semibold mb-3" style="color: #006CAC;">Taxes/Fees</div>
+        <div class="d-flex">
+            <form style="position: relative;margin-right: 10px;">
+                <input type="search" id="searchInput" placeholder="  Search" aria-label="Search" class="form-control"
+                    style="width: 200px;height: 60px;margin-right: 2px; border: 2px solid #eee;
+                                border-radius: 4px;">
+
+                <i class="bi bi-search" style="position: absolute;right: 10px;top: 15px;"></i>
+            </form>
+            <button class="customBtnPrimary px-3 p-md-3" id="loadModalAddTaxBtn"><i
+                    class="bi bi-plus-lg me-0 me-sm-2"></i><span class="d-none d-sm-block">New
+                    Tax</span></button>
+        </div>
+
+
+    </div>
+    <div class="content" style="display: flex;align-items: center;justify-content: center;padding-top: 40px;">
+        <div class="shadow" style="background-color: white;width: 95%;">
+            <div id="TaxTableContainer">
+            </div>
+        </div>
+    </div>
+</div>
+
+<div id="modalContainer"></div>
+
+
+
+
+
+
+
+
+
+
+@{
+    await Html.RenderPartialAsync("_ValidationScriptsPartial");
+}
+
+@section Scripts {
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+    <script>
+        $(document).ready(function () {
+
+            Taxes();
+
+
+
+        })
+
+        window.Taxes = function () {
+            $.ajax({
+                url: '@Url.Action("GetTaxTable", "Taxes")',
+                type: 'GET',
+                success: function (result) {
+                    $('#TaxTableContainer').html(result);
+                },
+                error: function (xhr, status, error) {
+                    console.log("Error: " + error);
+                }
+            });
+        };
+
+        // 'Add New Section' button
+        $('#loadModalAddTaxBtn').on('click', function () {
+            $.ajax({
+                url: '@Url.Action("AddTaxModal", "Taxes")',
+                type: 'GET',
+                success: function (response) {
+                    // partial view 
+                    $('#modalContainer').html(response);
+                    console.log(response);
+
+                    //show the modal after loading
+                    $('#AddTaxModal').modal('show');
+                },
+                error: function () {
+                    alert("An error occurred while loading the modal.");
+                }
+            });
+        });
+
+        function DeleteTableModal(id) {
+            $.ajax({
+                url: "/Taxes/DeleteTaxModal",
+                type: 'GET',
+                data: { id: id },
+                success: function (response) {
+                    $('#modalContainer').html(response);
+
+                    $('#DeleteTaxModal').modal('show');
+                },
+                error: function () {
+                    alert("An error occurred while loading the modal.");
+                }
+            });
+        }
+    </script>
+}

@@ -1,0 +1,67 @@
+@model pizzashop.Models.ViewModels.TaxViewModel
+
+<div style="overflow-x: auto; width: 100%;">
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Name</th>
+                <th>Type</th>
+                <th>IsEnabled</th>
+                <th>Default</th>
+                <th>Tax Value</th>
+                <th>&nbsp;&nbsp;&nbsp; Action</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var tax in Model.taxes)
+            {
+                <tr>
+                    <td>@tax.Name
+                    </td>
+                    <td>
+                        @if (tax.Type == 1)
+                        {
+                            <div>Percentage</div>
+                        }
+                        @if (tax.Type == 2)
+                        {
+                            <div>Flat Amount</div>
+                        }
+                    </td>
+                    <td>
+                        <div class="form-check form-switch toggleSwitch">
+                            <input class="form-check-input" type="checkbox" role="switch" id="flexSwitchCheckChecked"
+                                @(tax.IsEnable ? "checked" : "")>
+                        </div>
+                    </td>
+                    <td>
+                        <div class="form-check form-switch toggleSwitch">
+                            <input class="form-check-input" type="checkbox" role="switch" id="flexSwitchCheckChecked"
+                                @(tax.IsDefault ? "checked" : "")>
+                        </div>
+                    </td>
+                    <td>@tax.TaxAmount</td>
+                    @* <td>
+                        <div>
+                            <button class="menubtn loadEditModalBtn" data-id="@tax.Id" onclick="EditTableModal(@tax.Id)"><i
+                                    class="bi bi-pen"></i></button>
+                            <button class="menubtn" onclick="DeleteTableModal(@tax.Id)"><i class="bi bi-trash"></i></button>
+                        </div>
+                    </td> *@
+                    <td>
+                        <div style="display: flex">
+                            <form style="margin-top: 7.5px;">
+                                <a href="@Url.Action("edituser", "Account", new { id = tax.Id })" class="nav-item nav-link"
+                                    style="margin-left: 15px;margin-right: 10px;"><i class="bi bi-pen"></i></a>
+                            </form>
+                            @* <button class="btn" data-bs-toggle="modal" data-bs-target="#deleteModal" data-id="@tax.Id">
+                                <i class="bi bi-trash"></i>
+                            </button> *@
+                            <button class="menubtn" onclick="DeleteTableModal(@tax.Id)"><i class="bi bi-trash"></i></button>
+                        </div>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>

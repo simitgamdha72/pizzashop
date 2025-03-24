@@ -200,6 +200,22 @@ build_metadata.AdditionalFiles.CssScope =
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcVGFibGVTZWN0aW9uXF9UYWJsZUxpc3QuY3NodG1s
 build_metadata.AdditionalFiles.CssScope = 
 
+[D:/PIZZASHOP/pizzashop/Views/Taxes/Taxes.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcVGF4ZXNcVGF4ZXMuY3NodG1s
+build_metadata.AdditionalFiles.CssScope = 
+
+[D:/PIZZASHOP/pizzashop/Views/Taxes/_AddTaxModal.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcVGF4ZXNcX0FkZFRheE1vZGFsLmNzaHRtbA==
+build_metadata.AdditionalFiles.CssScope = 
+
+[D:/PIZZASHOP/pizzashop/Views/Taxes/_DeleteTax.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcVGF4ZXNcX0RlbGV0ZVRheC5jc2h0bWw=
+build_metadata.AdditionalFiles.CssScope = 
+
+[D:/PIZZASHOP/pizzashop/Views/Taxes/_TaxTable.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcVGF4ZXNcX1RheFRhYmxlLmNzaHRtbA==
+build_metadata.AdditionalFiles.CssScope = 
+
 [D:/PIZZASHOP/pizzashop/Views/_ViewImports.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcX1ZpZXdJbXBvcnRzLmNzaHRtbA==
 build_metadata.AdditionalFiles.CssScope = 
