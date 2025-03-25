@@ -1,121 +1,3 @@
-@* @model pizzashop.Models.ViewModels.ModifiersViewModel
-
-
-<div class="modal fade" style="margin-top: 6%;" id="EditModifiersGroupModal" tabindex="-1"
-    aria-labelledby="exampleModalLabel" aria-hidden="true">
-    <div class="modal-dialog">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h1 class="modal-title fs-5" id="exampleModalLabel">Update Modifier Group</h1>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-            </div>
-            <div class="modal-body">
-                <div class="form">
-                    <form id="ModifierGroupEditModelForm" class="form">
-                        <input type="hidden" id="ModifierId" asp-for="Id" name="Id" value="@Model.Id" />
-                        <div class="form-floating"  style="margin-bottom: 20px;">
-                            <input type="text" asp-for="Name" class="form-control" placeholder="Name" id="Name" value="@Model.Name"
-                                name="Name">
-                            <label for="Name">Name</label>
-                             <span asp-validation-for="Name" class="text-danger"></span>
-                       </div>
-                        <div class="form-floating">
-                            <input type="text" asp-for="Description" class="form-control" id="Description" value="@Model.Description"
-                                name="Description" placeholder="Description">
-                            <label for="Description">Description</label>
-                             <span asp-validation-for="Description" class="text-danger"></span>
-                        </div>
-        
-                        <div id="ExistingModifiersContainer"></div>
-
-                        <div style="padding-top: 20px;padding-bottom: 20px;margin-left: 5px;">
-                            <a href="javascript:void(0);" class="text-decoration-none" id="ExistingModifierTable" onclick="ExistingModifierTableclick()">+ Add Existing Modifiers</a>
-                        </div>
-                        <div class="modal-footer">
-                             <button type="submit" class="btn btn-primary" >Save</button>
-                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
-                        </div>
-                    </form>
-
-                   
-
-                </div>
-            </div>
-
-        </div>
-    </div>
-</div>
-
-@{
-    await Html.RenderPartialAsync("_ValidationScriptsPartial");
-    
-}
-
-
-<script>
-      $(document).ready(function () {
-
-             loadExistingModifiers(@Model.Id);       
-
-         function loadExistingModifiers(id) {
-                $.ajax({
-                    url: '@Url.Action("GetExistingModifiers", "Modifiers")',
-                    type: 'GET',
-                    data:{id :id},
-                    success: function (response) {
-                        console.log("hdsbvdsvb");
-                        $('#ExistingModifiersContainer').html(response);
-                    },
-                    error: function () {
-                        alert('Error loading Modifiers');
-                    }
-                });
-            }        
-      });
-</script>
-
-<script>
-    $('#ModifierGroupEditModelForm').on('submit', function (e) {
-         var isvalid = $('#ModifierGroupEditModelForm').valid();
-    if(isvalid){
-     e.preventDefault();
-     var form = $(this);
-     var url = form.attr('action');
-     var data = form.serialize();
-
-     $.ajax({
-         type: "POST",
-         url: "@(Url.Action("EditModifierGroup", "Modifiers"))",
-         data: data,
-         success: function (data) {
-             loadModifiers();
-              $('#EditModifiersGroupModal').modal('hide');
-         }
-     });
-     }
-         
- });
-
- </script>
-
- *@
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 @model pizzashop.Models.ViewModels.ModifiersViewModel
 
 @* EditModifier modal *@
@@ -145,13 +27,13 @@
                         </div>
 
                         <div style="margin-top: 20px;">
-    <h6>Selected Modifiers</h6>
-    <div id="tempSelectedModifiers" class="modifier-container" style="border: 1px solid #eee; padding: 10px; margin-top: 5px; min-height: 50px;">
-        <!-- Temporary selected modifiers will be shown here -->
-    </div>
-</div>
-        
+                        <h6>Selected Modifiers</h6>
+                        </div>
+                       
+                            <div class="d-flex" id="tempSelectedModifiers"></div>
                         <div id="ExistingModifiersContainer"></div>
+                        
+                        
 
                         <div style="padding-top: 20px;padding-bottom: 20px;margin-left: 5px;">
                             <a href="javascript:void(0);" class="text-decoration-none" id="ExistingModifierTable" onclick="ExistingModifierTableclick()">+ Add Existing Modifiers</a>
@@ -175,9 +57,6 @@
     $(document).ready(function () {
         loadExistingModifiers(@Model.Id);       
 
-       
-
-        // Make sure we can close the modal
         $('#cancelEditModifierGroup').on('click', function() {
             $('#EditModifiersGroupModal').modal('hide');
         });
@@ -188,8 +67,20 @@
                 type: 'GET',
                 data:{id :id},
                 success: function (response) {
-                    console.log("Loading existing modifiers");
                     $('#ExistingModifiersContainer').html(response);
+
+                     if (!window.existingModifierIds) {
+                        window.existingModifierIds = [];
+                      }
+                      if (!window.existingModifierName) {
+                        window.existingModifierName = [];
+                      }
+
+                    $('#ExistingModifiersContainer .modifier').each(function() {
+                     window.existingModifierIds.push($(this).data('id'));
+                     window.existingModifierName.push($(this).data('name'));
+                    });
+                    console.log(window.existingModifierName);
                 },
                 error: function () {
                     alert('Error loading Modifiers');
@@ -199,44 +90,6 @@
 </script>
 
 <script>
-@* $('#ModifierGroupEditModelForm').on('submit', function (e) {
-    var isvalid = $('#ModifierGroupEditModelForm').valid();
-    if(isvalid) {
-        e.preventDefault();
-        var form = $(this);
-        var data = form.serialize();
-        
-        // Get all remaining modifier IDs currently visible in the container
-        var remainingModifierIds = [];
-        $('.modifier').each(function() {
-            remainingModifierIds.push($(this).data('id'));
-        });
-        
-        // Add these to the data to be sent
-        data += '&remainingModifierIds=' + JSON.stringify(remainingModifierIds);
-        
-        // Add modifiers to be removed if any exist
-        if (window.modifiersToRemove && window.modifiersToRemove.length > 0) {
-            data += '&modifiersToRemove=' + JSON.stringify(window.modifiersToRemove);
-        }
-
-        $.ajax({
-            type: "POST",
-            url: "@(Url.Action("EditModifierGroup", "Modifiers"))",
-            data: data,
-            success: function (data) {
-                loadModifiers();
-                $('#EditModifiersGroupModal').modal('hide');
-                // Reset the tracking arrays
-                window.modifiersToRemove = [];
-            },
-            error: function(xhr, status, error) {
-                console.error("Error saving modifier group: " + error);
-                alert("An error occurred while saving. Please try again.");
-            }
-        });
-    }
-}); *@
 
 
 $('#ModifierGroupEditModelForm').on('submit', function (e) {
@@ -246,40 +99,39 @@ $('#ModifierGroupEditModelForm').on('submit', function (e) {
         var form = $(this);
         var data = form.serialize();
         
-        // Get existing modifiers from the ExistingModifiersContainer
-        var existingModifierIds = [];
-        $('#ExistingModifiersContainer .modifier').each(function() {
-            existingModifierIds.push($(this).data('id'));
-        });
+       
+        @* var existingModifierIds = []; *@
+       
+
+        @* console.log(window.existingModifierIds); *@
         
-        // Get temporary selected modifiers
         var tempSelectedModifierIds = [];
-        $('#tempSelectedModifiers .temp-modifier').each(function() {
+        $('#tempSelectedModifiers .modifier').each(function() {
             tempSelectedModifierIds.push($(this).data('id'));
         });
         
-        // Combine all modifiers to save
         var allModifierIds = [...new Set([...existingModifierIds, ...tempSelectedModifierIds])];
-        
-        // Add modifiers to the data to be sent
+    
         data += '&modifierIds=' + JSON.stringify(allModifierIds);
         
-        // Add modifiers to be removed if any exist
         if (window.modifiersToRemove && window.modifiersToRemove.length > 0) {
             data += '&modifiersToRemove=' + JSON.stringify(window.modifiersToRemove);
         }
-
+    
         $.ajax({
             type: "POST",
             url: "@(Url.Action("EditModifierGroup", "Modifiers"))",
             data: data,
             success: function (data) {
-                loadModifiers();
+               loadModifiers();
+               loadMenuModifiers(@Model.Id);
                 $('#EditModifiersGroupModal').modal('hide');
-                // Reset the tracking arrays
                 window.modifiersToRemove = [];
-                // Clear the temporary selected modifiers
                 $('#tempSelectedModifiers').empty();
+                window.existingModifierIds = [];
+                window.existingModifierName = [];
+                window.seenModifierIds = new Set();
+                window.seenModifierNames = new Set();
             },
             error: function(xhr, status, error) {
                 console.error("Error saving modifier group: " + error);
@@ -288,7 +140,6 @@ $('#ModifierGroupEditModelForm').on('submit', function (e) {
         });
     }
 });
-
 
 </script>
 

@@ -203,7 +203,6 @@
                 currentStateModifier.currentPage = 1;
                 currentStateModifier.searchTerm = '';
                 $('#searchInput').val('');
-                console.log("1");
                 loadMenuModifiers2();
             };
 
@@ -218,7 +217,6 @@
 
 
         function EditModifierGroupModal(id) {
-            console.log(id);
             $.ajax({
                 url: '@Url.Action("EditModifierGroupModal", "Modifiers")',
                 type: 'GET',
@@ -295,7 +293,6 @@
                 }
             });
         };
-
 
 
         @* $('#ExistingModifierTable').on('click', function (e) { *@

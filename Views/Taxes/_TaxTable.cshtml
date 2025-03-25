@@ -1,4 +1,11 @@
 @model pizzashop.Models.ViewModels.TaxViewModel
+@{
+    var TaxAdd = TempData["TaxAdd"] as string;
+    var TaxIsDeleted = TempData["TaxIsDeleted"] as string;
+    var TaxExist = TempData["TaxExist"] as string;
+    var TaxEdit = TempData["TaxEdit"] as string;
+
+}
 
 <div style="overflow-x: auto; width: 100%;">
     <table class="table">
@@ -40,23 +47,21 @@
                                 @(tax.IsDefault ? "checked" : "")>
                         </div>
                     </td>
-                    <td>@tax.TaxAmount</td>
-                    @* <td>
-                        <div>
-                            <button class="menubtn loadEditModalBtn" data-id="@tax.Id" onclick="EditTableModal(@tax.Id)"><i
-                                    class="bi bi-pen"></i></button>
-                            <button class="menubtn" onclick="DeleteTableModal(@tax.Id)"><i class="bi bi-trash"></i></button>
-                        </div>
-                    </td> *@
+                    @* <td>@tax.TaxAmount</td> *@
+                    <td>
+                        @if (tax.Type == 1)
+                        {
+                            <div>@tax.TaxAmount%</div>
+                        }
+                        @if (tax.Type == 2)
+                        {
+                            <div>@tax.TaxAmount</div>
+                        }
+                    </td>
                     <td>
                         <div style="display: flex">
-                            <form style="margin-top: 7.5px;">
-                                <a href="@Url.Action("edituser", "Account", new { id = tax.Id })" class="nav-item nav-link"
-                                    style="margin-left: 15px;margin-right: 10px;"><i class="bi bi-pen"></i></a>
-                            </form>
-                            @* <button class="btn" data-bs-toggle="modal" data-bs-target="#deleteModal" data-id="@tax.Id">
-                                <i class="bi bi-trash"></i>
-                            </button> *@
+                            <button class="menubtn loadEditModalBtn" onclick="EditTaxModal(@tax.Id)"><i
+                                    class="bi bi-pen"></i></button>
                             <button class="menubtn" onclick="DeleteTableModal(@tax.Id)"><i class="bi bi-trash"></i></button>
                         </div>
                     </td>
@@ -65,3 +70,36 @@
         </tbody>
     </table>
 </div>
+@if (!string.IsNullOrEmpty(TaxAdd))
+{
+    <script>
+        toastr.success('@TaxAdd');  // Show success message using Toastr
+    </script>
+}
+@if (!string.IsNullOrEmpty(TaxIsDeleted))
+{
+    <script>
+        toastr.success('@TaxIsDeleted');  // Show success message using Toastr
+    </script>
+}
+@if (!string.IsNullOrEmpty(TaxExist))
+{
+    <script>
+        toastr.error('@TaxExist');  // Show success message using Toastr
+    </script>
+}
+@if (!string.IsNullOrEmpty(TaxEdit))
+{
+    <script>
+        toastr.success('@TaxEdit');  // Show success message using Toastr
+    </script>
+}
+
+
+<script>
+    if (typeof currentStateTax === "undefined") {
+        const currentStateTax = {
+            searchTerm: "@Html.Raw(Model.SearchTerm ?? "")",
+        };
+    }
+</script>

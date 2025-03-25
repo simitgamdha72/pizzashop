@@ -25,9 +25,14 @@
                             <span asp-validation-for="Description" class="text-danger"></span>
                         </div>
 
+                        <div class="d-flex" id="tempSelectedModifiers"></div>
+
                         <div style="padding-top: 20px;padding-bottom: 20px;margin-left: 5px;">
-                            <a href="#" class="text-decoration-none">+ Add Existing Modifiers</a>
+                            <a href="javascript:void(0);" class="text-decoration-none" id="ExistingModifierTable"
+                                onclick="ExistingModifierTableclick()">+ Add Existing Modifiers</a>
                         </div>
+
+
                         <div class="modal-footer">
 
                             <button type="submit" class="btn btn-primary">Save</button>
@@ -46,6 +51,11 @@
 }
 
 <script>
+    $(document).ready(function () {
+        window.existingModifierIds = [];
+        window.existingModifierName = [];
+    });
+
     $('#AddModifierGroupModalForm').on('submit', function (e) {
         var isvalid = $('#AddModifierGroupModalForm').valid();
         if (isvalid) {

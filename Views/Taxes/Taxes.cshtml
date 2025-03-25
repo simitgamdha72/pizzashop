@@ -48,13 +48,55 @@
     <script>
         $(document).ready(function () {
 
-            Taxes();
+            @* Taxes(); *@
+
+                let currentStateTax = {
+                    searchTerm: '',
+                };
+
+            $('#searchInput').on('keyup', function () {
+                const searchTerm = $(this).val().trim();
+                currentStateTax.searchTerm = searchTerm;
+
+                //prevent too many requests
+                clearTimeout($(this).data('timeout'));
+                $(this).data('timeout', setTimeout(function () {
+                    loadTax();
+                }, 500));
+            });
 
 
+            function loadTax() {
+                $.ajax({
+                    url: '@Url.Action("SearchItems", "Taxes")',
+                    type: 'GET',
+                    data: {
+                        searchTerm: currentStateTax.searchTerm,
+                    },
+                    success: function (result) {
+                        $('#TaxTableContainer').html(result);
+                    },
+                    error: function (xhr, status, error) {
+                        console.log("Error: " + error);
+                    }
+                });
+            }
+
+            window.Taxes = function () {
+                currentStateTax.searchTerm = '';
+                $('#searchInput').val('');
+                loadTax();
+            };
+
+            try {
+                loadTax();
+            } catch (e) {
+                console.error("Error parsing URL parameters", e);
+            }
 
         })
 
-        window.Taxes = function () {
+        @* window.Taxes = function () {
             $.ajax({
                 url: '@Url.Action("GetTaxTable", "Taxes")',
                 type: 'GET',
@@ -65,26 +107,26 @@
                     console.log("Error: " + error);
                 }
             });
-        };
+        }; *@
 
-        // 'Add New Section' button
-        $('#loadModalAddTaxBtn').on('click', function () {
-            $.ajax({
-                url: '@Url.Action("AddTaxModal", "Taxes")',
-                type: 'GET',
-                success: function (response) {
-                    // partial view 
-                    $('#modalContainer').html(response);
-                    console.log(response);
+            // 'Add New Section' button
+            $('#loadModalAddTaxBtn').on('click', function () {
+                $.ajax({
+                    url: '@Url.Action("AddTaxModal", "Taxes")',
+                    type: 'GET',
+                    success: function (response) {
+                        // partial view 
+                        $('#modalContainer').html(response);
+                        console.log(response);
 
-                    //show the modal after loading
-                    $('#AddTaxModal').modal('show');
-                },
-                error: function () {
-                    alert("An error occurred while loading the modal.");
-                }
+                        //show the modal after loading
+                        $('#AddTaxModal').modal('show');
+                    },
+                    error: function () {
+                        alert("An error occurred while loading the modal.");
+                    }
+                });
             });
-        });
 
         function DeleteTableModal(id) {
             $.ajax({
@@ -95,6 +137,22 @@
                     $('#modalContainer').html(response);
 
                     $('#DeleteTaxModal').modal('show');
+                },
+                error: function () {
+                    alert("An error occurred while loading the modal.");
+                }
+            });
+        }
+
+        function EditTaxModal(id) {
+            $.ajax({
+                url: "/Taxes/EditTaxModal",
+                type: 'GET',
+                data: { id: id },
+                success: function (response) {
+                    $('#modalContainer').html(response);
+
+                    $('#EditTaxModal').modal('show');
                 },
                 error: function () {
                     alert("An error occurred while loading the modal.");

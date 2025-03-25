@@ -1,32 +1,3 @@
-@* @model pizzashop.Models.ViewModels.ModifiersViewModel
-
-<div class="mb-1 mt-3">
-
-    <div class="modifier-container">
-        @{
-            foreach (var modifiers in Model.menuModifiers)
-            {
-                <div class="modifier">@modifiers.Name <span>&times;</span></div>
-            }
-        }
-    </div>
-</div> *@
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 @model pizzashop.Models.ViewModels.ModifiersViewModel
 
 <div class="mb-1 mt-3">
@@ -34,9 +5,9 @@
         @{
             foreach (var modifiers in Model.menuModifiers)
             {
-                <div class="modifier" data-id="@modifiers.Id">
+                <div class="modifier" data-id="@modifiers.Id" data-name="@modifiers.Name">
                     @modifiers.Name
-                    <span class="remove-modifier" data-id="@modifiers.Id">&times;</span>
+                    <span class="remove-modifier" data-id="@modifiers.Id" data-name="@modifiers.Name">&times;</span>
                 </div>
             }
         }
@@ -64,19 +35,35 @@
 </style>
 
 <script>
-    // Replace the current click handler in _ExistingModifiers.cshtml
     $(document).ready(function () {
-        // Handle removing a modifier
         $(document).on('click', '.remove-modifier', function () {
-            // Just remove from the DOM, but don't send to server yet
             $(this).parent().remove();
 
-            // Add the ID to a list of modifiers to be removed when saving
             const modifierId = $(this).data('id');
+            const modifierName = $(this).data('name');
             if (!window.modifiersToRemove) {
                 window.modifiersToRemove = [];
             }
-            window.modifiersToRemove.push(modifierId);
+            @* window.seenModifierIds.delete(modifierId);
+            window.seenModifierNames.delete(modifierName); *@
+                window.modifiersToRemove.push(modifierId);
+
+
+            window.seenModifierIds.delete(modifierId);
+            window.seenModifierNames.delete(modifierName);
+
+
+            @* window.existingModifierName.delete(modifierName); *@
+                const index = window.existingModifierName.indexOf(modifierName);
+            if (index > -1) {
+                window.existingModifierName.splice(index, 1);
+                window.existingModifierIds.splice(index, 1);
+                @* window.seenModifierIds.splice(index, 1);
+                window.seenModifierNames.splice(index, 1); *@
+                    
+            }
+
+
         });
     });
 </script>

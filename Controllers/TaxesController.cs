@@ -20,16 +20,29 @@ namespace pizzashop.Controllers
         }
 
 
-        public IActionResult GetTaxTable()
+        public IActionResult GetTaxTable(string searchTerm)
         {
-            var taxes = _context.TaxesFees.Where(x => x.Isdeleted != true)
-            .ToList();
+            var taxes = _context.TaxesFees.Where(x => x.Isdeleted != true);
+            // .ToList();
+
+            if (!string.IsNullOrEmpty(searchTerm))
+            {
+                searchTerm = searchTerm.ToLower();
+                taxes = taxes.Where(m => m.Name.ToLower().Contains(searchTerm));
+            }
 
             var viewModel = new TaxViewModel
             {
                 taxes = taxes,
+                SearchTerm = searchTerm,
             };
             return PartialView("_TaxTable", viewModel);
+        }
+
+        [HttpGet]
+        public IActionResult SearchItems(string searchTerm)
+        {
+            return GetTaxTable(searchTerm);
         }
 
         public IActionResult AddTaxModal()
@@ -47,10 +60,11 @@ namespace pizzashop.Controllers
                 return Json(false);
             }
 
+
             var validator = _context.TaxesFees.FirstOrDefault(x => x.Name == model.Name);
             if (validator != null)
             {
-                TempData["TaxExist"] = "Section is Alreday Exist";
+                TempData["TaxExist"] = "Tax is Alreday Exist";
                 return Json(false);
             }
 
@@ -69,7 +83,7 @@ namespace pizzashop.Controllers
             _context.TaxesFees.Add(viewModel);
             _context.SaveChanges();
 
-            TempData["SectionAdd"] = "New Section is Added ";
+            TempData["TaxAdd"] = "New Tax is Added ";
             return Json(new { success = true });
         }
 
@@ -99,9 +113,86 @@ namespace pizzashop.Controllers
             _context.TaxesFees.Update(tax);
             _context.SaveChanges();
 
-            TempData["SectionIsDeleted"] = "Section Deleted Successfully";
+            TempData["TaxIsDeleted"] = "Tax Deleted Successfully";
             return Json(true);
         }
+
+        public IActionResult EditTaxModal(int id)
+        {
+            var tax = _context.TaxesFees.FirstOrDefault(x => x.Id == id);
+
+            if (tax == null)
+            {
+                TempData["SomethingIsMissing"] = "Something Went Wrong";
+                return RedirectToAction("TableAndSection", "TableSection");
+            }
+
+            var viewModel = new TaxViewModel
+            {
+                Id = tax.Id,
+                Name = tax.Name,
+                Type = tax.Type,
+                TaxAmount = tax.TaxAmount,
+                IsEnable = tax.IsEnable,
+                IsDefault = tax.IsDefault,
+
+            };
+
+            return PartialView("_EditTaxModal", viewModel);
+
+        }
+
+
+        [HttpPost]
+        public IActionResult EditTax(TaxViewModel model)
+        {
+            if (!ModelState.IsValid)
+            {
+                TempData["SomethingIsMissing"] = "Something Went Wrong";
+                return RedirectToAction("TableAndSection", "TableSection");
+            }
+
+            TaxesFee? tax = _context.TaxesFees.FirstOrDefault(x => x.Id == model.Id);
+            var validator = _context.TaxesFees.FirstOrDefault(x => x.Name == model.Name);
+
+            if (tax == null)
+            {
+                TempData["SomethingIsMissing"] = "Something Went Wrong";
+                return RedirectToAction("TableAndSection", "TableAndSection");
+            }
+
+            if (validator != null)
+            {
+                if (tax.Id != validator.Id)
+                {
+                    TempData["TaxExist"] = "Tax is Alreday Exist";
+                    return Json(false);
+                }
+            }
+
+
+            tax.Name = model.Name;
+            tax.Type = model.Type;
+            tax.TaxAmount = model.TaxAmount;
+            tax.IsEnable = model.IsEnable;
+            tax.IsDefault = model.IsDefault;
+
+
+            _context.TaxesFees.Update(tax);
+            _context.SaveChanges();
+
+            TempData["TaxEdit"] = "Tax is Updated";
+            return Json(true);
+        }
+
+
+
+
+
+
+
+
+
 
 
     }

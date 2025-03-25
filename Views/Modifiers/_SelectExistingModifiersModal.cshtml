@@ -1,134 +1,3 @@
-@* <div class="modal fade" style="margin-top: 6%;" tabindex="-1" aria-labelledby="exampleModalLabel"
-    id="SelectExistingModifiersModal" aria-hidden="true">
-    <div class="modal-dialog">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h3 class="modal-title fs-5" id="exampleModalLabel">Select Existing Modifier</h3>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-            </div>
-            <div class="modal-body"
-                style="display: flex;flex-direction: column; align-items: center;justify-content: center;">
-                <div style="">
-                    <form style="position: relative;margin-right: 10px;">
-                        <input type="search" id="searchInputt" placeholder="  Search" aria-label="Search"
-                            class="form-control" style="width: 200px;height: 52px;margin-right: 2px; border: 2px solid #eee;
-                                border-radius: 4px;">
-
-                        <i class="bi bi-search" style="position: absolute;right: 10px;top: 15px;"></i>
-                    </form>
-                </div>
-                <div id="ExisintModifiersContainer"></div>
-
-                <div class="modal-footer">
-                    <button type="submit" class="btn btn-primary">Save</button>
-                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
-                </div>
-
-
-
-            </div>
-        </div>
-    </div>
-</div>
-
-
-
-
-
-
-
-<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-
-
-<!-- Bootstrap JavaScript -->
-<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
-
-<script>
-    $(document).ready(function () {
-
-        let currentStateExistingModifier = {
-            searchTerm: '',
-            currentPage: 1,
-            pageSize: 5
-        };
-
-        $('#searchInputt').on('keyup', function () {
-            const searchTerm = $(this).val().trim();
-            currentStateExistingModifier.searchTerm = searchTerm;
-            currentStateExistingModifier.currentPage = 1;
-
-            //prevent too many requests
-            clearTimeout($(this).data('timeout'));
-            $(this).data('timeout', setTimeout(function () {
-                loadExistingMenuModifiers();
-            }, 500));
-        });
-
-        $(document).on('change', '#pageSizeSelecttable', function () {
-            currentStateExistingModifier.pageSize = parseInt($(this).val());
-            currentStateExistingModifier.currentPage = 1;
-            loadExistingMenuModifiers();
-        });
-
-        $(document).on('click', '#prevPageBtn:not([disabled])', function () {
-            currentStateExistingModifier.currentPage--;
-            loadExistingMenuModifiers();
-        });
-
-        $(document).on('click', '#nextPageBtn:not([disabled])', function () {
-            currentStateExistingModifier.currentPage++;
-            loadExistingMenuModifiers();
-        });
-
-        function loadExistingMenuModifiers() {
-            $.ajax({
-                url: '/Modifiers/SearchItemsForExistingModifier',
-                type: 'GET',
-                data: {
-                    searchTerm: currentStateExistingModifier.searchTerm,
-                    page: currentStateExistingModifier.currentPage,
-                    pageSize: currentStateExistingModifier.pageSize
-                },
-                success: function (result) {
-                    $('#ExisintModifiersContainer').html(result);
-
-                    $('#pageSizeSelect').val(currentStateExistingModifier.pageSize);
-                },
-                error: function (xhr, status, error) {
-                    console.log("Error: " + error);
-                }
-            });
-        }
-        try {
-            loadExistingMenuModifiers();
-            console.log("try");
-        } catch (e) {
-            console.error("Error parsing URL parameters", e);
-        }
-    });
-</script> *@
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 <div class="modal fade" style="margin-top: 6%;" tabindex="-1" aria-labelledby="exampleModalLabel"
     id="SelectExistingModifiersModal" aria-hidden="true">
     <div class="modal-dialog">
@@ -159,9 +28,6 @@
         </div>
     </div>
 </div>
-
-@* <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script> *@
-@* <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script> *@
 
 <script>
     $(document).ready(function () {
@@ -225,108 +91,11 @@
             });
         }
 
-        @* $('#saveSelectedModifiers').on('click', function () {
-            const selectedModifiers = [];
+        $('#closeExistingModifiersModal').on('click', function () {
+            $('#SelectExistingModifiersModal').modal('hide');
+        });
 
 
-            $('.checkboxes:checked').each(function () {
-                const id = $(this).data('id');
-                const name = $(this).closest('tr').find('td:eq(1)').text().trim();
-
-                selectedModifiers.push({
-                    id: id,
-                    name: name
-                });
-            });
-
-            if (selectedModifiers.length > 0) {
-                // Get the modifier group ID from the hidden input in the edit form
-                const modifierGroupId = $('#ModifierId').val();
-
-                // Add the selected modifiers to the existing modifiers container
-                addModifiersToGroup(selectedModifiers, modifierGroupId);
-            }
-        }); *@
-
-            @* $('#saveSelectedModifiers').on('click', function () {
-                const selectedModifiers = [];
-
-                $('.checkboxes:checked').each(function () {
-                    const id = $(this).data('id');
-                    const name = $(this).closest('tr').find('td:eq(1)').text().trim();
-                    const unit = $(this).closest('tr').find('td:eq(2)').text().trim();
-                    const rate = $(this).closest('tr').find('td:eq(3)').text().trim();
-                    const quantity = $(this).closest('tr').find('td:eq(4)').text().trim();
-
-                    selectedModifiers.push({
-                        id: id,
-                        name: name,
-                        unit: unit,
-                        rate: rate,
-                        quantity: quantity
-                    });
-                });
-
-                if (selectedModifiers.length > 0) {
-                    // Add the selected modifiers to the temporary display container
-                    displayTempSelectedModifiers(selectedModifiers);
-                    $('#SelectExistingModifiersModal').modal('hide');
-                } else {
-                    alert('Please select at least one modifier');
-                }
-            }); *@
-
-            $('#closeExistingModifiersModal').on('click', function () {
-                $('#SelectExistingModifiersModal').modal('hide');
-            });
-
-        // Add modifiers to group
-        function addModifiersToGroup(modifiers, groupId) {
-            // Get existing modifier IDs to avoid duplicates
-            const existingModifierIds = [];
-            $('#ExistingModifiersContainer .modifier').each(function () {
-                existingModifierIds.push($(this).data('id'));
-            });
-
-            // Filter out any modifiers that already exist in the group
-            const newModifiers = modifiers.filter(modifier =>
-                !existingModifierIds.includes(modifier.id)
-            );
-
-            if (newModifiers.length === 0) {
-                alert('All selected modifiers already exist in this group!');
-                $('#SelectExistingModifiersModal').modal('hide');
-                return;
-            }
-
-            $.ajax({
-                url: '/Modifiers/AddExistingModifiersToGroup',
-                type: 'POST',
-                data: {
-                    modifiersIds: newModifiers.map(m => m.id),
-                    modifierGroupId: groupId
-                },
-                traditional: true,
-                success: function (response) {
-                    if (response.success) {
-                        // Refresh the existing modifiers container
-                        loadExistingModifiers(groupId);
-                        $('#SelectExistingModifiersModal').modal('hide');
-                    } else {
-                        alert('Error adding modifiers: ' + response.message);
-                    }
-                },
-                error: function () {
-                    // Add the modifiers to the container manually
-                    const container = $('#ExistingModifiersContainer .modifier-container');
-                    newModifiers.forEach(function (modifier) {
-                        container.append(`<div class="modifier" data-id="${modifier.id}">${modifier.name} <span class="remove-modifier" data-id="${modifier.id}">&times;</span></div>`);
-                    });
-
-                    $('#SelectExistingModifiersModal').modal('hide');
-                }
-            });
-        }
 
         try {
             loadExistingMenuModifiers();
@@ -359,47 +128,85 @@
                 // Add the selected modifiers to the temporary display container
                 displayTempSelectedModifiers(selectedModifiers);
                 $('#SelectExistingModifiersModal').modal('hide');
-            } else {
+            }
+            else {
                 alert('Please select at least one modifier');
             }
         });
 
-        // New function to display temporary selected modifiers
+
         function displayTempSelectedModifiers(modifiers) {
-            // Get existing modifier IDs to avoid duplicates
+            @* 
             const existingModifierIds = [];
-            $('#tempSelectedModifiers .temp-modifier').each(function () {
+            $('#tempSelectedModifiers .modifier').each(function () {
                 existingModifierIds.push($(this).data('id'));
+            }); *@
+
+                @* const newModifiers = modifiers.filter(modifier =>
+                !window.existingModifierIds.includes(modifier)
+            ); *@
+
+                @* const newModifiers = modifiers.filter(modifier =>
+                    !window.existingModifierIds.includes(modifier.id) && modifier => !window.existingModifierName.includes(modifier.name)
+                ); *@
+
+                @* if (window.newModifiers) {
+                newModifiers = modifiers.filter(modifier => !newModifiers.name);
+            } *@
+
+                @* const newModifiers = modifiers.filter(modifier =>
+                    !window.existingModifierIds.includes(modifier.id) &&
+                    !window.existingModifierName.includes(modifier.name) &&
+                    !newModifiers.includes(newModifier)
+                ); *@
+
+
+                const newModifiers = [];
+            if (!window.seenModifierIds && !window.seenModifierNames) {
+                window.seenModifierIds = new Set();
+                window.seenModifierNames = new Set();
+            }
+
+
+            modifiers.forEach(modifier => {
+                // Check if this modifier is not in existing modifiers
+                // and not already added to newModifiers
+                if (
+                    !window.existingModifierIds.includes(modifier.id) &&
+                    !window.existingModifierName.includes(modifier.name) &&
+                    !window.seenModifierIds.has(modifier.id) &&
+                    !window.seenModifierNames.has(modifier.name)
+                ) {
+                    newModifiers.push(modifier);
+                    window.seenModifierIds.add(modifier.id);
+                    window.seenModifierNames.add(modifier.name);
+                }
             });
 
-            // Filter out any modifiers that already exist in the temporary display
-            const newModifiers = modifiers.filter(modifier =>
-                !existingModifierIds.includes(modifier.id)
-            );
+            console.log(window.seenModifierIds);
+
+
+
 
             if (newModifiers.length === 0) {
                 alert('All selected modifiers already added!');
                 return;
             }
 
-            // Add the new modifiers to the temporary display
             const container = $('#tempSelectedModifiers');
             newModifiers.forEach(function (modifier) {
-                container.append(`
-            <div class="temp-modifier" data-id="${modifier.id}" style="background-color: #f8f9fa; padding: 5px; margin: 5px; border-radius: 3px; display: flex; justify-content: space-between;">
-                <span>${modifier.name} (${modifier.unit} - $${modifier.rate})</span>
-                <span class="remove-temp-modifier" style="cursor: pointer; color: red;" data-id="${modifier.id}">×</span>
-            </div>
-        `);
-            });
-
-            // Add event listener to remove buttons
-            $('.remove-temp-modifier').on('click', function () {
-                const modifierId = $(this).data('id');
-                $(`.temp-modifier[data-id="${modifierId}"]`).remove();
+                $.ajax({
+                    url: '@Url.Action("GetExistingModifiersbyModifierId", "Modifiers")',
+                    type: 'GET',
+                    data: { id: modifier.id },
+                    success: function (response) {
+                        container.append(response);
+                    },
+                    error: function () {
+                        alert('Error loading Modifiers');
+                    }
+                });
             });
         }
-
-
     });
 </script>
