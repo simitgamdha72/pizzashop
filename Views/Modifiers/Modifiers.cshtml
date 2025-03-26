@@ -50,7 +50,7 @@
                 <div class="d-flex">
                     <form style="position: relative;margin-right: 10px;">
                         <input type="search" id="searchInput" placeholder="  Search" aria-label="Search"
-                            class="form-control" style="width: 200px;height: 52px;margin-right: 2px; border: 2px solid #eee;
+                            class="form-control searchInputclass" style="width: 200px;height: 52px;margin-right: 2px; border: 2px solid #eee;
                                 border-radius: 4px;">
 
                         <i class="bi bi-search" style="position: absolute;right: 10px;top: 15px;"></i>
@@ -77,6 +77,37 @@
 <div id="modalContainertable"></div>
 <div id="modalsContainer"></div>
 
+
+<!-- Modal for Confirmation -->
+<div class="modal fade" id="MassDataDeleteModal" tabindex="-1" aria-labelledby="deleteLabel" aria-hidden="true"
+    style="margin-top: 13%;">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 class="modal-title fs-5" id="exampleModalLabel">Delete Confirmation</h3>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body"
+                style="display: flex; flex-direction: column; align-items: center; justify-content: center;">
+                <div style="color: #ffc409;">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="40" height="40" fill="currentColor"
+                        class="bi bi-exclamation-triangle-fill" viewBox="0 0 16 16">
+                        <path
+                            d="M8.982 1.566a1.13 1.13 0 0 0-1.96 0L.165 13.233c-.457.778.091 1.767.98 1.767h13.713c.889 0 1.438-.99.98-1.767zM8 5c.535 0 .954.462.9.995l-.35 3.507a.552.552 0 0 1-1.1 0L7.1 5.995A.905.905 0 0 1 8 5m.002 6a1 1 0 1 1 0 2 1 1 0 0 1 0-2" />
+                    </svg>
+                </div>
+                <div>
+                    <p>Are you sure you want to delete the selected Modifiers?</p>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-primary" onclick="MassDelete()"
+                    data-bs-dismiss="modal">Yes</button>
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">No</button>
+            </div>
+        </div>
+    </div>
+</div>
 
 
 
@@ -312,7 +343,35 @@
             }
 
 
+        @* function MassDelete() {
+            var ids = getCheckedTablesIds();
+            ids.forEach(function (value) {
+                console.log(value);
+                deleteall(value);
+            });
 
+            function getCheckedTablesIds() {
+                var checkedIds = [];
+                var checkboxes = document.querySelectorAll('.checkboxes:checked');
+
+                checkboxes.forEach(function (checkbox) {
+                    var TableId = checkbox.getAttribute('data-id');
+                    checkedIds.push(TableId);
+                });
+                return checkedIds;
+            }
+
+            function deleteall(id) {
+                $.ajax({
+                    type: "POST",
+                    url: "@(Url.Action("DeleteTable", "TableSection"))",
+                    data: { id: id },
+                    success: function (data) {
+                        loadTables();
+                        $('#MassDataDeleteModal').modal('hide');
+                    }
+                });
+            } *@
 
 
 

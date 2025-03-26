@@ -425,3 +425,13 @@
   color: white;
   border-radius: 30px;
 }
+@media screen and (max-width: 380px) {
+  .searchInputclass {
+    width: 180px !important;
+  }
+}
+@media screen and (max-width: 355px) {
+  .searchInputclass {
+    width: 150px !important;
+  }
+}

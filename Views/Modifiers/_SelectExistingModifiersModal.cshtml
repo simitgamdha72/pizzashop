@@ -11,7 +11,7 @@
                 <div style="">
                     <form style="position: relative;margin-right: 10px;">
                         <input type="search" id="searchInputt" placeholder="  Search" aria-label="Search"
-                            class="form-control" style="width: 200px;height: 52px;margin-right: 2px; border: 2px solid #eee;
+                            class="form-control searchInputclass" style="width: 200px;height: 52px;margin-right: 2px; border: 2px solid #eee;
                                 border-radius: 4px;">
 
                         <i class="bi bi-search" style="position: absolute;right: 10px;top: 15px;"></i>
@@ -59,13 +59,13 @@
         });
 
 
-        $(document).on('click', '#prevPageBtn:not([disabled])', function () {
+        $(document).on('click', '#prevPageBtn2:not([disabled])', function () {
             currentStateExistingModifier.currentPage--;
             loadExistingMenuModifiers();
         });
 
 
-        $(document).on('click', '#nextPageBtn:not([disabled])', function () {
+        $(document).on('click', '#nextPageBtn2:not([disabled])', function () {
             currentStateExistingModifier.currentPage++;
             loadExistingMenuModifiers();
         });
@@ -94,8 +94,6 @@
         $('#closeExistingModifiersModal').on('click', function () {
             $('#SelectExistingModifiersModal').modal('hide');
         });
-
-
 
         try {
             loadExistingMenuModifiers();
@@ -130,7 +128,7 @@
                 $('#SelectExistingModifiersModal').modal('hide');
             }
             else {
-                alert('Please select at least one modifier');
+                toastr.error('Please select at least one modifier');
             }
         });
 
@@ -189,7 +187,8 @@
 
 
             if (newModifiers.length === 0) {
-                alert('All selected modifiers already added!');
+                @* alert('All selected modifiers already added!'); *@
+                    toastr.error('All selected modifiers already added!')
                 return;
             }
 

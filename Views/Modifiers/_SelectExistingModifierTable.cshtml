@@ -56,10 +56,10 @@
             Model.TotalItems)) of @Model.TotalItems
         </div>
         <div>
-            <button id="prevPageBtn" class="me-2" @(Model.CurrentPage == 1 ? "disabled" : "")>
+            <button id="prevPageBtn2" class="me-2" @(Model.CurrentPage == 1 ? "disabled" : "")>
                 <i class="bi bi-chevron-left"></i>
             </button>
-            <button id="nextPageBtn" @(Model.CurrentPage == Model.TotalPages ? "disabled" : "")>
+            <button id="nextPageBtn2" @(Model.CurrentPage == Model.TotalPages ? "disabled" : "")>
                 <i class="bi bi-chevron-right"></i>
             </button>
         </div>

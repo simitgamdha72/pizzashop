@@ -6,6 +6,13 @@
     var ModifierIsDeleted = TempData["ModifierIsDeleted"] as string;
     var ModifiersGroupIsDeleted = TempData["ModifiersGroupIsDeleted"] as string;
 }
+@{
+    var ModifiersGroupExist = TempData["ModifiersGroupExist"] as string;
+    var ModifiersGroupEdit = TempData["ModifiersGroupEdit"] as string;
+    var ModifiersGroupAdd = TempData["ModifiersGroupAdd"] as string;
+
+
+}
 <div class="table-responsive">
     <table class="tableList table align-middle table">
         <thead>
@@ -115,6 +122,25 @@
 {
     <script>
         toastr.success('@ModifiersGroupIsDeleted');  // Show success message using Toastr
+    </script>
+}
+
+@if (!string.IsNullOrEmpty(ModifiersGroupEdit))
+{
+    <script>
+        toastr.success('@ModifiersGroupEdit');  // Show success message using Toastr
+    </script>
+}
+@if (!string.IsNullOrEmpty(ModifiersGroupExist))
+{
+    <script>
+        toastr.error('@ModifiersGroupExist');  // Show success message using Toastr
+    </script>
+}
+@if (!string.IsNullOrEmpty(ModifiersGroupAdd))
+{
+    <script>
+        toastr.success('@ModifiersGroupAdd');  // Show success message using Toastr
     </script>
 }
 

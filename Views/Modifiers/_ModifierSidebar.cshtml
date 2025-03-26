@@ -1,11 +1,5 @@
 @model pizzashop.Models.ViewModels.ModifiersViewModel
-@{
-    var ModifiersGroupExist = TempData["ModifiersGroupExist"] as string;
-    var ModifiersGroupEdit = TempData["ModifiersGroupEdit"] as string;
-    var ModifiersGroupAdd = TempData["ModifiersGroupAdd"] as string;
 
-
-}
 
 <ul class="categorys flex-column mb-auto w-100" style="overflow-y: scroll; max-height: 400px;">
     @{
@@ -32,24 +26,7 @@
     }
 </ul>
 
-@if (!string.IsNullOrEmpty(ModifiersGroupEdit))
-{
-    <script>
-        toastr.success('@ModifiersGroupEdit');  // Show success message using Toastr
-    </script>
-}
-@if (!string.IsNullOrEmpty(ModifiersGroupExist))
-{
-    <script>
-        toastr.error('@ModifiersGroupExist');  // Show success message using Toastr
-    </script>
-}
-@if (!string.IsNullOrEmpty(ModifiersGroupAdd))
-{
-    <script>
-        toastr.success('@ModifiersGroupAdd');  // Show success message using Toastr
-    </script>
-}
+
 
 <script>
     @* var firstModifiersGroupId = $('a[data-mg-id]').first().data('mg-id');
