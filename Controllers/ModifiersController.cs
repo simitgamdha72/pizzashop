@@ -6,12 +6,13 @@ namespace pizzashop.Controllers
 {
     public class ModifiersController : Controller
     {
+        private readonly imodifierservice _modifierservice;
+        private readonly iunitservice _unitservice;
 
-        private readonly PizzashopContext _context;
-
-        public ModifiersController(PizzashopContext context)
+        public ModifiersController(imodifierservice modifierservice, iunitservice unitservice)
         {
-            _context = context;
+            _modifierservice = modifierservice;
+            _unitservice = unitservice;
         }
 
         public IActionResult Modifiers()
@@ -21,13 +22,19 @@ namespace pizzashop.Controllers
 
         public IActionResult GetModifiersGroup()
         {
-            var modifiers = _context.ModifiersGroups.Where(x => x.Isdeleted != true)
-            .ToList();
+            var modifiersGroup = _modifierservice.GetModifiersGroups();
+
+            if (modifiersGroup == null || !modifiersGroup.Any())
+            {
+                TempData["ErrorMessage"] = "No modifiers found.";
+                return PartialView("_ModifierSidebar", new ModifiersViewModel());
+            }
 
             var viewModel = new ModifiersViewModel
             {
-                modifiersGroups = modifiers,
+                modifiersGroups = modifiersGroup,
             };
+
             return PartialView("_ModifierSidebar", viewModel);
         }
 
@@ -37,7 +44,8 @@ namespace pizzashop.Controllers
             return PartialView("_AddModifierModalGroup");
         }
 
-        public IActionResult AddModifierGroup(ModifiersViewModel model)
+        [HttpPost]
+        public IActionResult AddModifierGroup(ModifiersViewModel model, string modifierIds)
         {
             if (!ModelState.IsValid)
             {
@@ -45,22 +53,13 @@ namespace pizzashop.Controllers
                 return Json(false);
             }
 
-            var validator = _context.ModifiersGroups.FirstOrDefault(x => x.Name == model.Name);
-            if (validator != null)
+            var result = _modifierservice.AddModifierGroup(model, modifierIds);
+
+            if (!result)
             {
-                TempData["ModifiersGroupExist"] = "ModifiersGroup is Alreday Exist";
+                TempData["ModifiersGroupExist"] = "ModifiersGroup is Already Exist";
                 return Json(false);
             }
-
-
-            var viewModel = new ModifiersGroup
-            {
-                Name = model.Name,
-                Description = model.Description,
-            };
-
-            _context.ModifiersGroups.Add(viewModel);
-            _context.SaveChanges();
 
             TempData["ModifiersGroupAdd"] = "New ModifiersGroup is Added ";
             return Json(new { success = true });
@@ -68,61 +67,7 @@ namespace pizzashop.Controllers
 
         public IActionResult EditModifierGroupModal(int id)
         {
-            ModifiersGroup? modifiersGroup = _context.ModifiersGroups.FirstOrDefault(x => x.Id == id);
-
-            if (modifiersGroup == null)
-            {
-                TempData["SomethingIsMissing"] = "Something Went Wrong";
-                return RedirectToAction("Modifiers", "Midifiers");
-            }
-
-            // var modifiersItem = _context.MenuModifiers.Where(x => x.ModifierGroupId == id)
-            // .ToList();
-
-            // if (modifiersItem != null)
-            // {
-            //     var viewModel = new ModifiersViewModel
-            //     {
-            //         Id = modifiersGroup.Id,
-            //         Name = modifiersGroup.Name,
-            //         Description = modifiersGroup.Description,
-            //         menuModifiers = modifiersItem,
-            //     };
-            //     return PartialView("_EditModifierModal", viewModel);
-            // }
-            // else
-            // {
-            //     var viewModel = new ModifiersViewModel
-            //     {
-            //         Id = modifiersGroup.Id,
-            //         Name = modifiersGroup.Name,
-            //         Description = modifiersGroup.Description,
-            //         menuModifiers = modifiersItem,
-            //     };
-
-            var viewModel = new ModifiersViewModel
-            {
-                Id = modifiersGroup.Id,
-                Name = modifiersGroup.Name,
-                Description = modifiersGroup.Description ?? "",
-
-            };
-
-            return PartialView("_EditModifierGroupModal", viewModel);
-
-        }
-
-        [HttpPost]
-        public IActionResult EditModifierGroup(ModifiersViewModel model, string modifierIds, string modifiersToRemove)
-        {
-            // if (!ModelState.IsValid)
-            // {
-            //     TempData["SomethingIsMissing"] = "Something Went Wrong";
-            //     return RedirectToAction("Modifiers", "Modifiers");
-            // }
-
-            ModifiersGroup? modifiersGroup = _context.ModifiersGroups.FirstOrDefault(x => x.Id == model.Id);
-            var validator = _context.ModifiersGroups.FirstOrDefault(x => x.Name == model.Name);
+            var modifiersGroup = _modifierservice.GetModifierGroupById(id);
 
             if (modifiersGroup == null)
             {
@@ -130,84 +75,42 @@ namespace pizzashop.Controllers
                 return RedirectToAction("Modifiers", "Modifiers");
             }
 
-            if (validator != null)
+            var viewModel = new ModifiersViewModel
             {
-                if (modifiersGroup.Id != validator.Id)
-                {
-                    TempData["ModifiersGroupExist"] = "ModifiersGroup is Already Exist";
-                    return Json(false);
-                }
-            }
+                Id = modifiersGroup.Id,
+                Name = modifiersGroup.Name,
+                Description = modifiersGroup.Description ?? "",
+            };
 
+            return PartialView("_EditModifierGroupModal", viewModel);
+        }
 
-            modifiersGroup.Name = model.Name;
-            modifiersGroup.Description = model.Description;
+        [HttpPost]
+        public IActionResult EditModifierGroup(ModifiersViewModel model, string modifierIds, string modifiersToRemove)
+        {
 
-            _context.ModifiersGroups.Update(modifiersGroup);
+            var result = _modifierservice.EditModifierGroup(model, modifierIds, modifiersToRemove);
 
-
-            List<int> remainingIds = new List<int>();
-            List<int> idsToRemove = new List<int>();
-
-
-            if (!string.IsNullOrEmpty(modifierIds))
+            if (result == 1)
             {
-                remainingIds = System.Text.Json.JsonSerializer.Deserialize<List<int>>(modifierIds);
+                TempData["SomethingIsMissing"] = "Something Went Wrong";
+                return RedirectToAction("Modifiers", "Modifiers");
             }
-
-            if (!string.IsNullOrEmpty(modifiersToRemove))
+            if (result == 2)
             {
-                idsToRemove = System.Text.Json.JsonSerializer.Deserialize<List<int>>(modifiersToRemove);
+                TempData["ModifiersGroupExist"] = "ModifiersGroup is Already Exist";
+                return Json(false);
             }
-
-            if (idsToRemove.Count > 0)
+            else
             {
-                var modifiersToDelete = _context.MenuModifiers
-                    .Where(m => idsToRemove.Contains(m.Id) && m.ModifierGroupId == model.Id)
-                    .ToList();
-
-                foreach (var modifier in modifiersToDelete)
-                {
-                    modifier.Isdeleted = true;
-                    _context.MenuModifiers.Update(modifier);
-                }
-
-                _context.SaveChanges();
-
+                TempData["ModifiersGroupEdit"] = "ModifiersGroup is Updated";
+                return Json(true);
             }
-
-
-            if (remainingIds.Count > 0)
-            {
-                var existmodifier = _context.MenuModifiers.Where(x => x.ModifierGroupId == model.Id && x.Isdeleted != true).ToList();
-
-                var modifiersToAdd = _context.MenuModifiers
-                    .Where(m => remainingIds.Contains(m.Id))
-                    .ToList();
-
-                var modifiersToAddFiltered = modifiersToAdd
-                    .Where(m => !existmodifier.Any(em => em.Id == m.Id || em.Name == m.Name))
-                    .ToList();
-
-
-                foreach (var modifier in modifiersToAddFiltered)
-                {
-                    modifier.Id = default;
-                    modifier.ModifierGroupId = model.Id ?? 0;
-                    _context.MenuModifiers.Add(modifier);
-                }
-            }
-
-            _context.SaveChanges();
-
-            TempData["ModifiersGroupEdit"] = "ModifiersGroup is Updated";
-            return Json(true);
         }
 
 
         public IActionResult DeleteModifierGroupModal(int id)
         {
-            var modifiersGroup = _context.ModifiersGroups.FirstOrDefault(x => x.Id == id);
             var viewModel = new ModifiersViewModel
             {
                 Id = id,
@@ -219,108 +122,67 @@ namespace pizzashop.Controllers
         [HttpPost]
         public IActionResult DeleteModifiersGroup(int id)
         {
-            var modifiersgroup = _context.ModifiersGroups.FirstOrDefault(x => x.Id == id);
+            var success = _modifierservice.DeleteModifierGroup(id);
 
-            if (modifiersgroup == null)
+            if (!success)
             {
                 TempData["SomethingIsMissing"] = "Something Went Wrong";
-                return RedirectToAction("Modifiers", "Midifiers");
+                return RedirectToAction("Modifiers", "Modifiers");
             }
-
-
-            modifiersgroup.Isdeleted = true;
-            _context.ModifiersGroups.Update(modifiersgroup);
-            _context.SaveChanges();
 
             TempData["ModifiersGroupIsDeleted"] = "ModifiersGroup Deleted Successfully";
             return Json(true);
         }
 
+        [HttpGet]
         public IActionResult GetExistingModifiers(int id)
         {
-            var ExistModifiers = _context.MenuModifiers.Where(x => x.ModifierGroupId == id && x.Isdeleted != true).ToList();
+            var existingModifiers = _modifierservice.GetModifiersByGroupId(id);
 
-            if (ExistModifiers != null)
+            if (existingModifiers != null && existingModifiers.Any())
             {
                 var viewModel = new ModifiersViewModel
                 {
-                    menuModifiers = ExistModifiers,
+                    menuModifiers = existingModifiers,
                 };
-                return PartialView("_ExistingModifiers", viewModel);
 
+                return PartialView("_ExistingModifiers", viewModel);
             }
             else
             {
                 return Json(false);
             }
-
         }
 
+
+        [HttpGet]
         public IActionResult GetExistingModifiersbyModifierId(int id)
         {
-            var ExistModifiers = _context.MenuModifiers.Where(x => x.Id == id && x.Isdeleted != true).ToList();
+            var existingModifiers = _modifierservice.GetModifiersById(id);
 
-            if (ExistModifiers != null)
+            if (existingModifiers != null && existingModifiers.Any())
             {
                 var viewModel = new ModifiersViewModel
                 {
-                    menuModifiers = ExistModifiers,
+                    menuModifiers = existingModifiers,
                 };
-                return PartialView("_ExistingModifiers", viewModel);
 
+                return PartialView("_ExistingModifiers", viewModel);
             }
             else
             {
                 return Json(false);
             }
-
         }
 
+
+        [HttpGet]
         public IActionResult GetModifiers(int? id, int page = 1, int pageSize = 5, string searchTerm = "")
         {
-            var ModifierGroup = _context.ModifiersGroups.Where(c => c.Isdeleted != true).ToList().First();
-
-            int? mgid = ModifierGroup.Id;
-
-            var query = _context.MenuModifiers.Where(x => x.Isdeleted != true);
-
-            if (id.HasValue)
-            {
-                query = query.Where(m => m.ModifierGroupId == id);
-            }
-            else
-            {
-                id = mgid;
-                query = query.Where(m => m.ModifierGroupId == id);
-            }
-            if (!string.IsNullOrEmpty(searchTerm))
-            {
-                searchTerm = searchTerm.ToLower();
-                query = query.Where(m => m.Name.ToLower().Contains(searchTerm));
-            }
-
-            var totalItems = query.Count();
-
-            var menumodifiers = query
-            .OrderBy(m => m.Name)
-            .Skip((page - 1) * pageSize)
-            .Take(pageSize)
-            .ToList();
-
-            var viewModel = new PaginatedModifiersViewModel
-            {
-                Modifiers = menumodifiers,
-                CurrentPage = page,
-                PageSize = pageSize,
-                TotalItems = totalItems,
-                SearchTerm = searchTerm,
-                ModifierGroupId = id,
-            };
+            var viewModel = _modifierservice.GetModifiers(id, page, pageSize, searchTerm);
 
             return PartialView("_ModifiersList", viewModel);
-
         }
-
 
         [HttpGet]
         public IActionResult SearchItems(int? ModifierGroupId, string searchTerm, int page = 1, int pageSize = 5)
@@ -331,12 +193,12 @@ namespace pizzashop.Controllers
         [HttpGet]
         public IActionResult addModifierModal()
         {
-            var modifiersGroup = _context.ModifiersGroups.ToList();
-            var units = _context.Units.ToList();
+            var modifiersGroups = _modifierservice.GetAllModifiersGroups();
+            var units = _unitservice.GetUnits();
 
             var model = new MenuModifiersViewModel
             {
-                modifiersGroups = modifiersGroup,
+                modifiersGroups = modifiersGroups,
                 units = units,
             };
             return PartialView("_AddModifierModal", model);
@@ -350,56 +212,26 @@ namespace pizzashop.Controllers
                 return Json(false);
             }
 
-            var validator = _context.MenuModifiers.FirstOrDefault(x => x.Name == model.Name && x.ModifierGroupId == model.ModifierGroupId);
-            if (validator != null)
+            var result = _modifierservice.AddModifier(model);
+
+            if (result == false)
             {
                 TempData["ModifiersExist"] = "Modifier is Alreday Exist";
                 return Json(false);
             }
-
-
-            var viewModel = new MenuModifier
-            {
-                ModifierGroupId = model.ModifierGroupId,
-                Name = model.Name,
-                Rate = model.Rate,
-                Quantity = model.Quantity,
-                UnitId = model.UnitId,
-                Description = model.Description,
-            };
-
-            _context.MenuModifiers.Add(viewModel);
-            _context.SaveChanges();
-
             TempData["ModifierAdd"] = "New Modifier is Added ";
             return Json(true);
         }
 
         public IActionResult EditModifierModal(int id)
         {
-            var menumodifier = _context.MenuModifiers.FirstOrDefault(x => x.Id == id);
-            var modifiersGroup = _context.ModifiersGroups.ToList();
-            var units = _context.Units.ToList();
+            var viewModel = _modifierservice.EditModifierModal(id);
 
-            if (menumodifier == null)
+            if (viewModel == null)
             {
                 TempData["SomethingIsMissing"] = "Something Went Wrong";
                 return RedirectToAction("Modifiers", "Modifiers");
             }
-
-            var viewModel = new MenuModifiersViewModel
-            {
-                Id = id,
-                ModifierGroupId = menumodifier.ModifierGroupId,
-                Name = menumodifier.Name,
-                Rate = menumodifier.Rate,
-                Quantity = menumodifier.Quantity,
-                UnitId = menumodifier.UnitId,
-                Description = menumodifier.Description ?? "",
-                modifiersGroups = modifiersGroup,
-                units = units,
-            };
-
             return PartialView("_EditModifierModal", viewModel);
         }
 
@@ -412,41 +244,31 @@ namespace pizzashop.Controllers
                 return RedirectToAction("Modifiers", "Midifiers");
             }
 
-            MenuModifier? menuModifier = _context.MenuModifiers.FirstOrDefault(x => x.Id == model.Id);
-            var validator = _context.MenuModifiers.FirstOrDefault(x => x.Name == model.Name && x.ModifierGroupId == model.ModifierGroupId);
+            var v = _modifierservice.EditModifier(model);
 
-            if (menuModifier == null)
+            if (v == 1)
             {
                 TempData["SomethingIsMissing"] = "Something Went Wrong";
                 return RedirectToAction("Modifiers", "Midifiers");
             }
-
-            if (validator != null)
+            if (v == 2)
             {
-                if (menuModifier.Id != validator.Id)
-                {
-                    TempData["ModifiersExist"] = "Modifier is Alreday Exist";
-                    return Json(false);
-                }
+                TempData["ModifiersExist"] = "Modifier is Alreday Exist";
+                return Json(false);
             }
-
-            menuModifier.Name = model.Name;
-            menuModifier.ModifierGroupId = model.ModifierGroupId;
-            menuModifier.Rate = model.Rate;
-            menuModifier.Quantity = model.Quantity;
-            menuModifier.UnitId = model.UnitId;
-            menuModifier.Description = model.Description;
-
-            _context.MenuModifiers.Update(menuModifier);
-            _context.SaveChanges();
-
-            TempData["ModifierEdit"] = "Modifier is Updated";
-            return Json(true);
+            else
+            {
+                TempData["ModifierEdit"] = "Modifier is Updated";
+                return Json(true);
+            }
         }
 
         public IActionResult DeleteModifierModal(int id)
         {
-            var modifier = _context.MenuModifiers.FirstOrDefault(x => x.Id == id);
+
+            var modifier = _modifierservice.GetMenuModifierById(id);
+
+            // var modifier = _context.MenuModifiers.FirstOrDefault(x => x.Id == id);
             if (modifier == null)
             {
                 TempData["SomethingIsMissing"] = "Something Went Wrong";
@@ -464,7 +286,7 @@ namespace pizzashop.Controllers
         [HttpPost]
         public IActionResult DeleteModifiers(int id)
         {
-            var modifiers = _context.MenuModifiers.FirstOrDefault(x => x.Id == id);
+            var modifiers = _modifierservice.GetMenuModifierById(id);
 
             if (modifiers == null)
             {
@@ -472,45 +294,19 @@ namespace pizzashop.Controllers
                 return RedirectToAction("Modifiers", "Midifiers");
             }
 
-            modifiers.Isdeleted = true;
-            _context.MenuModifiers.Update(modifiers);
-            _context.SaveChanges();
+            _modifierservice.DeleteMenuModifier(modifiers);
 
             TempData["ModifierIsDeleted"] = "Modifier Deleted Successfully";
             return Json(true);
         }
 
+        [HttpGet]
         public IActionResult GetExistingModifiersTable(string searchTerm = "", int page = 1, int pageSize = 5)
         {
-            var query = _context.MenuModifiers.Where(x => x.Isdeleted != true);
-
-            if (!string.IsNullOrEmpty(searchTerm))
-            {
-                searchTerm = searchTerm.ToLower();
-                query = query.Where(m => m.Name.ToLower().Contains(searchTerm));
-            }
-
-            var totalItems = query.Count();
-
-            var menumodifiers = query
-            .OrderBy(m => m.Name)
-            .Skip((page - 1) * pageSize)
-            .Take(pageSize)
-            .ToList();
-
-            var viewModel = new PaginatedExistingModifiersViewModel
-            {
-                Modifiers = menumodifiers,
-                CurrentPage = page,
-                PageSize = pageSize,
-                TotalItems = totalItems,
-                SearchTerm = searchTerm,
-            };
+            var viewModel = _modifierservice.GetPaginatedMenuModifiers(searchTerm, page, pageSize);
 
             return PartialView("_SelectExistingModifierTable", viewModel);
-
         }
-
 
         [HttpGet]
         public IActionResult SearchItemsForExistingModifier(string searchTerm, int page = 1, int pageSize = 5)
@@ -522,6 +318,5 @@ namespace pizzashop.Controllers
         {
             return PartialView("_SelectExistingModifiersModal");
         }
-
     }
 }

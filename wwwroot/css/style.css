@@ -278,8 +278,7 @@
   color: #727b83;
   margin-right: 5px;
 }
-
-#menu .customBtnPrimary {
+.customBtnPrimary {
   display: flex;
   align-items: center;
   justify-content: center;
@@ -292,7 +291,7 @@
   transition: all 0.3s ease;
 }
 
-#menu .customBtnSecondary {
+.customBtnSecondary {
   display: flex;
   align-items: center;
   justify-content: center;

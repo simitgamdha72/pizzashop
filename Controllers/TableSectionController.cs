@@ -6,12 +6,11 @@ namespace pizzashop.Controllers
 {
     public class TableSectionController : Controller
     {
+        private readonly itablesectionservice _tableSectionService;
 
-        private readonly PizzashopContext _context;
-
-        public TableSectionController(PizzashopContext context)
+        public TableSectionController(itablesectionservice tableSectionService)
         {
-            _context = context;
+            _tableSectionService = tableSectionService;
         }
 
         public IActionResult TableAndSection()
@@ -21,9 +20,7 @@ namespace pizzashop.Controllers
 
         public IActionResult GetSection()
         {
-            var sections = _context.Sections.Where(x => x.Isdeleted != true)
-            .ToList();
-
+            var sections = _tableSectionService.GetActiveSections();
             var viewModel = new SectionViewModal
             {
                 section = sections,
@@ -45,31 +42,24 @@ namespace pizzashop.Controllers
                 return Json(false);
             }
 
-            var validator = _context.Sections.FirstOrDefault(x => x.Name == model.Name);
-            if (validator != null)
+            bool result = _tableSectionService.AddSection(model);
+
+            if (result)
             {
-                TempData["SectionExist"] = "Section is Alreday Exist";
+                TempData["SectionAdd"] = "New Section is Added";
+                return Json(new { success = true });
+            }
+            else
+            {
+                TempData["SectionExist"] = "Section is Already Exist";
                 return Json(false);
             }
-
-
-            var viewModel = new Section
-            {
-                Name = model.Name,
-                Description = model.Description,
-            };
-
-            _context.Sections.Add(viewModel);
-            _context.SaveChanges();
-
-            TempData["SectionAdd"] = "New Section is Added ";
-            return Json(new { success = true });
         }
 
 
         public IActionResult EditSectionModal(int id)
         {
-            Section? sections = _context.Sections.FirstOrDefault(x => x.Id == id);
+            var sections = _tableSectionService.GetSectionById(id);
 
             if (sections == null)
             {
@@ -86,7 +76,6 @@ namespace pizzashop.Controllers
             };
 
             return PartialView("_EditSectionModal", viewModel);
-
         }
 
         [HttpPost]
@@ -98,37 +87,22 @@ namespace pizzashop.Controllers
                 return RedirectToAction("TableAndSection", "TableSection");
             }
 
-            Section? sections = _context.Sections.FirstOrDefault(x => x.Id == model.Id);
-            var validator = _context.Sections.FirstOrDefault(x => x.Name == model.Name);
+            bool result = _tableSectionService.EditSection(model);
 
-            if (sections == null)
+            if (result)
             {
-                TempData["SomethingIsMissing"] = "Something Went Wrong";
-                return RedirectToAction("TableAndSection", "TableAndSection");
+                TempData["SectionEdit"] = "Section is Updated";
+                return Json(true);
             }
-
-            if (validator != null)
+            else
             {
-                if (sections.Id != validator.Id)
-                {
-                    TempData["SectionExist"] = "Section is Alreday Exist";
-                    return Json(false);
-                }
+                TempData["SectionExist"] = "Section is Already Exist";
+                return Json(false);
             }
-
-            sections.Name = model.Name;
-            sections.Description = model.Description;
-
-            _context.Sections.Update(sections);
-            _context.SaveChanges();
-
-            TempData["SectionEdit"] = "Section is Updated";
-            return Json(true);
         }
 
         public IActionResult DeleteSectionModal(int id)
         {
-            var section = _context.Sections.FirstOrDefault(x => x.Id == id);
             var viewModel = new SectionViewModal
             {
                 Id = id,
@@ -140,63 +114,23 @@ namespace pizzashop.Controllers
         [HttpPost]
         public IActionResult DeleteSection(int id)
         {
-            var sections = _context.Sections.FirstOrDefault(x => x.Id == id);
+            bool result = _tableSectionService.DeleteSection(id);
 
-            if (sections == null)
+            if (result)
+            {
+                TempData["SectionIsDeleted"] = "Section Deleted Successfully";
+                return Json(true);
+            }
+            else
             {
                 TempData["SomethingIsMissing"] = "Something Went Wrong";
-                return RedirectToAction("TableAndSection", "TableSection");
+                return Json(false);
             }
-
-            sections.Isdeleted = true;
-            _context.Sections.Update(sections);
-            _context.SaveChanges();
-
-            TempData["SectionIsDeleted"] = "Section Deleted Successfully";
-            return Json(true);
         }
 
         public IActionResult GetTables(int? id, int page = 1, int pageSize = 5, string searchTerm = "")
         {
-            var Sections = _context.Sections.Where(c => c.Isdeleted != true).ToList().First();
-
-            int? sid = Sections.Id;
-
-            var query = _context.Tables.Where(x => x.Isdeleted != true);
-
-            if (id.HasValue)
-            {
-                query = query.Where(m => m.SectionId == id);
-            }
-            else
-            {
-                id = sid;
-                query = query.Where(m => m.SectionId == id);
-            }
-            if (!string.IsNullOrEmpty(searchTerm))
-            {
-                searchTerm = searchTerm.ToLower();
-                query = query.Where(m => m.Name.ToLower().Contains(searchTerm));
-            }
-
-            var totalItems = query.Count();
-
-            var tables = query
-          .OrderBy(m => m.Name)
-          .Skip((page - 1) * pageSize)
-          .Take(pageSize)
-          .ToList();
-
-            var viewModel = new PaginatedTableViewModel
-            {
-                tables = tables,
-                CurrentPage = page,
-                PageSize = pageSize,
-                TotalItems = totalItems,
-                SearchTerm = searchTerm,
-                sectionId = id,
-            };
-
+            var viewModel = _tableSectionService.GetTables(id, page, pageSize, searchTerm);
             return PartialView("_TableList", viewModel);
         }
 
@@ -209,18 +143,7 @@ namespace pizzashop.Controllers
         [HttpGet]
         public IActionResult addTableModal(int? id)
         {
-            if (id == null)
-            {
-                var sectionId = _context.Sections.First();
-                id = sectionId.Id;
-            }
-            var sectionlist = _context.Sections.Where(x => x.Isdeleted != true).ToList();
-            var section = _context.Sections.FirstOrDefault(x => x.Id == id);
-            var viewModel = new TableViewModel
-            {
-                SectionId = section.Id,
-                sections = sectionlist,
-            };
+            var viewModel = _tableSectionService.GetAddTableModalViewModel(id);
             return PartialView("_AddTableModal", viewModel);
         }
 
@@ -232,51 +155,27 @@ namespace pizzashop.Controllers
                 return Json(false);
             }
 
-            var validator = _context.Tables.FirstOrDefault(x => x.SectionId == model.SectionId && x.Name == model.Name);
-            if (validator != null)
+            var result = _tableSectionService.AddTable(model);
+
+            if (result)
             {
-                TempData["TableExist"] = "Table is Alreday Exist";
-                return Json(false);
+                TempData["TableAdd"] = "New Table is Added";
+                return Json(true);
             }
 
-
-            var viewModel = new Table
-            {
-                SectionId = model.SectionId,
-                Name = model.Name,
-                Capacity = model.Capacity,
-                Status = model.Status,
-            };
-
-            _context.Tables.Add(viewModel);
-            _context.SaveChanges();
-
-            TempData["TableAdd"] = "New Table is Added ";
-            return Json(true);
+            TempData["TableExist"] = "Table Already Exists";
+            return Json(false);
         }
 
         public IActionResult EditTableModal(int id)
         {
-            var table = _context.Tables.FirstOrDefault(x => x.Id == id);
-            var sections = _context.Sections.Where(x => x.Isdeleted != true)
-            .ToList();
+            var viewModel = _tableSectionService.GetEditTableModalViewModel(id);
 
-            if (table == null)
+            if (viewModel == null)
             {
                 TempData["SomethingIsMissing"] = "Something Went Wrong";
                 return RedirectToAction("TableAndSection", "TableSection");
             }
-
-            var viewModel = new TableViewModel
-            {
-                Id = id,
-                Name = table.Name,
-                Status = table.Status,
-                Capacity = table.Capacity,
-                SectionId = table.SectionId,
-                sections = sections,
-
-            };
 
             return PartialView("_EditTableModal", viewModel);
         }
@@ -290,69 +189,59 @@ namespace pizzashop.Controllers
                 return RedirectToAction("TableAndSection", "TableSection");
             }
 
-            Table? table = _context.Tables.FirstOrDefault(x => x.Id == model.Id);
-            var validator = _context.Tables.FirstOrDefault(x => x.Name == model.Name && x.SectionId == model.SectionId);
+            int validator = _tableSectionService.EditTable(model);
 
-            if (table == null)
+            if (validator == 1)
             {
                 TempData["SomethingIsMissing"] = "Something Went Wrong";
                 return RedirectToAction("TableAndSection", "TableSection");
             }
-
-            if (validator != null)
+            if (validator == 2)
             {
-                if (table.Id != validator.Id)
-                {
-                    TempData["TableExist"] = "Table is Alreday Exist";
-                    return Json(false);
-                }
+                TempData["TableExist"] = "Table is Alreday Exist";
+                return Json(false);
             }
-
-            table.Name = model.Name;
-            table.SectionId = model.SectionId;
-            table.Capacity = model.Capacity;
-            table.Status = model.Status;
-
-            _context.Tables.Update(table);
-            _context.SaveChanges();
-
-            TempData["TableEdit"] = "Table is Updated";
-            return Json(true);
+            else
+            {
+                TempData["TableEdit"] = "Table is Updated";
+                return Json(true);
+            }
         }
 
         public IActionResult DeleteTableModal(int id)
         {
-            var table = _context.Tables.FirstOrDefault(x => x.Id == id);
+            var table = _tableSectionService.GetTableForDelete(id);
+
+            if (table == null)
+            {
+                TempData["SomethingIsMissing"] = "Table not found.";
+                return RedirectToAction("TableAndSection", "TableSection");
+            }
+
             var viewModel = new TableViewModel
             {
-                Id = id,
+                Id = table.Id,
                 SectionId = table.SectionId,
             };
 
             return PartialView("_DeleteTableModal", viewModel);
         }
 
-
         [HttpPost]
         public IActionResult DeleteTable(int id)
         {
-            var table = _context.Tables.FirstOrDefault(x => x.Id == id);
+            bool isSuccess = _tableSectionService.DeleteTable(id);
 
-            if (table == null)
+            if (isSuccess)
+            {
+                TempData["TableIsDeleted"] = "Table Deleted Successfully";
+                return Json(true);
+            }
+            else
             {
                 TempData["SomethingIsMissing"] = "Something Went Wrong";
-                return RedirectToAction("TableAndSection", "TableSection");
+                return Json(false);
             }
-
-            table.Isdeleted = true;
-            _context.Tables.Update(table);
-            _context.SaveChanges();
-
-            TempData["TableIsDeleted"] = "Table Deleted Successfully";
-            return Json(true);
         }
-
-
-
     }
 }

@@ -52,8 +52,12 @@
 
 <script>
     $(document).ready(function () {
-        window.existingModifierIds = [];
-        window.existingModifierName = [];
+        if (!window.existingModifierIds) {
+            window.existingModifierIds = [];
+        }
+        if (!window.existingModifierName) {
+            window.existingModifierName = [];
+        }
     });
 
     $('#AddModifierGroupModalForm').on('submit', function (e) {
@@ -64,15 +68,35 @@
             var url = form.attr('action');
             var data = form.serialize();
 
-            $.ajax({
-                type: "POST",
-                url: '@(Url.Action("AddModifierGroup", "Modifiers"))',
-                data: data,
-                success: function (data) {
-                    loadModifiers();
-                    $('#addModifiersModalGroup').modal('hide');
-                }
+            var tempSelectedModifierIds = [];
+            $('#tempSelectedModifiers .modifier').each(function () {
+                tempSelectedModifierIds.push($(this).data('id'));
             });
+
+            var allModifierIds = [...new Set([...existingModifierIds, ...tempSelectedModifierIds])];
+
+            data += '&modifierIds=' + JSON.stringify(allModifierIds);
+            @* 
+            if (window.modifiersToRemove && window.modifiersToRemove.length > 0) {
+                data += '&modifiersToRemove=' + JSON.stringify(window.modifiersToRemove);
+            } *@
+
+                $.ajax({
+                    type: "POST",
+                    url: '@(Url.Action("AddModifierGroup", "Modifiers"))',
+                    data: data,
+                    success: function (data) {
+                        loadModifiers();
+                        loadMenuModifiers();
+                        $('#addModifiersModalGroup').modal('hide');
+                        window.modifiersToRemove = [];
+                        $('#tempSelectedModifiers').empty();
+                        window.existingModifierIds = [];
+                        window.existingModifierName = [];
+                        window.seenModifierIds = new Set();
+                        window.seenModifierNames = new Set();
+                    }
+                });
         }
     });
 </script>

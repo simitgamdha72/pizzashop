@@ -19,5 +19,10 @@ namespace pizzashop.Controllers
             return View();
         }
 
+        public IActionResult ShowOrders()
+        {
+            return PartialView("_OrderTable");
+        }
+
     }
 }

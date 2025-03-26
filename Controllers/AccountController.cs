@@ -16,15 +16,11 @@ namespace pizzashop.Controllers;
 
 public class AccountController : Controller
 {
-
     public readonly EmailSender1 es;
-
     private readonly IWebHostEnvironment _webHostEnvironment;
-
     private readonly dropdownService _dropdownService;
     private readonly IConfiguration _configuration;
     private readonly IAccountService _accountService;
-
 
     public AccountController(IWebHostEnvironment webHostEnvironment, dropdownService dropdownService, IAccountService accountService, EmailSender1 ess1, IConfiguration configuration)
     {
@@ -33,7 +29,6 @@ public class AccountController : Controller
         _configuration = configuration;
         _dropdownService = dropdownService;
         _webHostEnvironment = webHostEnvironment;
-
     }
 
     [HttpGet]
@@ -54,11 +49,8 @@ public class AccountController : Controller
             return View();
         }
 
-
-
         return RedirectToAction("UserList", "Account");
     }
-
 
     [HttpPost]
     public async Task<IActionResult> Index(LoginViewModel loginViewModel)
@@ -69,13 +61,13 @@ public class AccountController : Controller
         }
 
         var user = await _accountService.LoginAsync(loginViewModel);
+
         if (user == null)
         {
             TempData["error"] = "User not found or invalid password.";
             return View(loginViewModel);
         }
 
-        // Set success message in TempData
         TempData["success"] = "Successfully logged in!";
 
         var tokenString = GenerateToken(user.Email, user.RoleId);
@@ -111,23 +103,12 @@ public class AccountController : Controller
     [Authorize]
     public async Task<IActionResult> addnewuser()
     {
-
-
-
-
         return View();
-
-
     }
-
-
-
-
 
     [HttpGet]
     public async Task<JsonResult> GetStatesByCountry(int countryId)
     {
-
         List<SelectListItem> states = _dropdownService.GetState(countryId);
         return Json(states);
     }
@@ -142,7 +123,6 @@ public class AccountController : Controller
     [HttpPost]
     public async Task<IActionResult> addnewuser(AddnewUserViewModel model)
     {
-
         string fileName = null;
         if (model.ProfileImage != null && model.ProfileImage.Length > 0)
         {
@@ -157,30 +137,19 @@ public class AccountController : Controller
                 return View(model);
             }
         }
-
-
-        // var countries = await _countryservice.GetCountriesAsync();
         if (ModelState.IsValid)
         {
             var valid = _accountService.CreateUser(model, fileName);
 
             if (valid == 1)
             {
-
-
                 TempData["alredyexist"] = "Email or UserName is Already exist";
                 return View(model);
             }
-
-
             TempData["usersadded"] = "New User is Added";
-
             return RedirectToAction("UserList", "Account");
         }
 
-
-
-        // ViewBag.Countries = countries;
         return View(model);
     }
 
@@ -188,27 +157,18 @@ public class AccountController : Controller
     [Authorize]
     public async Task<IActionResult> edituserAsync(int id)
     {
-        // var countries = await _countryservice.GetCountriesAsync();
-
-
         var viewModel = _accountService.edituserget(id);
-
-        // viewModel.Countries = countries;
-
 
         if (viewModel == null)
         {
             return NotFound();
         }
-
         return View(viewModel);
     }
-
 
     [HttpPost]
     public async Task<IActionResult> edituser(EditUserViewModel model)
     {
-
         string fileName = null;
         if (model.ProfileImage != null && model.ProfileImage.Length > 0)
         {
@@ -223,7 +183,6 @@ public class AccountController : Controller
                 return View(model);
             }
         }
-
         if (!ModelState.IsValid)
         {
             return View(model);
@@ -235,7 +194,6 @@ public class AccountController : Controller
         {
             return NotFound();
         }
-
         if (validator == 2)
         {
             TempData["usernameexist"] = "This UserName is Already in Use";
@@ -243,19 +201,13 @@ public class AccountController : Controller
         }
 
         TempData["edituser"] = "Users's details successfuly changed";
-
         return RedirectToAction("userlist", "Account");
     }
-
-
-
 
     [HttpGet]
     [Authorize]
     public async Task<IActionResult> UserProfile()
     {
-        // var countries = await _countryservice.GetCountriesAsync();
-        // ViewBag.Countries = countries;
         var cookie = Request.Cookies["cookieforid"];
         if (cookie == null)
         {
@@ -264,7 +216,6 @@ public class AccountController : Controller
         var viewModel = await _accountService.GetUserProfile(cookie);
         return View(viewModel);
     }
-
 
     [HttpPost]
     public async Task<IActionResult> UserProfile(UserProfileViewModel model)
@@ -279,12 +230,10 @@ public class AccountController : Controller
                 TempData["userprofiledatachanged"] = "Profile is Updated";
                 return RedirectToAction("UserProfile", "Account");
             }
-
             if (validator == 0)
             {
                 return NotFound();
             }
-
             if (validator == 2)
             {
                 if (model.CountryId != 0)
@@ -294,18 +243,14 @@ public class AccountController : Controller
                 TempData["usernameexist"] = "This UserName is Already in Use";
                 return View(model);
             }
-
         }
-        // var countries = await _countryservice.GetCountriesAsync();
-        // ViewBag.Countries = countries;
+
         if (model.CountryId != 0)
         {
             model.CountryId = 0;
         }
-
         return View(model);
     }
-
 
     [HttpGet]
     public IActionResult forgotpassword()
@@ -339,7 +284,6 @@ public class AccountController : Controller
         return View();
     }
 
-
     [HttpPost]
     public IActionResult ResetPassword(ResetPasswordViewModel m)
     {
@@ -352,14 +296,9 @@ public class AccountController : Controller
         }
 
         TempData["ResetPasswordConfirmation"] = "Password is Reset Successlly";
-
-
         _accountService.resetpassword(cookie, m);
         return RedirectToAction("Index", "Account");
     }
-
-
-
 
     [HttpPost]
     [ValidateAntiForgeryToken]
@@ -373,7 +312,6 @@ public class AccountController : Controller
         return RedirectToAction("Index", "Account");
     }
 
-
     [HttpGet]
     [Authorize]
     public IActionResult changepassword()
@@ -381,11 +319,9 @@ public class AccountController : Controller
         return View();
     }
 
-
     [HttpPost]
     public IActionResult changepassword(ChangePasswordViewModel model)
     {
-
         var cookie = Request.Cookies["cookieforid"];
         var validator = _accountService.changepassword(cookie, model);
         if (validator == 1)
@@ -410,8 +346,6 @@ public class AccountController : Controller
             return NotFound();
         }
     }
-
-
 
     [Authorize]
     public async Task<IActionResult> userlist(int page = 1, string search = "", int? roleId = null, bool? status = null, int pageSize = 5)
@@ -465,12 +399,7 @@ public class AccountController : Controller
             return RedirectToAction("UserList", "Account");
         }
         return NotFound();
-
-
     }
-
-
-
 
     [Authorize]
     [HttpGet]
@@ -479,22 +408,17 @@ public class AccountController : Controller
         return View();
     }
 
-
     [HttpGet]
     public IActionResult role()
     {
         return View();
     }
 
-
     [HttpGet]
     public IActionResult permission()
     {
         return View();
     }
-
-
-
     private string GenerateToken(string email, int? role)
     {
         string Role = role.ToString();
@@ -514,6 +438,5 @@ public class AccountController : Controller
         );
         return new JwtSecurityTokenHandler().WriteToken(token);
     }
-
 }
 

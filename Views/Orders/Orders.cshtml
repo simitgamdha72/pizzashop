@@ -1,0 +1,137 @@
+@{
+    ViewData["Title"] = "Order View";
+}
+<div id="menu">
+    <!-- orderList content Start -->
+    <div id="orderContent" class="container-fluid px-2 py-4 p-md-5">
+        <div class="container-fluid p-0">
+            <div class="row align-items-center mb-2 mb-md-3">
+                <div class="col-12 col-lg-4 mb-2 mb-md-0">
+                    <div class="fs-2 fw-semibold d-none d-md-block" style="color: #006CAC;">Orders</div>
+                    <div class="d-flex justify-content-between align-items-center d-md-none">
+                        <div class="fs-2 fw-semibold" style="color: #006CAC;">Orders</div>
+                        <!-- Export Button -->
+                        <form id="exportForm" method="post" action="@Url.Action("ExportToExcel", "Orders")">
+                            <input type="hidden" id="ordersData" name="ordersData" />
+                            <button type="submit" class="customBtnPrimary" onclick="bindFormData(event)">
+                                <i class="bi bi-download"></i>
+                            </button>
+                        </form>
+                    </div>
+                </div>
+
+                <div class="col-12 col-lg-8">
+                    <div class="d-flex flex-column flex-sm-row justify-content-center justify-content-md-end">
+                        <form style="position: relative;margin-right: 10px;">
+                            <input type="search" id="searchInput" placeholder="  Search" aria-label="Search"
+                                class="form-control" style="width: 200px;height: 60px;margin-right: 2px; border: 2px solid #eee;
+                                border-radius: 4px;">
+
+                            <i class="bi bi-search" style="position: absolute;right: 10px;top: 15px;"></i>
+                        </form>
+                        @* <div class="orderFilter searchBar me-sm-2 me-lg-3 mb-2 mb-sm-0">
+                            <input class="form-control h-100" id="searchInput" type="text" placeholder="Search">
+                            <i class="searchIcon bi bi-search"></i>
+                        </div> *@
+
+                        <div class="d-flex">
+                            <!-- Status Filter Dropdown -->
+                            <select class="orderFilter form-select me-2 me-lg-3" onchange="fetchOrderByStatus(this)">
+                                <option value="1" selected>All Status</option>
+                                <option value="Pending">Pending</option>
+                                <option value="Completed">Completed</option>
+                            </select>
+
+                            <!-- Date Range Dropdown -->
+                            <select class="orderFilter form-select me-md-2 me-lg-3"
+                                onchange="fetchOrderByDateRange(this)">
+                                <option value="1" selected>All Time</option>
+                                <option value="LAST 7 DAYS">Last 7 Days</option>
+                                <option value="LAST 30 DAYS">Last 30 Days</option>
+                                <option value="CURRENT MONTH">Current Month</option>
+                            </select>
+                        </div>
+
+                        <!-- Export Button -->
+                        <form class="d-none d-md-block" id="exportForm" method="post"
+                            action="@Url.Action("ExportToExcel", "Orders")">
+                            <input type="hidden" id="ordersData" name="ordersData" />
+                            <button type="submit" class="customBtnPrimary" style="padding: 12px"
+                                onclick="bindFormData(event)">
+                                <i class="bi bi-download me-2"></i>
+                                Export
+                            </button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Date Range Search Section -->
+            <div class="d-flex flex-column flex-sm-row justify-content-end align-items-end align-items-sm-center mb-3">
+                <div class="d-flex flex-column justify-content-end flex-sm-row w-100">
+                    <div class="dateRangeSelector form-floating me-sm-2 me-lg-3 mb-2 mb-sm-0" style="min-width: 160px;">
+                        <input type="date" class="form-control" id="startDate">
+                        <label for="startDate">From Date</label>
+                    </div>
+                    <div class="dateRangeSelector form-floating me-sm-2 me-lg-3" style="min-width: 160px;">
+                        <input type="date" class="form-control" id="endDate">
+                        <label for="endDate">To Date</label>
+                    </div>
+                </div>
+                <div class="mt-2 mt-md-0">
+                    <div class="d-flex">
+                        <button type="button" class="customBtnPrimary px-4 me-2"
+                            onclick="SearchByDate()">Search</button>
+                        <button type="button" class="customBtnSecondary px-4" onclick="ClearDateValue()">Clear</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="secondaryContainer shadow mt-3" id="orderList">
+
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+    <script>
+        $(document).ready(function () {
+            LoadOrders();
+        });
+
+        function LoadOrders() {
+            $.ajax({
+                url: '@Url.Action("ShowOrders", "Orders")',
+                type: 'GET',
+                success: function (result) {
+                    $('#orderList').html(result);
+                },
+                error: function (xhr, status, error) {
+                    console.log("Error: " + error);
+                }
+            });
+        }
+
+        function ClearDateValue() {
+            // Clear date inputs
+            $('#startDate').val('');
+            $('#endDate').val('');
+
+            // Clear the search bar
+            $('#searchInput').val('');
+
+            // Reset the status filter dropdown to 'All Status'
+            $("select[name='statusFilter']").val('1');
+
+            // Reset the date range filter dropdown to 'All Time'
+            @* $("select[name='dateRangeFilter']").val('1'); *@
+                $("select[name='dateRangeFilter']").prop('selectedIndex', 0);
+
+            // Reload orders to show all results again
+            LoadOrders();
+        }
+    </script>
+
+}

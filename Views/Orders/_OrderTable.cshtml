@@ -1,0 +1,85 @@
+@* @model PaginatedList<VMOrder> *@
+
+<div class="table-responsive">
+
+    <table class="tableList table align-middle">
+        <thead>
+            <tr>
+                <th scope="col">
+                    <div class="d-flex justify-content-center align-items-center">
+                        #Order
+                        <i class="sortBtn ms-2 bi bi-arrow-down-up" data-column="Id" data-sort="asc"></i>
+                    </div>
+                </th>
+                <th scope="col">
+                    <div class="d-flex justify-content-center align-items-center">
+                        Date
+                        <i class="sortBtn ms-2 bi bi-arrow-down-up" data-column="CreatedAt" data-sort="asc"></i>
+                    </div>
+                </th>
+                <th scope="col">
+                    <div class="d-flex justify-content-center align-items-center">
+                        Customer
+                        <i class="sortBtn ms-2 bi bi-arrow-down-up" data-column="Customer" data-sort="asc"></i>
+                    </div>
+                </th>
+                <th scope="col">Status</th>
+                <th scope="col">Payment Mode</th>
+                <th scope="col">Rating</th>
+                <th scope="col">
+                    <div class="d-flex justify-content-center align-items-center">
+                        Total Amount
+                        <i class="sortBtn ms-2 bi bi-arrow-down-up" data-column="TotalAmount" data-sort="asc"></i>
+                    </div>
+                </th>
+                <th scope="col">Action</th>
+            </tr>
+        </thead>
+        <tbody class="table-group-divider">
+            @* @foreach (var order in Model.Items!)
+            {
+                <tr>
+                    <td>@order.Id</td>
+                    <td>@order.CreatedAt</td>
+                    <td>@order.CustomerName</td>
+                    <td>@order.OrderStatus</td>
+                    <td>@(order.PaymentMode == null ? "Pending" : @order.PaymentMode)</td>
+                    <td>@order.Rating</td>
+                    <td>@order.TotalAmount</td>
+                    <td>
+                        <div class="d-flex justify-content-center align-items-center">
+                            <button class="actionBtn editBtn" onclick="GenerateInvoice(1)">
+                                <i class="bi bi-filetype-pdf"></i>
+                            </button>
+                            <button class="actionBtn" onclick="ViewOrderDetails(1)">
+                                <i class="bi bi-eye"></i>
+                            </button>
+                        </div>
+                    </td>
+                </tr>
+            } *@
+
+
+            <tr>
+                <td>order.Id</td>
+                <td>order.CreatedAt</td>
+                <td>order.CustomerName</td>
+                <td>order.OrderStatus</td>
+                <td>online</td>
+                <td>order.Rating</td>
+                <td>order.TotalAmount</td>
+                <td>
+                    <div class="d-flex justify-content-center align-items-center">
+                        <button class="actionBtn editBtn" onclick="GenerateInvoice(1)">
+                            <i class="bi bi-filetype-pdf"></i>
+                        </button>
+                        <button class="actionBtn" onclick="ViewOrderDetails(1)">
+                            <i class="bi bi-eye"></i>
+                        </button>
+                    </div>
+                </td>
+            </tr>
+
+        </tbody>
+    </table>
+</div>

@@ -51,6 +51,14 @@ builder.Services.AddScoped<ipermission, permission>();
 builder.Services.AddScoped<irolewisepermission, rolewisepermission>();
 builder.Services.AddScoped<iroleandpermissionservice, roleandpermissionservice>();
 builder.Services.AddScoped<dropdownService>();
+builder.Services.AddScoped<itax, tax>();
+builder.Services.AddScoped<itable, table>();
+builder.Services.AddScoped<isection, section>();
+builder.Services.AddScoped<itaxservice, taxservice>();
+builder.Services.AddScoped<itablesectionservice, tablesectionservice>();
+builder.Services.AddScoped<imodifiersgroup, modifiersgroup>();
+builder.Services.AddScoped<imenumodifiers, menumodifiers>();
+builder.Services.AddScoped<imodifierservice, modifierservice>();
 
 
 

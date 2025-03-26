@@ -1,17 +1,17 @@
 using Microsoft.AspNetCore.Mvc;
 using pizzashop.Models.Models;
 using pizzashop.Models.ViewModels;
+using pizzashop.Services;
 
 namespace pizzashop.Controllers
 {
     public class TaxesController : Controller
     {
+        private readonly itaxservice _taxService;
 
-        private readonly PizzashopContext _context;
-
-        public TaxesController(PizzashopContext context)
+        public TaxesController(itaxservice taxService)
         {
-            _context = context;
+            _taxService = taxService;
         }
 
         public IActionResult Taxes()
@@ -22,20 +22,7 @@ namespace pizzashop.Controllers
 
         public IActionResult GetTaxTable(string searchTerm)
         {
-            var taxes = _context.TaxesFees.Where(x => x.Isdeleted != true);
-            // .ToList();
-
-            if (!string.IsNullOrEmpty(searchTerm))
-            {
-                searchTerm = searchTerm.ToLower();
-                taxes = taxes.Where(m => m.Name.ToLower().Contains(searchTerm));
-            }
-
-            var viewModel = new TaxViewModel
-            {
-                taxes = taxes,
-                SearchTerm = searchTerm,
-            };
+            var viewModel = _taxService.GetTaxTable(searchTerm);
             return PartialView("_TaxTable", viewModel);
         }
 
@@ -47,9 +34,7 @@ namespace pizzashop.Controllers
 
         public IActionResult AddTaxModal()
         {
-
             return PartialView("_AddTaxModal");
-
         }
 
         public IActionResult AddTax(TaxViewModel model)
@@ -60,36 +45,20 @@ namespace pizzashop.Controllers
                 return Json(false);
             }
 
+            bool isTaxAdded = _taxService.AddTax(model);
 
-            var validator = _context.TaxesFees.FirstOrDefault(x => x.Name == model.Name);
-            if (validator != null)
+            if (!isTaxAdded)
             {
-                TempData["TaxExist"] = "Tax is Alreday Exist";
+                TempData["TaxExist"] = "Tax Already Exists";
                 return Json(false);
             }
 
-
-            var viewModel = new TaxesFee
-            {
-                Name = model.Name,
-                Type = model.Type,
-                TaxAmount = model.TaxAmount,
-                IsEnable = model.IsEnable,
-                IsDefault = model.IsDefault,
-
-
-            };
-
-            _context.TaxesFees.Add(viewModel);
-            _context.SaveChanges();
-
-            TempData["TaxAdd"] = "New Tax is Added ";
+            TempData["TaxAdd"] = "New Tax is Added";
             return Json(new { success = true });
         }
 
         public IActionResult DeleteTaxModal(int id)
         {
-            var tax = _context.TaxesFees.FirstOrDefault(x => x.Id == id);
             var viewModel = new TaxViewModel
             {
                 Id = id,
@@ -101,17 +70,13 @@ namespace pizzashop.Controllers
         [HttpPost]
         public IActionResult DeleteTax(int id)
         {
-            var tax = _context.TaxesFees.FirstOrDefault(x => x.Id == id);
+            var result = _taxService.DeleteTax(id);
 
-            if (tax == null)
+            if (!result)
             {
                 TempData["SomethingIsMissing"] = "Something Went Wrong";
-                return RedirectToAction("TableAndSection", "TableSection");
+                return RedirectToAction("Taxes", "Taxes");
             }
-
-            tax.Isdeleted = true;
-            _context.TaxesFees.Update(tax);
-            _context.SaveChanges();
 
             TempData["TaxIsDeleted"] = "Tax Deleted Successfully";
             return Json(true);
@@ -119,29 +84,16 @@ namespace pizzashop.Controllers
 
         public IActionResult EditTaxModal(int id)
         {
-            var tax = _context.TaxesFees.FirstOrDefault(x => x.Id == id);
+            var viewModel = _taxService.GetTaxForEdit(id);
 
-            if (tax == null)
+            if (viewModel == null)
             {
                 TempData["SomethingIsMissing"] = "Something Went Wrong";
-                return RedirectToAction("TableAndSection", "TableSection");
+                return RedirectToAction("Taxes", "Taxes");
             }
 
-            var viewModel = new TaxViewModel
-            {
-                Id = tax.Id,
-                Name = tax.Name,
-                Type = tax.Type,
-                TaxAmount = tax.TaxAmount,
-                IsEnable = tax.IsEnable,
-                IsDefault = tax.IsDefault,
-
-            };
-
             return PartialView("_EditTaxModal", viewModel);
-
         }
-
 
         [HttpPost]
         public IActionResult EditTax(TaxViewModel model)
@@ -149,51 +101,24 @@ namespace pizzashop.Controllers
             if (!ModelState.IsValid)
             {
                 TempData["SomethingIsMissing"] = "Something Went Wrong";
-                return RedirectToAction("TableAndSection", "TableSection");
+                return RedirectToAction("Taxes", "Taxes");
             }
 
-            TaxesFee? tax = _context.TaxesFees.FirstOrDefault(x => x.Id == model.Id);
-            var validator = _context.TaxesFees.FirstOrDefault(x => x.Name == model.Name);
-
-            if (tax == null)
+            if (!model.Id.HasValue)
             {
-                TempData["SomethingIsMissing"] = "Something Went Wrong";
-                return RedirectToAction("TableAndSection", "TableAndSection");
+                return Json(true);
             }
 
-            if (validator != null)
+            var result = _taxService.EditTax(model);
+
+            if (!result)
             {
-                if (tax.Id != validator.Id)
-                {
-                    TempData["TaxExist"] = "Tax is Alreday Exist";
-                    return Json(false);
-                }
+                TempData["TaxExist"] = "Tax Already Exists";
+                return Json(false);
             }
-
-
-            tax.Name = model.Name;
-            tax.Type = model.Type;
-            tax.TaxAmount = model.TaxAmount;
-            tax.IsEnable = model.IsEnable;
-            tax.IsDefault = model.IsDefault;
-
-
-            _context.TaxesFees.Update(tax);
-            _context.SaveChanges();
 
             TempData["TaxEdit"] = "Tax is Updated";
             return Json(true);
         }
-
-
-
-
-
-
-
-
-
-
-
     }
 }
