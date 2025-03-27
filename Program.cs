@@ -9,7 +9,6 @@ using Microsoft.AspNetCore.Authentication.Cookies;
 using System.Security.Claims;
 using pizzashop.Models.Models;
 using pizzashop.Repository;
-using pizzashop.Repository.implementation;
 using pizzashop.Utility;
 using pizzashop.Service;
 using pizzashop.Services;
@@ -59,6 +58,13 @@ builder.Services.AddScoped<itablesectionservice, tablesectionservice>();
 builder.Services.AddScoped<imodifiersgroup, modifiersgroup>();
 builder.Services.AddScoped<imenumodifiers, menumodifiers>();
 builder.Services.AddScoped<imodifierservice, modifierservice>();
+
+// builder.Services
+//     .AddControllers()
+//     .AddNewtonsoftJson(options =>
+//     {
+//         options.SerializerSettings.ReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Ignore;
+//     });
 
 
 

@@ -1,83 +1,134 @@
-<div class="table-responsive">
+@model List<pizzashop.Models.ViewModels.OrderViewModel>
 
+<div class="table-responsive">
     <table class="tableList table align-middle">
         <thead>
             <tr>
-                <th scope="col">
-                    <div class="d-flex justify-content-center align-items-center">
-                        #Order
-                        <i class="sortBtn ms-2 bi bi-arrow-down-up" data-column="Id" data-sort="asc"></i>
-                    </div>
+                <th scope="col">#Order
+                    <span class="sort-icon" data-column="id" onclick="sortTable('id')">
+                        <i class="bi bi-arrow-down-up"></i>
+                    </span>
                 </th>
-                <th scope="col">
-                    <div class="d-flex justify-content-center align-items-center">
-                        Date
-                        <i class="sortBtn ms-2 bi bi-arrow-down-up" data-column="CreatedAt" data-sort="asc"></i>
-                    </div>
+                <th scope="col">Date
+                    <span class="sort-icon" data-column="orderdate" onclick="sortTable('orderdate')">
+                        <i class="bi bi-arrow-down-up"></i>
+                    </span>
                 </th>
-                <th scope="col">
-                    <div class="d-flex justify-content-center align-items-center">
-                        Customer
-                        <i class="sortBtn ms-2 bi bi-arrow-down-up" data-column="Customer" data-sort="asc"></i>
-                    </div>
+                <th scope="col">Customer
+                    <span class="sort-icon" data-column="customername" onclick="sortTable('customername')">
+                        <i class="bi bi-arrow-down-up"></i>
+                    </span>
                 </th>
                 <th scope="col">Status</th>
                 <th scope="col">Payment Mode</th>
                 <th scope="col">Rating</th>
-                <th scope="col">
-                    <div class="d-flex justify-content-center align-items-center">
-                        Total Amount
-                        <i class="sortBtn ms-2 bi bi-arrow-down-up" data-column="TotalAmount" data-sort="asc"></i>
-                    </div>
-                </th>
+                <th scope="col">Total Amount</th>
                 <th scope="col">Action</th>
             </tr>
         </thead>
         <tbody class="table-group-divider">
-            @* @foreach (var order in Model.Items!)
+            @foreach (var order in Model)
             {
                 <tr>
                     <td>@order.Id</td>
-                    <td>@order.CreatedAt</td>
+                    <td>@order.OrderDate.ToString("dd/MM/yyyy")</td>
                     <td>@order.CustomerName</td>
-                    <td>@order.OrderStatus</td>
-                    <td>@(order.PaymentMode == null ? "Pending" : @order.PaymentMode)</td>
-                    <td>@order.Rating</td>
-                    <td>@order.TotalAmount</td>
+                    @if (order.Status == 1)
+                    {
+                        <td>Pending</td>
+                    }
+                    @if (order.Status == 2)
+                    {
+                        <td>in Progress</td>
+                    }
+                    @if (order.Status == 3)
+                    {
+                        <td>Served</td>
+                    }
+                    @if (order.Status == 4)
+                    {
+                        <td>Completed</td>
+                    }
+                    @if (order.Status == 5)
+                    {
+                        <td>Cancelled</td>
+                    }
+                    @if (order.Status == 6)
+                    {
+                        <td>On Hold</td>
+                    }
+                    @if (order.Status == 7)
+                    {
+                        <td>Failed</td>
+                    }
+                    @* <td>@order.Status</td> *@
+                    @* <td>@order.PaymentMode</td> *@
+                    @{
+                        switch (@order.PaymentMode)
+                        {
+                            case "1":
+                                <td>Pending</td>
+                                break;
+                            case "2":
+                                <td>Upi</td>
+                                break;
+                            case "3":
+                                <td>Cash</td>
+                                break;
+                            case "4":
+                                <td>Card</td>
+                                break;
+                        }
+                    }
+                    @* <td>@order.Rating</td> *@
+                    <td>
+                        @for (int i = 0; i < 5; i++)
+                        {
+                            <span class="@(i < order.Rating ? "text-warning" : "text-muted")">&#9733;</span>
+                        }
+                    </td>
+                    <td>@order.TotalAmount.ToString("C")</td>
                     <td>
                         <div class="d-flex justify-content-center align-items-center">
-                            <button class="actionBtn editBtn" onclick="GenerateInvoice(1)">
+                            <button class="actionBtn editBtn menubtn" onclick="GenerateInvoice(@order.Id)">
                                 <i class="bi bi-filetype-pdf"></i>
                             </button>
-                            <button class="actionBtn" onclick="ViewOrderDetails(1)">
+                            <button class="actionBtn menubtn" onclick="ViewOrderDetails(@order.Id)">
                                 <i class="bi bi-eye"></i>
                             </button>
                         </div>
                     </td>
                 </tr>
-            } *@
-
-
-            <tr>
-                <td>order.Id</td>
-                <td>order.CreatedAt</td>
-                <td>order.CustomerName</td>
-                <td>order.OrderStatus</td>
-                <td>online</td>
-                <td>order.Rating</td>
-                <td>order.TotalAmount</td>
-                <td>
-                    <div class="d-flex justify-content-center align-items-center">
-                        <button class="actionBtn editBtn" onclick="GenerateInvoice(1)">
-                            <i class="bi bi-filetype-pdf"></i>
-                        </button>
-                        <button class="actionBtn" onclick="ViewOrderDetails(1)">
-                            <i class="bi bi-eye"></i>
-                        </button>
-                    </div>
-                </td>
-            </tr>
-
+            }
         </tbody>
     </table>
 </div>
+@{
+    var totalitemscount = ViewBag.totalitemscount;
+    var pageSize = ViewBag.pageSize;
+    var currentPage = ViewBag.currentPage;
+}
+<script>
+    if (typeof currentorderstate === "undefined") {
+        const currentorderstate = {
+            totalitemscounts: @totalitemscount,
+            orderpagesize: @pageSize,
+            ordercurrentpage: @currentPage
+        };
+    }
+    currentorderstate.totalitemscounts = @totalitemscount;
+    currentorderstate.orderpagesize = @pageSize;
+    currentorderstate.ordercurrentpage = @currentPage;
+</script>
+
+<style>
+    .sort-icon {
+        cursor: pointer;
+        margin-left: 5px;
+        color: #666;
+    }
+
+    .sort-icon:hover {
+        color: #007bff;
+    }
+</style>

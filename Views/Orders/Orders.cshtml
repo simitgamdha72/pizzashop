@@ -1,7 +1,8 @@
 @{
     ViewData["Title"] = "Order View";
 }
-<div id="menu">
+
+<div id="menu" style="margin-right: 1%;">
     <!-- orderList content Start -->
     <div id="orderContent" class="container-fluid px-2 py-4 p-md-5">
         <div class="container-fluid p-0">
@@ -11,40 +12,48 @@
                     <div class="d-flex justify-content-between align-items-center d-md-none">
                         <div class="fs-2 fw-semibold" style="color: #006CAC;">Orders</div>
                         <!-- Export Button -->
-                        <form id="exportForm" method="post" action="@Url.Action("ExportToExcel", "Orders")">
+                        @* <form id="exportForm" method="post" action="@Url.Action("ExportToExcel", "Orders")">
                             <input type="hidden" id="ordersData" name="ordersData" />
                             <button type="submit" class="customBtnPrimary" onclick="bindFormData(event)">
                                 <i class="bi bi-download"></i>
                             </button>
+                        </form> *@
+                        <form id="exportForm" method="get" action="@Url.Action("ExportToExcel", "Orders")">
+
+                            <button type="submit" class="customBtnPrimary">
+                                <i class="bi bi-download"></i>
+                            </button>
                         </form>
+                        @* <form method="get" action="@Url.Action("ExportToExcel", "Orders")">
+                            <button type="submit" class="btn btn-primary">Export to Excel</button>
+                        </form> *@
                     </div>
                 </div>
 
                 <div class="col-12 col-lg-8">
                     <div class="d-flex flex-column flex-sm-row justify-content-center justify-content-md-end">
-                        <form style="position: relative;margin-right: 10px;">
-                            <input type="search" id="searchInput" placeholder="  Search" aria-label="Search"
-                                class="form-control" style="width: 200px;height: 60px;margin-right: 2px; border: 2px solid #eee;
-                                border-radius: 4px;">
 
+                        <form style="position: relative;margin-right: 10px;">
+                            <input type="search" id="searchOrderId" placeholder="  Search Order ID"
+                                aria-label="Search Order ID" class="form-control" style="width: 200px;height: 60px;margin-right: 2px; border: 2px solid #eee;
+                                border-radius: 4px;">
                             <i class="bi bi-search" style="position: absolute;right: 10px;top: 15px;"></i>
                         </form>
-                        @* <div class="orderFilter searchBar me-sm-2 me-lg-3 mb-2 mb-sm-0">
-                            <input class="form-control h-100" id="searchInput" type="text" placeholder="Search">
-                            <i class="searchIcon bi bi-search"></i>
-                        </div> *@
 
                         <div class="d-flex">
-                            <!-- Status Filter Dropdown -->
-                            <select class="orderFilter form-select me-2 me-lg-3" onchange="fetchOrderByStatus(this)">
-                                <option value="1" selected>All Status</option>
-                                <option value="Pending">Pending</option>
-                                <option value="Completed">Completed</option>
+
+                            <select id="statusFilter" class="orderFilter form-select me-2 me-lg-3">
+                                <option value="" selected>All Status</option>
+                                <option value="1">Pending</option>
+                                <option value="2">in Progress</option>
+                                <option value="3">Served</option>
+                                <option value="4">Completed</option>
+                                <option value="5">Cancelled</option>
+                                <option value="6">On Hold</option>
+                                <option value="7">Failed</option>
                             </select>
 
-                            <!-- Date Range Dropdown -->
-                            <select class="orderFilter form-select me-md-2 me-lg-3"
-                                onchange="fetchOrderByDateRange(this)">
+                            <select id="dateRangeFilter" class="orderFilter form-select me-md-2 me-lg-3">
                                 <option value="1" selected>All Time</option>
                                 <option value="LAST 7 DAYS">Last 7 Days</option>
                                 <option value="LAST 30 DAYS">Last 30 Days</option>
@@ -53,7 +62,16 @@
                         </div>
 
                         <!-- Export Button -->
-                        <form class="d-none d-md-block" id="exportForm" method="post"
+                        @* <form class="d-none d-md-block" id="exportForm" method="post"
+                            action="@Url.Action("ExportToExcel", "Orders")">
+                            <input type="hidden" id="ordersData" name="ordersData" />
+                            <button type="submit" class="customBtnPrimary" style="padding: 12px"
+                                onclick="bindFormData(event)">
+                                <i class="bi bi-download me-2"></i>
+                                Export
+                            </button>
+                        </form> *@
+                        <form class="d-none d-md-block" id="exportForm" method="get"
                             action="@Url.Action("ExportToExcel", "Orders")">
                             <input type="hidden" id="ordersData" name="ordersData" />
                             <button type="submit" class="customBtnPrimary" style="padding: 12px"
@@ -62,6 +80,7 @@
                                 Export
                             </button>
                         </form>
+
                     </div>
                 </div>
             </div>
@@ -81,14 +100,41 @@
                 <div class="mt-2 mt-md-0">
                     <div class="d-flex">
                         <button type="button" class="customBtnPrimary px-4 me-2"
-                            onclick="SearchByDate()">Search</button>
-                        <button type="button" class="customBtnSecondary px-4" onclick="ClearDateValue()">Clear</button>
+                            onclick="applyFilters()">Search</button>
+                        <button type="button" class="customBtnSecondary px-4" onclick="clearFilters()">Clear</button>
                     </div>
                 </div>
             </div>
         </div>
         <div class="secondaryContainer shadow mt-3" id="orderList">
 
+        </div>
+
+        <div class="customPagination d-flex flex-column align-items-center mt-1" id="paginationSection">
+            <div class="d-flex align-items-center w-100 justify-content-end mb-2">
+                <div class="d-flex align-items-center me-auto me-sm-3">
+                    <div class="me-sm-2" style="min-width: 7rem;">Items per page:</div>
+                    <select id="pageSizeSelect" class="form-select" onchange="applyFilters()">
+                        <option value="5" selected>5</option>
+                        <option value="10">10</option>
+                        <option value="15">15</option>
+                    </select>
+                </div>
+                <div class="d-none d-sm-block me-sm-2" id="paginationInfo">
+                    Showing 1-10 of 100
+                </div>
+                <div>
+                    <button id="prevPageBtn" class="me-2" onclick="changePage(-1)">
+                        <i class="bi bi-chevron-left"></i>
+                    </button>
+                    <button id="nextPageBtn" onclick="changePage(1)">
+                        <i class="bi bi-chevron-right"></i>
+                    </button>
+                </div>
+            </div>
+            <div class="d-block d-sm-none" id="paginationInfoMobile">
+                Showing 1-10 of 100
+            </div>
         </div>
     </div>
 </div>
@@ -97,16 +143,65 @@
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 
     <script>
+        let currentorderstate = {
+            totalitemscounts: 5,
+            orderpagesize: 5,
+            ordercurrentpage: 1
+        };
+
+        let currentSort = {
+            column: 'orderdate',
+            direction: 'desc'
+        };
+
+        var currentPage = 1;
+        var pageSize = 5;
+
         $(document).ready(function () {
-            LoadOrders();
+            loadOrders();
+
+            $('#startDate, #endDate').on('change', function () {
+                $('#dateRangeFilter').val('1');
+            });
+
+            $('#dateRangeFilter').on('change', function () {
+                if ($(this).val() !== '1') {
+                    $('#startDate').val('');
+                    $('#endDate').val('');
+                }
+            });
         });
 
-        function LoadOrders() {
+        function sortTable(column) {
+            if (currentSort.column === column) {
+                currentSort.direction = currentSort.direction === 'asc' ? 'desc' : 'asc';
+            } else {
+                currentSort.column = column;
+                currentSort.direction = 'desc';
+            }
+
+            loadOrders();
+
+        }
+
+        function loadOrders(searchParams = {}) {
             $.ajax({
                 url: '@Url.Action("ShowOrders", "Orders")',
                 type: 'GET',
+                data: {
+                    SearchId: $('#searchOrderId').val(),
+                    Status: $('#statusFilter').val(),
+                    DateRange: $('#dateRangeFilter').val() === '1' ? $('#statusFilter').val() : $('#dateRangeFilter').val(),
+                    StartDate: $('#startDate').val(),
+                    EndDate: $('#endDate').val(),
+                    CurrentPage: currentPage,
+                    PageSize: $('#pageSizeSelect').val(),
+                    SortColumn: currentSort.column,
+                    SortDirection: currentSort.direction
+                },
                 success: function (result) {
                     $('#orderList').html(result);
+                    updatePaginationInfo();
                 },
                 error: function (xhr, status, error) {
                     console.log("Error: " + error);
@@ -114,24 +209,42 @@
             });
         }
 
-        function ClearDateValue() {
-            // Clear date inputs
+        function applyFilters() {
+            currentPage = 1;
+            loadOrders();
+        }
+
+        function clearFilters() {
+            $('#searchOrderId').val('');
+            $('#statusFilter').val('');
+            $('#dateRangeFilter').val('1');
             $('#startDate').val('');
             $('#endDate').val('');
-
-            // Clear the search bar
-            $('#searchInput').val('');
-
-            // Reset the status filter dropdown to 'All Status'
-            $("select[name='statusFilter']").val('1');
-
-            // Reset the date range filter dropdown to 'All Time'
-            @* $("select[name='dateRangeFilter']").val('1');  *@
-                $("select[name='dateRangeFilter']").prop('selectedIndex', 0);
-
-            // Reload orders to show all results again
-            LoadOrders();
+            $('#pageSizeSelect').val('10');
+            currentPage = 1;
+            loadOrders();
         }
+
+        function changePage(direction) {
+            currentPage += direction;
+            loadOrders();
+        }
+
+        function updatePaginationInfo() {
+            const startItem = (currentorderstate.ordercurrentpage - 1) * currentorderstate.orderpagesize + 1;
+            const endItem = Math.min(currentorderstate.ordercurrentpage * currentorderstate.orderpagesize, currentorderstate.totalitemscounts);
+
+            const totalItems = currentorderstate.totalitemscounts;
+
+            $('#paginationInfo').text(`Showing ${startItem}-${endItem} of ${totalItems}`);
+            $('#paginationInfoMobile').text(`Showing ${startItem}-${endItem} of ${totalItems}`);
+
+            $('#prevPageBtn').prop('disabled', currentPage === 1);
+            $('#nextPageBtn').prop('disabled', currentPage === Math.ceil(totalItems / currentorderstate.orderpagesize));
+        }
+
+
     </script>
+
 
 }
