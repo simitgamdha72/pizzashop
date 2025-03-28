@@ -1,0 +1,296 @@
+@model pizzashop.Models.ViewModels.OrderDetailsViewModel
+
+<div class="header">
+    <div class="header-title" style="margin-left: 25%;">Order-Details</div>
+    <div style="margin-left: 30%;">
+        <button class="customBtnPrimary">Export</button>
+    </div>
+    <div style="margin-left: 2%;">
+        <button class="customBtnSecondary" onclick="BackToOrders()">Back</button>
+    </div>
+</div>
+<div class="container">
+
+
+    <div class="order-summary" style="margin-top: 20px;">
+        <div class="order-summary-content">
+            <div>
+
+
+
+                <div class="d-flex" style="margin-bottom: 15px;">
+                    <div style="font-weight: 900;color:black;font-size: large;">Order Summary</div>  
+                    <div class="status" style="margin-left: 1%;">
+                        @if (Model.OrderStatus == 1)
+                        {
+                            <div>Pending</div>
+                        }
+                        @if (Model.OrderStatus == 2)
+                        {
+                            <div>in Progress</div>
+                        }
+                        @if (Model.OrderStatus == 3)
+                        {
+                            <div>Served</div>
+                        }
+                        @if (Model.OrderStatus == 4)
+                        {
+                            <div>Completed</div>
+                        }
+                        @if (Model.OrderStatus == 5)
+                        {
+                            <div>Cancelled</div>
+                        }
+                        @if (Model.OrderStatus == 6)
+                        {
+                            <div>On Hold</div>
+                        }
+                        @if (Model.OrderStatus == 7)
+                        {
+                            <div>Failed</div>
+                        }
+
+                    </div> 
+
+                </div>
+
+
+
+
+                <div class="d-flex" style="margin-bottom: 5px;">
+                    <div style="color: black;">Invoice No.</div>
+                    <span> : #@Model.invoice</span>
+                </div>
+                <div class="d-flex"><div style="color: black;"> Paid on: &nbsp; 
+
+                    </div>
+                    <div style="color: black;"> Placed on:&nbsp; </div>
+
+                    <span>: @Model.OrderDate &nbsp;</span>
+                    <div style="color: black;"> Modified on &nbsp;</div>
+                    <span>: @Model.OrderModifiedDate&nbsp;</span>
+                    <div style="color: black;"> Order Duration</div>
+                </div>
+
+            </div>
+
+        </div>
+    </div>
+
+    <div class="details-section" style="margin-top: 10px;">
+        <div class="customer-details">
+            <h4>Customer Details</h4>
+            <div>Name: @Model.CustomerName</div>
+            <div>Phone: @Model.Phone</div>
+            <div>No of Person @Model.customerno</div>
+            <div>Email: @Model.Email</div>
+        </div>
+
+        <div class="table-details">
+            <h4>Table Details</h4>
+            <div>Table:@foreach(var t in Model.AssignedTables){@t.Name}</div>
+            <div>Section: @foreach(var t in Model.AssignedSection){@t.Name}</div>
+        </div>
+    </div>
+
+    <table class="order-items" style="margin-top: 10px;">
+        <thead>
+            <tr>
+                <th>S.No</th>
+                <th>Item</th>
+                <th>Quantity</th>
+                <th>Price</th>
+                <th>Total Amount</th>
+            </tr>
+        </thead>
+        <tbody>
+            @* @foreach (var order in Model.ordersitemdetails){            
+                <tr>
+
+                    @foreach(var items in Model.menuItems){
+                        <td>1</td>
+                        <td>@items.Item1.Name
+                            <br>@items.Item2.ModifierName
+                        </td>
+                        <td>@order.Itemquantity
+                            <br>@items.Item2.Modifierquantity
+                        </td>
+                        <td>@order.Itemrate
+                            <br>@items.Item2.ModifierRate
+                        </td>
+
+                            var totalAmount = (((order.Itemrate * order.Itemtax) / 100)+order.Itemrate)*order.Itemquantity;
+                             var totalAmountModifier = (((items.Item2.ModifierRate * items.Item2.Modifiertax) / 100)+items.Item2.ModifierRate)*items.Item2.Modifierquantity;
+
+                            <td>@totalAmount
+                                <br>@totalAmountModifier
+                            </td>
+
+                        } *@
+                @{
+                    var a = 0;
+                }
+            @foreach(var order in Model.ordersitemdetails){
+                
+                <td>@a</td>
+                <td>@order.ItemName
+                    <br>@foreach(var m in order.modifiedOrderDetails){ @m.ModifierName}
+                </td>
+                        <td>@order.ItemQuantity
+                            <br>@foreach(var m in order.modifiedOrderDetails){ @m.Quantity}
+                        </td>
+                        <td>@order.ItemRate
+                            <br>@foreach(var m in order.modifiedOrderDetails){ @m.Rate}
+                        </td>
+                        
+                            var totalAmount = order.ItemRate*order.ItemQuantity;
+                             @* var totalAmountModifier = *items.Item2.Modifierquantity; *@
+
+                            <td>@totalAmount
+                                @* <br>@totalAmountModifier *@
+                            </td>
+
+                           
+                        }
+            </tr>
+             }
+        </tbody>
+    </table>
+
+    <div class="totals">
+        <table>
+            <tr>
+                <td>Subtotal</td>
+                <td>₹399.00</td>
+            </tr>
+            <tr>
+                <td>CGST</td>
+                <td>₹47.88</td>
+            </tr>
+            <tr>
+                <td>SGST</td>
+                <td>₹150.00</td>
+            </tr>
+            <tr>
+                <td>GST</td>
+                <td>₹7.98</td>
+            </tr>
+            <tr>
+                <td>Other</td>
+                <td>₹19.95</td>
+            </tr>
+            <tr class="total-row">
+                <td>Total</td>
+                <td>₹624.81</td>
+            </tr>
+        </table>
+    </div>
+</div>
+
+<style>
+    body {
+        font-family: Arial, sans-serif;
+        margin: 0;
+        @* padding: 20px; *@
+        @* background-color: #f0f0f0; *@
+    }
+
+    .container {
+        background-color: white;
+        border: 1px solid #ddd;
+        max-width: 800px;
+        margin: 0 auto;
+    }
+
+    .header {
+        display: flex;
+        @* justify-content: space-around; *@
+        align-items: center;
+        padding: 10px 15px;
+
+
+    }
+
+    .header-title {
+        color: #0073bc;
+        font-weight: bold;
+        font-size: x-large;
+    }
+
+    .order-summary {    
+        padding: 10px 15px;
+        background-color: white;
+        border-bottom: 1px solid #ddd;
+        font-size: 14px;
+        color: #666;
+    }
+
+    .order-summary-content {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+    }
+
+    .status {
+        background-color: #0073bc;
+        color: white;
+        padding: 3px 8px;
+        border-radius: 3px;
+        font-size: 12px;
+    }
+
+    .details-section {
+        display: flex;
+    }
+
+    .customer-details,
+    .table-details {
+        width: 50%;
+        padding: 15px;
+        font-size: 14px;
+    }
+
+    .details-section h4 {
+        margin: 0 0 10px 0;
+        color: #333;
+    }
+
+    .order-items {
+        width: 100%;
+        border-collapse: collapse;
+    }
+
+    .order-items th,
+    .order-items td {
+        border: 1px solid #ddd;
+        padding: 8px;
+        text-align: left;
+        font-size: 14px;
+    }
+
+    .order-items th {
+        background-color: #f8f8f8;
+    }
+
+    .totals {
+        text-align: right;
+        padding: 10px 15px;
+    }
+
+    .totals table {
+        width: 100%;
+        border-collapse: separate;
+        border-spacing: 0 5px;
+    }
+
+    .totals td {
+        padding: 5px;
+        text-align: right;
+    }
+
+    .total-row {
+        font-weight: bold;
+    }
+
+
+</style>

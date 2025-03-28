@@ -41,8 +41,16 @@ namespace pizzashop.Controllers
         {
             if (!ModelState.IsValid)
             {
-                TempData["SomethingIsMissing"] = "Something Went Wrong";
-                return Json(false);
+                // TempData["SomethingIsMissing"] = "Something Went Wrong";
+                // return Json(false);
+                return Json(new
+                {
+                    success = false,
+                    errors = ModelState.Values
+              .SelectMany(v => v.Errors)
+              .Select(e => e.ErrorMessage)
+              .ToList()
+                });
             }
 
             bool isTaxAdded = _taxService.AddTax(model);

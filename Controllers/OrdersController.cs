@@ -3,6 +3,7 @@ using Microsoft.EntityFrameworkCore;
 using OfficeOpenXml;
 using pizzashop.Models.Models;
 using pizzashop.Models.ViewModels;
+using pizzashop.Repository;
 
 namespace pizzashop.Controllers
 {
@@ -19,6 +20,10 @@ namespace pizzashop.Controllers
         {
             return View();
         }
+        // public IActionResult OrderDetails()
+        // {
+        //     return View();
+        // }
 
 
         public IActionResult ShowOrders([FromQuery] OrderSearchViewModel searchModel)
@@ -27,7 +32,7 @@ namespace pizzashop.Controllers
 
             if (!string.IsNullOrEmpty(searchModel.SearchId))
             {
-                query = query.Where(o => o.Id.ToString().Contains(searchModel.SearchId));
+                query = query.Where(o => o.Id.ToString().Contains(searchModel.SearchId) || o.Customer.Name.ToLower().Contains(searchModel.SearchId.ToLower()));
             }
 
             if (!string.IsNullOrEmpty(searchModel.Status) && searchModel.Status != "")
@@ -106,6 +111,118 @@ namespace pizzashop.Controllers
             ViewBag.currentPage = currentPage;
 
             return PartialView("_OrderTable", pagedOrders);
+        }
+
+
+        // public IActionResult OrderDetails(int id)
+        // {
+        //     var order = _context.Orders.FirstOrDefault(o => o.Id == id);
+        //     var tableorder = _context.Tableorders.FirstOrDefault(t => t.OrderId == id);
+        //     var table = _context.Tables.FirstOrDefault(t => t.Id == tableorder.TableId);
+        //     var Section = _context.Sections.FirstOrDefault(s => s.Id == table.SectionId);
+        //     var customer = _context.Customers.FirstOrDefault(c => c.Id == order.CustomerId);
+        //     var invoice = _context.Invoices.FirstOrDefault(i => i.OrderId == order.Id);
+
+
+        //     var orderitemList = (from o in _context.Ordersitemdetails
+        //                          join mi in _context.MenuItems on o.ItemsId equals mi.Id
+        //                          join mod in _context.ModifiedOrderDetails on o.OrderId equals mod.OrdersItemDetailsId
+        //                          where o.OrderId == order.Id
+        //                          select new
+        //                          {
+        //                              o,
+        //                              mi,
+        //                              mod
+        //                          }).ToList();
+
+        //     if (order == null)
+        //     {
+        //         return RedirectToAction("Orders", "Orders");
+        //     }
+        //     var ordersitemdetails = new List<Ordersitemdetail>();
+        //     var MenuItems = new List<Tuple<MenuItem, ModifiedOrderDetail>>();
+
+        //     foreach (var item in orderitemList)
+        //     {
+        //         ordersitemdetails.Add(item.o);
+        //         MenuItems.Add(new Tuple<MenuItem, ModifiedOrderDetail>(item.mi, item.mod));
+        //     }
+        //     var modifiedorderList = _context.ModifiedOrderDetails.AsEnumerable().Where(m => ordersitemdetails.Any(i => i.Id == m.Id)).ToList();
+
+        //     var viewModel = new OrderDetailsViewModel
+        //     {
+
+        //         OrderDate = order.Date,
+        //         OrderModifiedDate = order.ModifiedAt,
+        //         OrderStatus = order.Status,
+        //         invoice = invoice.Id,
+        //         CustomerName = customer.Name,
+        //         Phone = customer.Phone,
+        //         Email = customer.Email,
+        //         customerno = order.NoOfCustomers,
+        //         TableName = table.Name,
+        //         SectionName = Section.Name,
+        //         ordersitemdetails = ordersitemdetails,
+        //         modifiedOrderDetails = modifiedorderList,
+        //         menuItems = MenuItems,
+        //     };
+
+        //     return View(viewModel);
+
+        // }
+
+        public IActionResult OrderDetails(int id)
+        {
+            var order = _context.Orders.FirstOrDefault(i => i.Id == id);
+
+
+
+#pragma warning disable CS8600 // Converting null literal or possible null value to non-nullable type.
+            OrderDetailsViewModel vmOrder = _context.Orders
+      .Where(o => o.Id == order.Id && o.Isdeleted != true)
+      .Select(o => new OrderDetailsViewModel
+      {
+          OrderDate = o.CreatedAt,
+          OrderModifiedDate = o.ModifiedAt,
+          CustomerName = o.Customer.Name,
+          customerno = o.NoOfCustomers,
+          Phone = o.Customer.Phone,
+          Email = o.Customer.Email,
+          AssignedTables = o.Tableorders.Where(t => t.OrderId == order.Id).Select(tbl => new TableViewModel
+          {
+              Name = tbl.Table.Name,
+          }).ToList(),
+          AssignedSection = o.Tableorders.Where(t => t.OrderId == order.Id).Select(sbl => new SectionViewModal
+          {
+              Name = sbl.Table.Section.Name,
+          }).ToList(),
+          ordersitemdetails = o.Ordersitemdetails.Where(od => od.OrderId == order.Id && od.Isdeleted != true).Select(od => new OrderItemDetailsViewModel
+          {
+              ItemsId = od.ItemsId,
+              ItemName = od.Items.Name,
+              ItemRate = od.Itemrate,
+              ItemQuantity = od.Itemquantity,
+              modifiedOrderDetails = od.ModifiedOrderDetails.Where(m => m.OrdersItemDetailsId == od.Id).Select(mod => new ModifiedOrderDetailsViewModel
+              {
+                  ModifierName = mod.ModifierName,
+                  Rate = mod.ModifierRate ?? 0,
+                  Quantity = mod.Modifierquantity ?? 1,
+              }).ToList()
+          }).ToList(),
+          OrderTaxList = o.OrderTaxes.Where(ot => ot.OrderId == order.Id).Select(ot => new OrderTax
+          {
+              TaxId = ot.Tax.Id,
+              Tax = ot.Tax,
+          }).ToList(),
+          //   SubTotal = o.,
+          //   TotalTax = o.TotalTax,
+          //   TotalAmount = o.TotalAmount,
+          //   PaymentMode = o.Payments.First().PaymentMethod.ToString()
+      })
+      .FirstOrDefault();
+#pragma warning restore CS8600 // Converting null literal or possible null value to non-nullable type.
+
+            return View(vmOrder);
         }
 
 
