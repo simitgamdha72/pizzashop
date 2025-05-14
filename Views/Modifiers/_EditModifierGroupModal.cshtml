@@ -59,6 +59,11 @@
 
         $('#cancelEditModifierGroup').on('click', function() {
             $('#EditModifiersGroupModal').modal('hide');
+             window.existingModifierIds = [];
+                window.existingModifierName = [];
+                window.seenModifierIds = new Set();
+                window.seenModifierNames = new Set();
+
         });
     });
      function loadExistingModifiers(id) {

@@ -1,8 +1,8 @@
 {
   "version": 2,
-  "dgSpecHash": "mz/+5e/A7MKrs5qDot88JUbpkwzfNBIhdfPkxc6+paJcy4FrTm8T0+qiyz1ZnUTG9MkkWTYy+fXfp8aVhpG4iQ==",
+  "dgSpecHash": "j4dt5d9QYcVZJuQelASvnKItCpK6Ln9uSK5f1pQXpIHws2q8P7H9M2g19TVp+L/Bq7l1mUiIxmDyTCKZy+Fwng==",
   "success": true,
-  "projectFilePath": "D:\\PIZZASHOP\\pizzashop\\pizzashop.csproj",
+  "projectFilePath": "D:\\PIZZASHOP_GIT_ERROR\\pizzashop\\pizzashop.csproj",
   "expectedPackageFiles": [
     "C:\\Users\\pctr59\\.nuget\\packages\\bouncycastle.cryptography\\2.5.0\\bouncycastle.cryptography.2.5.0.nupkg.sha512",
     "C:\\Users\\pctr59\\.nuget\\packages\\common.logging\\3.4.1\\common.logging.3.4.1.nupkg.sha512",
